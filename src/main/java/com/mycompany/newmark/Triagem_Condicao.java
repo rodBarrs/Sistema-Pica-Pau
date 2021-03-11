@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 public class Triagem_Condicao {
     
     public boolean verificaCondicao(String processo, String tipo) throws SQLException {

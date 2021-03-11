@@ -21,7 +21,7 @@ public class LeituraPDF {
 		return textoPDF;
 	}
 	
-	private void apagarPDF() {
+	public void apagarPDF() {
 		for(File file : new File("C:\\Temp").listFiles()) {
 			file.delete();
 		}
