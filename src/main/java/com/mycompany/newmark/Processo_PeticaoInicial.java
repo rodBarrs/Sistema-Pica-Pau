@@ -7,19 +7,9 @@ package com.mycompany.newmark;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JOptionPane;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -28,12 +18,10 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Element;
 
 public class Processo_PeticaoInicial {
 
-	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, String bancos)
-			throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
+	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, String bancos) throws Exception {
 		LeituraPDF pdf = new LeituraPDF();
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		Tratamento tratamento = new Tratamento();
@@ -41,7 +29,7 @@ public class Processo_PeticaoInicial {
 		Triagem_Condicao condicao = new Triagem_Condicao();
 		Actions action = new Actions(driver);
 		String localTriagem = "PET";
-		String linhaMovimentacao = "";
+		//String linhaMovimentacao = "";
 		boolean citacao = false;
 		boolean intimacao = false;
 		
@@ -91,7 +79,7 @@ public class Processo_PeticaoInicial {
 		resultado.setPalavraChave("");
 		resultado.setComplemento("");
 		// JOptionPane.showMessageDialog(null, listaMovimentacao.size());
-		// FOR - Enquantou houve elementos na tabela, do último para o primeiro
+		// FOR - Enquantou houve elementos na tabela, do primeiro ao último
 		for (int i = 1; i < listaMovimentacao.size(); i++) {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td[2]/div/span/span[1]")));
 			// IF - Busca pelas expressões descritas, dentro das <tr> da movimentação
@@ -150,21 +138,21 @@ public class Processo_PeticaoInicial {
 				driver.switchTo().defaultContent();
 
 				// \u0046
-
+				Thread.sleep(500);
 				action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
 				action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
-				Thread.sleep(500);
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				DataFlavor flavor = DataFlavor.stringFlavor;
 				String BuscaPeticaoInicial = "";
+				String BuscaPeticaoInicialSemTratamento = "";
+				BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString();
 				BuscaPeticaoInicial = clipboard.getData(flavor).toString();
 				BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
 
 				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
 				// para seguir a tragem especifica
 
-				if (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
-						|| BuscaPeticaoInicial.contains("ANEXO")) {
+				if (BuscaPeticaoInicial.length() < 250) {
 					// CADASTRAR POSSIVEIS VERIFICAÇÕES
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + (i + 1) + "]/td/div")));
@@ -188,44 +176,86 @@ public class Processo_PeticaoInicial {
 								.elementToBeClickable(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")));
 						pdf.apagarPDF();
 						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
-						Thread.sleep(5000);
-						String processo = "";
-						processo = pdf.lerPDF();
 
-						if (condicao.verificaCondicao(processo, "PET")) {
-							JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
-							processo = tratamento.tratamento(processo);
-							resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
-							if(resultado.getEtiqueta().contains("RURAL")) {
-								JOptionPane.showMessageDialog(null, "RURAL");
-								if(citacao) {
-									resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
-									resultado.setDriver(driver);
-									return resultado;
-								} else if(intimacao) {
-									resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+						if (pdf.verificarExistenciaPDF()) {
+							
+							System.out.println("PDF Encontrado");
+							String processo = "";
+							processo = pdf.lerPDF();
+
+							if (condicao.verificaCondicao(processo, "PET")) {
+								//JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+								processo = tratamento.tratamento(processo);
+								resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
+								if (resultado.getEtiqueta().toUpperCase().contains("RURAL")) {
+									//JOptionPane.showMessageDialog(null, "RURAL");
+									if (citacao) {
+										resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+										resultado.setDriver(driver);
+										return resultado;
+									} else if (intimacao) {
+										resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+										resultado.setDriver(driver);
+										return resultado;
+									}
+
+								} else if (resultado.getEtiqueta().toUpperCase().contains("LOAS")) {
+
+									if (citacao) {
+										resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+										resultado.setDriver(driver);
+										return resultado;
+									} else if (intimacao) {
+										resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+										resultado.setDriver(driver);
+										return resultado;
+									}
+
+								} else {
 									resultado.setDriver(driver);
 									return resultado;
 								}
-								
-							} else if (resultado.getEtiqueta().contains("LOAS")) {
-								
-								if(citacao) {
-									resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
-									resultado.setDriver(driver);
-									return resultado;
-								} else if(intimacao) {
-									resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
-									resultado.setDriver(driver);
-									return resultado;
-								}
-								
-							} else {
-								//
 							}
+						} else {
+							throw new Exception("PDF não encontrado");
 						}
 
-						Thread.sleep(1000);
+					}
+
+				} else {
+					// TRATAMENTO CASO A PETIÇÃO INICIAL SE ENCONTRE NO HTML
+					if (condicao.verificaCondicao(BuscaPeticaoInicialSemTratamento, "PET")) {
+						BuscaPeticaoInicialSemTratamento = tratamento.tratamento(BuscaPeticaoInicialSemTratamento);
+						resultado = triagem.triarBanco(BuscaPeticaoInicialSemTratamento, bancos, localTriagem,
+								"PETIÇÃO INICIAL");
+						if (resultado.getEtiqueta().toUpperCase().contains("RURAL")) {
+							JOptionPane.showMessageDialog(null, "RURAL");
+							if (citacao) {
+								resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+								resultado.setDriver(driver);
+								return resultado;
+							} else if (intimacao) {
+								resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+								resultado.setDriver(driver);
+								return resultado;
+							}
+
+						} else if (resultado.getEtiqueta().toUpperCase().contains("LOAS")) {
+
+							if (citacao) {
+								resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+								resultado.setDriver(driver);
+								return resultado;
+							} else if (intimacao) {
+								resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+								resultado.setDriver(driver);
+								return resultado;
+							}
+
+						} else {
+							resultado.setDriver(driver);
+							return resultado;
+						}
 					}
 				}
 			}
