@@ -136,13 +136,19 @@ public class Controller_EtiquetasEdicao implements Initializable {
                 chave.setCOMPLEMENTO(Complemento.getText().toUpperCase().trim().replace("'", "").replace("´", ""));
                 chave.setETIQUETA(Etiqueta.getText().toUpperCase().trim().replace("'", "").replace("´", ""));
                 chave.setPRIORIDADE(Peso());
+                
                 if (LerMov.isSelected()) {
                     chave.setTIPO("MOV");
-                } else if (LerPet.isSelected()){
+                }
+                
+                if (LerPet.isSelected()){
                     chave.setTIPO("PET");
-                } else {
+                } 
+                
+                if (LerDoc.isSelected()){
                 	chave.setTIPO("DOC");
                 }
+                
                 chave.setBANCO(bancoSelecionado);
                 banco.inserirEtiquetas(chave);
                 atualizar();
@@ -204,6 +210,7 @@ public class Controller_EtiquetasEdicao implements Initializable {
             Aviso aviso = new Aviso();
             aviso.confirmacaoEtiqueta(chave);
             limpar();
+            atualizar();
         }
     }
 

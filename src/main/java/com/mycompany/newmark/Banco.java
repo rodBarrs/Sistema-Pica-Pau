@@ -44,9 +44,9 @@ public class Banco {
                 + "ID           INT                 NOT NULL    DEFAULT (1997),     \n"
                 + "TriarAntigo  BOOLEAN             NOT NULL    DEFAULT (false),    \n"
                 + "TipoTriagem  VARCHAR (3)         NOT NULL    DEFAULT ('COM'),    \n"
-                + "JuntManual   BOOLEAN             NOT NULL    DEFAULT (true),     \n"
+                + "JuntManual   BOOLEAN             NOT NULL    DEFAULT (false),     \n"
                 + "LaudoPericial BOOLEAN            NOT NULL    DEFAULT (false),    \n"
-                + "PeticaoInicial BOOLEAN           NOT NULL    DEFAULT (false),    \n"
+                + "PeticaoInicial BOOLEAN           NOT NULL    DEFAULT (true),     \n"
                 + "Login        STRING                          DEFAULT (''),       \n"
                 + "Senha        STRING                          DEFAULT (''),       \n"
                 + "PRIMARY KEY (ID)                                                 \n"
@@ -83,7 +83,7 @@ public class Banco {
                 comandoSql.execute("INSERT INTO CONTADOR (ID,ContTotal, ContNao, ContDoc, ContSeq, ContErro)       \n"
                         + "VALUES (1997,0,0,0,0,0);");
                 comandoSql.execute("INSERT INTO CONFIGURACAO (ID,TriarAntigo, TipoTriagem, JuntManual, LaudoPericial, PeticaoInicial, Login, Senha)  \n"
-                        + "VALUES (1997,'false','COM','true','false','false','','');");
+                        + "VALUES (1997,'false','COM','true','false','true','','');");
             }
             
             //Desconecta com o banco de dados, garantindo assim a integridade do dados
@@ -114,6 +114,7 @@ public class Banco {
             aviso.aviso(textoAviso);
         } catch (SQLException erro) {
             if(erro.getMessage().contains("UNIQUE constraint")){
+            	erro.printStackTrace();
                 textoAviso = "Não foi possível inserir o registro:\n"
                                 + "O registro já esta cadastrado!";
                 aviso.aviso(textoAviso);

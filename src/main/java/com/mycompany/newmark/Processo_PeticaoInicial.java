@@ -18,7 +18,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
 public class Processo_PeticaoInicial {
 
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, String bancos) throws Exception {
@@ -32,7 +31,7 @@ public class Processo_PeticaoInicial {
 		//String linhaMovimentacao = "";
 		boolean citacao = false;
 		boolean intimacao = false;
-		
+
 		WebElement TabelaTref = null;
 		boolean teste = false;
 		// Thread.sleep(2000);
@@ -75,7 +74,7 @@ public class Processo_PeticaoInicial {
 		}
 
 		resultado.setLocal("PETIÇÃO INICIAL");
-		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR PETIÇÃO INICIAL");
+		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR PASTA DE PETIÇÃO INICIAL");
 		resultado.setPalavraChave("");
 		resultado.setComplemento("");
 		// JOptionPane.showMessageDialog(null, listaMovimentacao.size());
@@ -85,6 +84,7 @@ public class Processo_PeticaoInicial {
 			// IF - Busca pelas expressões descritas, dentro das <tr> da movimentação
 			if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[1]")).getText().toUpperCase()
 					.contains("PETIÇÃO INICIAL")) {
+				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
 				// Clica no <tr> identificado
 				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
@@ -177,87 +177,131 @@ public class Processo_PeticaoInicial {
 						pdf.apagarPDF();
 						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
 
-						if (pdf.verificarExistenciaPDF()) {
-							
-							System.out.println("PDF Encontrado");
-							String processo = "";
-							processo = pdf.lerPDF();
+						boolean flag2 = true;
 
-							if (condicao.verificaCondicao(processo, "PET")) {
-								//JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
-								processo = tratamento.tratamento(processo);
-								resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
-								if (resultado.getEtiqueta().toUpperCase().contains("RURAL")) {
-									//JOptionPane.showMessageDialog(null, "RURAL");
-									if (citacao) {
-										resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
-										resultado.setDriver(driver);
-										return resultado;
-									} else if (intimacao) {
-										resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+						while (flag2) {
+							int resultadoPDF = pdf.verificarExistenciaPDF();
+							System.out.println("resultadoPDF: " + resultadoPDF);
+							switch (resultadoPDF) {
+							case 0:
+								System.out.println("ZERO");
+								flag2 = false;
+								throw new Exception("PDF Não encontrado");
+							case 1:
+								System.out.println("UM");
+								flag2 = false;
+								String processo = "";
+								processo = pdf.lerPDF();
+
+								if (condicao.verificaCondicao(processo, "PET")) {
+									//JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+									processo = tratamento.tratamento(processo);
+									resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
+
+									switch (resultado.getEtiqueta().toUpperCase()) {
+									case "RURAL":
+										System.out.println("RURAL");
+										if (citacao) {
+											resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+											resultado.setDriver(driver);
+											return resultado;
+										} else if (intimacao) {
+											resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+											resultado.setDriver(driver);
+											return resultado;
+										}
+									case "LOAS":
+										System.out.println("LOAS");
+										if (citacao) {
+											resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+											resultado.setDriver(driver);
+											return resultado;
+										} else if (intimacao) {
+											resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+											resultado.setDriver(driver);
+											return resultado;
+										}
+									default:
+										System.out.println("DEFAULT");
 										resultado.setDriver(driver);
 										return resultado;
 									}
-
-								} else if (resultado.getEtiqueta().toUpperCase().contains("LOAS")) {
-
-									if (citacao) {
-										resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
-										resultado.setDriver(driver);
-										return resultado;
-									} else if (intimacao) {
-										resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
-										resultado.setDriver(driver);
-										return resultado;
-									}
-
-								} else {
-									resultado.setDriver(driver);
-									return resultado;
 								}
+								break;
+							case 2:
+								System.out.println("DOIS");
+								pdf.apagarPDF();
+								driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
+								break;
 							}
-						} else {
-							throw new Exception("PDF não encontrado");
 						}
-
 					}
-
-				} else {
-					// TRATAMENTO CASO A PETIÇÃO INICIAL SE ENCONTRE NO HTML
-					if (condicao.verificaCondicao(BuscaPeticaoInicialSemTratamento, "PET")) {
-						BuscaPeticaoInicialSemTratamento = tratamento.tratamento(BuscaPeticaoInicialSemTratamento);
-						resultado = triagem.triarBanco(BuscaPeticaoInicialSemTratamento, bancos, localTriagem,
-								"PETIÇÃO INICIAL");
-						if (resultado.getEtiqueta().toUpperCase().contains("RURAL")) {
-							JOptionPane.showMessageDialog(null, "RURAL");
-							if (citacao) {
-								resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
-								resultado.setDriver(driver);
-								return resultado;
-							} else if (intimacao) {
-								resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
-								resultado.setDriver(driver);
-								return resultado;
-							}
-
-						} else if (resultado.getEtiqueta().toUpperCase().contains("LOAS")) {
-
-							if (citacao) {
-								resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
-								resultado.setDriver(driver);
-								return resultado;
-							} else if (intimacao) {
-								resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
-								resultado.setDriver(driver);
-								return resultado;
-							}
-
-						} else {
+					/*
+					if (resultado.getEtiqueta().toUpperCase().contains("RURAL")) {
+						//JOptionPane.showMessageDialog(null, "RURAL");
+						if (citacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						} else if (intimacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
 							resultado.setDriver(driver);
 							return resultado;
 						}
+					
+					} else if (resultado.getEtiqueta().toUpperCase().contains("LOAS")) {
+					
+						if (citacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						} else if (intimacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						}
+					
+					} else {
+						resultado.setDriver(driver);
+						return resultado;
+					}
+					} */
+
+					// TRATAMENTO CASO A PETIÇÃO INICIAL SE ENCONTRE NO HTML
+				} else if (condicao.verificaCondicao(BuscaPeticaoInicialSemTratamento, "PET")) {
+					BuscaPeticaoInicialSemTratamento = tratamento.tratamento(BuscaPeticaoInicialSemTratamento);
+					resultado = triagem.triarBanco(BuscaPeticaoInicialSemTratamento, bancos, localTriagem,
+							"PETIÇÃO INICIAL");
+					if (resultado.getEtiqueta().toUpperCase().contains("RURAL")) {
+						JOptionPane.showMessageDialog(null, "RURAL");
+						if (citacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						} else if (intimacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						}
+
+					} else if (resultado.getEtiqueta().toUpperCase().contains("LOAS")) {
+
+						if (citacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":CITAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						} else if (intimacao) {
+							resultado.setEtiqueta(resultado.getEtiqueta() + ":INTIMAÇÃO");
+							resultado.setDriver(driver);
+							return resultado;
+						}
+
+					} else {
+						resultado.setDriver(driver);
+						return resultado;
 					}
 				}
+
 			}
 		}
 		resultado.setDriver(driver);
