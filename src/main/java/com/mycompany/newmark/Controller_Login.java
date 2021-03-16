@@ -14,6 +14,8 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -37,7 +39,6 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -366,8 +367,10 @@ public class Controller_Login implements Initializable {
             String avisoTexto = "Driver de comunicação não encontrado, favor contatar o desenvolvedor.";
             aviso.aviso(avisoTexto);
         }
-
-        // Usuário contém Login e Senha encapsulados.
+        //Cria a pasta para receber os pdfs
+        Files.createDirectories(Paths.get("C:\\Temp"));
+        //Configurações de perfil para o Firefox
+        //Seta a pasta de downloads para a mencionada e faz o download automático de pdfs
         FirefoxProfile profile = new FirefoxProfile();
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
 		profile.setPreference("browser.download.dir", "C:\\Temp"); // folder

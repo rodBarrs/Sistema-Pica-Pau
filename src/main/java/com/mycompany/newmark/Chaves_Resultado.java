@@ -12,6 +12,7 @@ public class Chaves_Resultado
     private String Complemento = "";
     private String Etiqueta = "";
     private String Local = "";
+    private String LocalArquivo = "";
     private WebDriver driver;
     private boolean grid;
 
@@ -62,5 +63,13 @@ public class Chaves_Resultado
     public void setGrid(boolean grid) {
         this.grid = grid;
     }
+
+	public String getLocalArquivo() {
+		return LocalArquivo;
+	}
+
+	public void setLocalArquivo(String localArquivo) {
+		LocalArquivo = localArquivo;
+	}
     
 }
