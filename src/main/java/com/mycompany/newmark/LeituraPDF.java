@@ -8,7 +8,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 public class LeituraPDF {
 	File filePath = new File("C:\\Temp");
-	public int verificarExistenciaPDF() throws InterruptedException {
+	public String verificarExistenciaPDF() throws InterruptedException {
 		System.out.println("============ VERIFICANDO PDF ==============");
 		for (int i = 0; i < 5; i++) {
 			Thread.sleep(2000);
@@ -18,7 +18,7 @@ public class LeituraPDF {
 					if(pdfNome.getName().contains(".pdf")) {
 						System.out.println("pdf encontrado: " + pdfNome.getName());
 						System.out.println("retornando 1");
-						return 1;
+						return "PdfEncontrado";
 					}
 				}
 			}
@@ -27,9 +27,9 @@ public class LeituraPDF {
 		
 		if(filePath.listFiles().length > 1) {
 			System.out.println("retornando 2");
-			return 2;
+			return "MaisDeUmPdfEncontrado";
 		}
-		return 0;
+		return "NenhumPdfEncontrado";
 	}
 	
 	public String lerPDF() throws IOException {

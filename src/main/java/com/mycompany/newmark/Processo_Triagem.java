@@ -18,7 +18,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -33,7 +39,8 @@ public class Processo_Triagem {
     
     //Inicia a Triagem
     public boolean iniciarTriagem (WebDriver driver, WebDriverWait wait, String bancos) throws SQLException, InterruptedException, UnsupportedFlavorException, IOException {
-        Chaves_Resultado resultado = new Chaves_Resultado();
+        Actions actions = new Actions(driver);
+    	Chaves_Resultado resultado = new Chaves_Resultado();
         resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
         resultado.setDriver(driver);
         Chaves_Configuracao config = new Chaves_Configuracao();
@@ -47,6 +54,22 @@ public class Processo_Triagem {
         Processo_Etiquetar etiqueta = new Processo_Etiquetar();
         boolean grid;
         try{
+        	
+        	// Adiciona a coluna "Órgão Julgador" no Grid inicial
+        	//wait: aguarda por 15s até que a condição seja verdadeira
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gridcolumn-1083-titleEl\"]")));
+            WebElement target = driver.findElement(By.xpath("//*[@id=\"gridcolumn-1083-titleEl\"]"));
+            actions.moveToElement(target).perform();
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gridcolumn-1083-triggerEl\"]")));
+            driver.findElement(By.xpath("//*[@id=\"gridcolumn-1083-triggerEl\"]")).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")));
+            driver.findElement(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")).click();
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"menucheckitem-2650-itemEl\"]")));
+            driver.findElement(By.xpath("//*[@id=\"menucheckitem-2650-itemEl\"]")).click();
+            actions.sendKeys(Keys.ESCAPE).perform();
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("gridview-1109-body")));
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("gridview-1109-body")));
+        	
             do {
                 resultado = processo_grid.buscar_processo(resultado.getDriver(), wait);
                 grid = resultado.isGrid();
@@ -57,7 +80,7 @@ public class Processo_Triagem {
                     if(config.isLaudoPericial()==true){
                         resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
                     } else if (config.isPeticaoInicial()==true){
-                        resultado = peticao.peticaoInicial(resultado.getDriver(), wait, bancos);
+                        resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos, resultado.getOrgaoJulgador());
                     } else {
                         switch (config.getTipoTriagem()){
                             case "COM":

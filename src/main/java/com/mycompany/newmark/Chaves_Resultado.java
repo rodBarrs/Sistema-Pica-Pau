@@ -13,6 +13,7 @@ public class Chaves_Resultado
     private String Etiqueta = "";
     private String Local = "";
     private String LocalArquivo = "";
+    private String OrgaoJulgador = "";
     private WebDriver driver;
     private boolean grid;
 
@@ -70,6 +71,14 @@ public class Chaves_Resultado
 
 	public void setLocalArquivo(String localArquivo) {
 		LocalArquivo = localArquivo;
+	}
+
+	public String getOrgaoJulgador() {
+		return OrgaoJulgador;
+	}
+
+	public void setOrgaoJulgador(String orgaoJulgador) {
+		OrgaoJulgador = orgaoJulgador;
 	}
     
 }

@@ -22,7 +22,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Processo_Grid {
-
     private int tamanho = -1;
 
     public Processo_Grid(WebDriver driver) {
@@ -32,13 +31,15 @@ public class Processo_Grid {
     //Encontra os processos
     @SuppressWarnings("SleepWhileInLoop")
     public final Chaves_Resultado buscar_processo(WebDriver driver, WebDriverWait wait) throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
-        Actions actions = new Actions(driver);
+    	Actions actions = new Actions(driver);
     	Chaves_Resultado resultado = new Chaves_Resultado();
+    	
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[starts-with(@id,'edicaotarefawindow')]")));
         if (tamanho > 1) {
             wait.until(ExpectedConditions.presenceOfElementLocated(By.id("gridview-1109-body")));
             wait.until(ExpectedConditions.elementToBeClickable(By.id("gridview-1109-body")));
         }
+
         WebElement tabela = driver.findElement(By.id("gridview-1109-table"));
         List<WebElement> tarefas = new ArrayList(tabela.findElements(By.cssSelector("tr")));
         tamanho = tarefas.size();
@@ -47,6 +48,8 @@ public class Processo_Grid {
                 tabela = driver.findElement(By.id("gridview-1109-table"));
                 tarefas = new ArrayList(tabela.findElements(By.cssSelector("tr")));
                 wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[1]/td[3]/div/a")));
+                //Salva o órgão julgador
+                resultado.setOrgaoJulgador(driver.findElement(By.xpath("//tr[1]/td[4]/div")).getText());
                 driver.findElement(By.xpath("//tr[1]/td[3]/div/a")).click();
                 try {
                     boolean flag = false;
