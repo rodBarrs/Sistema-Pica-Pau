@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -23,7 +26,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Processo_Documento {
 
     public Chaves_Resultado documento(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
-        Chaves_Resultado resultado = new Chaves_Resultado();
+        LeituraPDF pdf = new LeituraPDF();
+    	Chaves_Resultado resultado = new Chaves_Resultado();
         resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
         Triagem_Etiquetas triagem = new Triagem_Etiquetas();
         VerificarData verificarData = new VerificarData();
@@ -32,11 +36,12 @@ public class Processo_Documento {
         String condicaoProv = "PRO";
         String condicaoCabecalho = "CAB";
         String localTriagem = "DOC";
+        String processo = "";
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
         WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
-        List listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
+        List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
 
         int limite = 10;
         WebElement movimentacaoAtual;
@@ -49,14 +54,32 @@ public class Processo_Documento {
 
                         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
                         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
-                        //Click na linha
-                        driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
-
+                        
                         //Armazena o span que contém o texto onde diz se o item é um PDF ou HTML
-                        String spanText = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText();
-
+                        String spanText = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().toUpperCase();
+                        
                         // Verifica se o documento é um pdf para tratamento apropriado
-                        if (spanText.contains("PDF") || spanText.contains("pdf")) {
+                        if (spanText.contains("PDF")) {
+                        	pdf.apagarPDF();
+                        	//Click na linha
+                            driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+                            
+                            int cont = 0; 
+                            while(cont <= 4) {
+                            	if(pdf.verificarExistenciaPDF() == "PdfEncontrado") {
+                            		processo = pdf.lerPDF();
+                            		break;
+                            	} else if(pdf.verificarExistenciaPDF() == "MaisDeUmPdfEncontrado") {
+                            		pdf.apagarPDF();
+                            		driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+                            	} else if (pdf.verificarExistenciaPDF() == "NenhumPdfEncontrado") {
+                            		pdf.apagarPDF();
+                            		driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+                            	}
+                            	cont++;
+                            }
+                            
+                        	/*
                             //Espera até que o iframe onde se carrega o PDF esteja visível
                             wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
                             //Armazena o iframe
@@ -70,39 +93,38 @@ public class Processo_Documento {
                             driver.findElement(By.id("viewerContainer")).click();
                             //Retorna o Driver para a página pai
                             driver.switchTo().defaultContent();
+                            */
                         } else {
-                            //nothing to do
+                        	driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+                        	//Envia o driver para o iframe e verifca os itens internos para confirmação do carregamento
+                            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
+                            WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
+                            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
+                            //wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+                            //wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+
+                            // Garante o clique no iframe
+                            boolean flag = true;
+                            do {
+                                try {
+                                    wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+                                    wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+                                    driver.findElement(By.tagName("html")).click();
+                                    flag = false;
+                                } catch (Exception e) {
+                                    // Nothing to do at all
+                                }
+
+                            } while (flag);
+                            Actions action = new Actions(driver);
+                            action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
+                            action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
+                            driver.switchTo().defaultContent();
+                            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                            DataFlavor flavor = DataFlavor.stringFlavor;
+                            processo = clipboard.getData(flavor).toString();
                         }
 
-                        //Envia o driver para o iframe e verifca os itens internos para confirmação do carregamento
-                        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
-                        WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
-                        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
-                        //wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-                        //wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
-
-                        // Garante o clique no iframe
-                        boolean flag = true;
-                        do {
-                            try {
-                                wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
-                                wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-                                driver.findElement(By.tagName("html")).click();
-                                flag = false;
-                            } catch (Exception e) {
-                                // Nothing to do at all
-                            }
-
-                        } while (flag);
-
-                        Actions action = new Actions(driver);
-                        action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
-                        action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
-                        driver.switchTo().defaultContent();
-                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                        DataFlavor flavor = DataFlavor.stringFlavor;
-                        String processo = "";
-                        processo = clipboard.getData(flavor).toString();
                         if (processo.length() > 1) {
                             if (condicao.verificaCondicao(processo, condicaoCabecalho)) {
                                 limite--;

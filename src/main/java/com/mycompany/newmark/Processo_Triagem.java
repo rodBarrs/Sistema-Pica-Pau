@@ -4,7 +4,10 @@
  */
 package com.mycompany.newmark;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -27,6 +30,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 /**
  *
  * @author admin-felipe
@@ -38,8 +42,9 @@ public class Processo_Triagem {
     }
     
     //Inicia a Triagem
-    public boolean iniciarTriagem (WebDriver driver, WebDriverWait wait, String bancos) throws SQLException, InterruptedException, UnsupportedFlavorException, IOException {
-        Actions actions = new Actions(driver);
+    public boolean iniciarTriagem (WebDriver driver, WebDriverWait wait, String bancos) throws SQLException, InterruptedException, UnsupportedFlavorException, IOException, AWTException {
+    	Robot robot = new Robot();
+    	Actions actions = new Actions(driver);
     	Chaves_Resultado resultado = new Chaves_Resultado();
         resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
         resultado.setDriver(driver);
@@ -62,11 +67,15 @@ public class Processo_Triagem {
             actions.moveToElement(target).perform();
             wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gridcolumn-1083-triggerEl\"]")));
             driver.findElement(By.xpath("//*[@id=\"gridcolumn-1083-triggerEl\"]")).click();
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")));
-            driver.findElement(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")).click();
+            //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")));
+            //driver.findElement(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")).click();
+            Thread.sleep(500);
+            actions.sendKeys(Keys.ARROW_UP).build().perform();
+            actions.sendKeys(Keys.ARROW_RIGHT).build().perform();
             wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"menucheckitem-2650-itemEl\"]")));
-            driver.findElement(By.xpath("//*[@id=\"menucheckitem-2650-itemEl\"]")).click();
+            driver.findElement(By.linkText("Órgão Julgador")).click();
             actions.sendKeys(Keys.ESCAPE).perform();
+            Thread.sleep(500);
             wait.until(ExpectedConditions.presenceOfElementLocated(By.id("gridview-1109-body")));
             wait.until(ExpectedConditions.elementToBeClickable(By.id("gridview-1109-body")));
         	

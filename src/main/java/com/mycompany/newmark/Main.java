@@ -27,7 +27,7 @@ public class Main extends Application {
             primaryStage.getIcons().add(new Image("/fxml/Imagens/iconeMark.png"));
             primaryStage.setTitle("Sistema de Triagem Mark");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(true);
+            primaryStage.setResizable(false);
             primaryStage.show();
         } catch (Exception erro) {
             Aviso aviso = new Aviso();

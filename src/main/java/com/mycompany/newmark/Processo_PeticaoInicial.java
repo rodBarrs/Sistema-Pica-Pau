@@ -80,8 +80,12 @@ public class Processo_PeticaoInicial {
 				intimacao = true;
 				break;
 			} else if (listaMovimentacao.get(i).getText().toUpperCase().contains("LAUDO PERICIAL")) {
-				if (verificarData.Verificar(listaMovimentacao.get(i).getText())) {
+				if (config.isTriarAntigo() == true) {
 					laudoRecente = true;
+				} else {
+					if (verificarData.Verificar(listaMovimentacao.get(i).getText())) {
+						laudoRecente = true;
+					}
 				}
 			}
 		}
@@ -170,7 +174,7 @@ public class Processo_PeticaoInicial {
 
 						boolean flag2 = true;
 
-						while (flag2) {
+						do {
 							String resultadoPDF = pdf.verificarExistenciaPDF();
 							System.out.println("resultadoPDF: " + resultadoPDF);
 
@@ -199,9 +203,8 @@ public class Processo_PeticaoInicial {
 									String subnucleo = resultado.getEtiqueta();
 									JOptionPane.showMessageDialog(null, subnucleo);
 									JOptionPane.showMessageDialog(null, orgaoJulgador);
-									if (subnucleo.contains("RURAL")
-											&& (orgaoJulgador.contains("JUIZADO ESPECIAL")
-													|| orgaoJulgador.contains("VARA FEDERAL"))) {
+									if (subnucleo.contains("RURAL") && (orgaoJulgador.contains("JUIZADO ESPECIAL")
+											|| orgaoJulgador.contains("VARA FEDERAL"))) {
 										if (citacao) {
 											System.out.println("RURAL/CITAÇÃO");
 											resultado.setEtiqueta(resultado.getEtiqueta() + "/GEAC-APOIO");
@@ -209,8 +212,7 @@ public class Processo_PeticaoInicial {
 											return resultado;
 										} else if (intimacao) {
 											System.out.println("RURAL/INTIMAÇÃO");
-											resultado = invocarTriagemPadrao(driver, wait, config,
-													bancos);
+											resultado = invocarTriagemPadrao(driver, wait, config, bancos, i);
 											sb = new StringBuilder(resultado.getEtiqueta());
 											sb.insert(0, "RURAL/");
 											resultado.setEtiqueta(sb.toString());
@@ -226,21 +228,19 @@ public class Processo_PeticaoInicial {
 											return resultado;
 										} else {
 											System.out.println("BI/SEMLAUDO");
-											resultado = invocarTriagemPadrao(driver, wait, config,
-													bancos);
+											resultado = invocarTriagemPadrao(driver, wait, config, bancos, i);
 											sb = new StringBuilder(resultado.getEtiqueta());
 											sb.insert(0, "BI/");
 											resultado.setEtiqueta(sb.toString());
 											resultado.setDriver(driver);
 											return resultado;
 										}
-									} else if (subnucleo.contains("NÃO FOI POSSÍVEL")){
+									} else if (subnucleo.contains("NÃO FOI POSSÍVEL")) {
 										resultado.setDriver(driver);
 										return resultado;
 									} else {
 										System.out.println("CC/");
-										resultado = invocarTriagemPadrao(driver, wait, config,
-												bancos);
+										resultado = invocarTriagemPadrao(driver, wait, config, bancos, i);
 										sb = new StringBuilder(resultado.getEtiqueta());
 										sb.insert(0, "CC/");
 										resultado.setEtiqueta(sb.toString());
@@ -249,7 +249,7 @@ public class Processo_PeticaoInicial {
 									}
 								}
 							}
-						}
+						} while (flag2);
 					}
 
 				}
@@ -262,13 +262,18 @@ public class Processo_PeticaoInicial {
 	}
 
 	public Chaves_Resultado invocarTriagemPadrao(WebDriver driver, WebDriverWait wait, Chaves_Configuracao configs,
-			String bancos) throws InterruptedException, SQLException, UnsupportedFlavorException, IOException {
+			String bancos, int indexPeticao)
+			throws InterruptedException, SQLException, UnsupportedFlavorException, IOException {
 		Processo_Movimentacao pm = new Processo_Movimentacao();
 		Processo_Documento pd = new Processo_Documento();
 		Chaves_Resultado resultado = new Chaves_Resultado();
+		driver.findElement(By.xpath("//tr[" + indexPeticao + "]/td/div/img")).click();
+		driver.findElement(By.xpath("//tr[1]/td/div/img")).click();
+		System.out.println("Chamando Movimentação");
 		resultado = pm.movimentacao(driver, wait, configs, bancos);
 		if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
-			resultado = pd.documento(driver, wait, configs, bancos);
+			System.out.println("Chamando Documento");
+			resultado = pd.documento(resultado.getDriver(), wait, configs, bancos);
 		}
 		resultado.setDriver(driver);
 		return resultado;

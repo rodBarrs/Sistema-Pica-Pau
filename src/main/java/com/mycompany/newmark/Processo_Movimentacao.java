@@ -7,6 +7,9 @@ package com.mycompany.newmark;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -53,8 +56,8 @@ public class Processo_Movimentacao {
         }
         
         TabelaTref = driver.findElement(By.id("treeview-1015"));
-        List listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
-        
+        List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
+
         int limite = 10;
         WebElement movimentacaoAtual;
         for (int i = listaMovimentacao.size(); i>0 && limite>0; i--) {
