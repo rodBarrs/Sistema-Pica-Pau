@@ -45,7 +45,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Controller_Login implements Initializable {
-
+	private boolean triagemIniciada = false;
 	private Thread backgroundThread;
 	public WebDriver driver;
 	public WebDriverWait wait;
@@ -300,7 +300,7 @@ public class Controller_Login implements Initializable {
 						SaidaTriagem.setText("- Triagem Iniciada!");
 						BarraDeProgresso.setVisible(true);
 						Processo_Triagem triagem = new Processo_Triagem(driver, bancoSelecionado);
-						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado);
+						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada);
 						if (triar == false) {
 							som();
 							SaidaTriagem.setText("- Erro de comunicação com plataforma Sapiens!");
@@ -313,6 +313,7 @@ public class Controller_Login implements Initializable {
 					}
 				}
 			}
+			triagemIniciada = true;
 		} catch (Exception erro) {
 			som();
 			SaidaTriagem.setText("- Erro: Login Não Realizado!");
@@ -324,6 +325,7 @@ public class Controller_Login implements Initializable {
 
 	@FXML
 	public void parar(ActionEvent event) {
+		triagemIniciada = false;
 		BarraDeProgresso.setVisible(false);
 		SaidaTriagem.setText("- Triagem Parada!");
 		som();

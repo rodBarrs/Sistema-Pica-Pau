@@ -109,7 +109,7 @@ public class Processo_Documento {
                                 try {
                                     wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
                                     wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-                                    driver.findElement(By.tagName("html")).click();
+                                    driver.findElement(By.tagName("body")).click();
                                     flag = false;
                                 } catch (Exception e) {
                                     // Nothing to do at all
