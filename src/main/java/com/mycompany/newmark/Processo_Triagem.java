@@ -63,31 +63,7 @@ public class Processo_Triagem {
 		Processo_Etiquetar etiqueta = new Processo_Etiquetar();
 		boolean grid;
 		try {
-			if (triagemIniciada == false) {
-				// Adiciona a coluna "Órgão Julgador" no Grid inicial
-				//wait: aguarda por 15s até que a condição seja verdadeira
-				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gridcolumn-1083-titleEl\"]")));
-				WebElement target = driver.findElement(By.xpath("//*[@id=\"gridcolumn-1083-titleEl\"]"));
-				actions.moveToElement(target).perform();
-				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gridcolumn-1083-triggerEl\"]")));
-				driver.findElement(By.xpath("//*[@id=\"gridcolumn-1083-triggerEl\"]")).click();
-				//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")));
-				//driver.findElement(By.xpath("//*[@id=\"menuitem-2688-itemEl\"]")).click();
-				Thread.sleep(500);
-				/*
-				actions.sendKeys(Keys.ARROW_DOWN).build().perform();
-				actions.sendKeys(Keys.ARROW_DOWN).build().perform();
-				actions.sendKeys(Keys.ARROW_DOWN).build().perform();
-				actions.sendKeys(Keys.ARROW_RIGHT).build().perform();
-				*/
-				driver.findElement(By.linkText("Colunas")).click();
-				driver.findElement(By.linkText("Órgão Julgador")).click();
-				actions.sendKeys(Keys.ESCAPE).perform();
-				Thread.sleep(500);
-			}
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("gridview-1109-body")));
-			wait.until(ExpectedConditions.elementToBeClickable(By.id("gridview-1109-body")));
-
+			
 			do {
 				resultado = processo_grid.buscar_processo(resultado.getDriver(), wait);
 				grid = resultado.isGrid();
@@ -98,8 +74,7 @@ public class Processo_Triagem {
 					if (config.isLaudoPericial() == true) {
 						resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
 					} else if (config.isPeticaoInicial() == true) {
-						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos,
-								resultado.getOrgaoJulgador());
+						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos);
 					} else {
 						switch (config.getTipoTriagem()) {
 						case "COM":

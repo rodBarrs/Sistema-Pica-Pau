@@ -26,7 +26,7 @@ public class Processo_PeticaoInicial {
 	private String localTriagem = "PET";
 
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config,
-			String bancos, String orgaoJulgador) throws Exception {
+			String bancos) throws Exception {
 		Tratamento tratamento = new Tratamento();
 
 		String localArquivo = "";
@@ -37,6 +37,7 @@ public class Processo_PeticaoInicial {
 		boolean citacao = false;
 		boolean intimacao = false;
 		boolean laudoRecente = false;
+		String orgaoJulgador = "";
 		// String linhaMovimentacao = "";
 
 		WebElement TabelaTref = null;
@@ -68,6 +69,16 @@ public class Processo_PeticaoInicial {
 		// Identifica as linhas da tabela de movimentação processual <rr>
 		List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
 
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
+		WebElement capa = driver.findElement(By.id("iframe-myiframe"));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
+		try {
+			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
+		} catch (Exception ex) {
+
+		}
+		driver.switchTo().defaultContent();
+		resultado.setOrgaoJulgador(orgaoJulgador);
 		// Verifica nas providências jurídicas se existem Citações,Intimações e Laudo
 		// Recente
 		for (int i = listaMovimentacao.size() - 1; i >= 0; i--) {
@@ -234,11 +245,11 @@ public class Processo_PeticaoInicial {
 							Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 							DataFlavor flavor = DataFlavor.stringFlavor;
 							String processo = clipboard.getData(flavor).toString();
-							if(processo.length() > 2500){
-							resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait, config,
-									i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
-							resultado.setDriver(driver);
-							return resultado;
+							if (processo.length() > 2500) {
+								resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
+										config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
+								resultado.setDriver(driver);
+								return resultado;
 							}
 						}
 					}
@@ -265,14 +276,15 @@ public class Processo_PeticaoInicial {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		Triagem_Condicao condicao = new Triagem_Condicao();
 		if (condicao.verificaCondicao(processo, "PET")) {
-			JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+			//JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
 			processo = tratamento.tratamento(processo);
 			resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
 			String subnucleo = resultado.getEtiqueta();
-			JOptionPane.showMessageDialog(null, subnucleo);
+			/*JOptionPane.showMessageDialog(null, subnucleo);
 			JOptionPane.showMessageDialog(null,
 					"Palavra Chave:" + resultado.getPalavraChave() + "\n Complemento: " + resultado.getComplemento());
 			JOptionPane.showMessageDialog(null, "Citação: " + citacao + "\nIntimação: " + intimacao);
+			*/
 			if (subnucleo.contains("RURAL")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 				if (citacao) {

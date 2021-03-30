@@ -47,9 +47,6 @@ public class Processo_Grid {
             try {
                 tabela = driver.findElement(By.id("gridview-1109-table"));
                 tarefas = new ArrayList(tabela.findElements(By.cssSelector("tr")));
-                wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[1]/td[3]/div/a")));
-                //Salva o órgão julgador
-                resultado.setOrgaoJulgador(driver.findElement(By.xpath("//tr[1]/td[4]/div")).getText());
                 driver.findElement(By.xpath("//tr[1]/td[3]/div/a")).click();
                 try {
                     boolean flag = false;

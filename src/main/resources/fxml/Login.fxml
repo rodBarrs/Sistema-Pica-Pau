@@ -117,7 +117,7 @@
             <JFXTextField fx:id="SenhaTxtMostar" focusColor="WHITE" labelFloat="true" layoutX="340.0" layoutY="339.0" onKeyPressed="#apertouEnter" prefHeight="25.0" prefWidth="220.0" promptText="Senha" unFocusColor="#fffffffe" />
             <FontAwesomeIcon fill="WHITE" iconName="PLAY" layoutX="91.0" layoutY="350.0" text="" />
             <Label layoutX="14.0" layoutY="13.0" prefHeight="20.0" prefWidth="97.0" text="VERSÃO DE TESTE" textFill="WHITE" />
-            <Label layoutX="14.0" layoutY="32.0" text="SNAPSHOT 3.1.5.1" textFill="WHITE" />
+            <Label layoutX="14.0" layoutY="32.0" text="SNAPSHOT 3.1.5.2" textFill="WHITE" />
          </children>
       </AnchorPane>
    </children>
