@@ -99,49 +99,61 @@ public class Processo_PeticaoInicial {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td[2]/div/span")));
 			//JOptionPane.showMessageDialog(null, driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText());
 			// IF - Busca pelas expressões descritas, dentro das <tr> da movimentação
+			//JOptionPane.showMessageDialog(null,
+			//		driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).getAttribute("class"));
 			if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText().toUpperCase()
-					.contains("PETIÇÃO INICIAL")) {
+					.contains("PETIÇÃO INICIAL")
+					|| (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).getAttribute("class")
+							.contains("x-tree-expander")) && i == 2) {
+				String BuscaPeticaoInicial = "";
+				String BuscaPeticaoInicialSemTratamento = "";
 				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
 				// Clica no <tr> identificado
 				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
 				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
-				driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+				pdf.apagarPDF();
+				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[2]")).click();
+				if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().contains("HTML")) {
 
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
-				WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
-				wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
+					wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
+					WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
+					wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
 
-				boolean flag = true;
-				do {
-					try {
-						wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
-						wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-						driver.findElement(By.tagName("html")).click();
-						flag = false;
-					} catch (Exception e) {
-						//
+					boolean flag = true;
+					do {
+						try {
+							wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+							wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+							driver.findElement(By.tagName("html")).click();
+							flag = false;
+						} catch (Exception e) {
+							//
+						}
+
+					} while (flag);
+					driver.switchTo().defaultContent();
+
+					Thread.sleep(500);
+					action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
+					action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					DataFlavor flavor = DataFlavor.stringFlavor;
+					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString();
+					BuscaPeticaoInicial = clipboard.getData(flavor).toString();
+					BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
+				} else {
+					if (pdf.verificarExistenciaPDF() == "PdfEncontrado") {
+						BuscaPeticaoInicial = pdf.lerPDF();
+						BuscaPeticaoInicialSemTratamento = BuscaPeticaoInicial;
+						BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
 					}
-
-				} while (flag);
-				driver.switchTo().defaultContent();
-
-				Thread.sleep(500);
-				action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
-				action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				DataFlavor flavor = DataFlavor.stringFlavor;
-				String BuscaPeticaoInicial = "";
-				String BuscaPeticaoInicialSemTratamento = "";
-				BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString();
-				BuscaPeticaoInicial = clipboard.getData(flavor).toString();
-				BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
-
+				}
 				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
 				// para seguir a tragem especifica
-				if (BuscaPeticaoInicial.length() < 2500
-						&& (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
-								|| BuscaPeticaoInicial.contains("ANEXO") || BuscaPeticaoInicial.contains("PDF"))) {
+				if (BuscaPeticaoInicial.length() < 2500) {
+					//&& (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
+					//|| BuscaPeticaoInicial.contains("ANEXO") || BuscaPeticaoInicial.contains("PDF"))) 
 
 					// CADASTRAR POSSIVEIS VERIFICAÇÕES
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
@@ -165,42 +177,75 @@ public class Processo_PeticaoInicial {
 						Thread.sleep(500);
 						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
 
-						boolean flag2 = true;
+						if (driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]")).getText()
+								.contains("PDF")) {
+							boolean flag2 = true;
 
-						do {
-							String resultadoPDF = pdf.verificarExistenciaPDF();
-							System.out.println("resultadoPDF: " + resultadoPDF);
+							do {
+								String resultadoPDF = pdf.verificarExistenciaPDF();
+								System.out.println("resultadoPDF: " + resultadoPDF);
 
-							switch (resultadoPDF) {
-							case "NenhumPdfEncontrado":
-								System.out.println("ZERO");
-								flag2 = false;
-								throw new Exception("PDF Não encontrado");
+								switch (resultadoPDF) {
+								case "NenhumPdfEncontrado":
+									System.out.println("ZERO");
+									flag2 = false;
+									throw new Exception("PDF Não encontrado");
 
-							case "MaisDeUmPdfEncontrado":
-								System.out.println("DOIS");
-								pdf.apagarPDF();
-								driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
-								break;
+								case "MaisDeUmPdfEncontrado":
+									System.out.println("DOIS");
+									pdf.apagarPDF();
+									driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
+									break;
 
-							case "PdfEncontrado":
-								System.out.println("UM");
-								flag2 = false;
-								String processo = "";
-								processo = pdf.lerPDF();
-								resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
-										config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
-								if (resultado
-										.getEtiqueta() != "NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL") {
-									return resultado;
+								case "PdfEncontrado":
+									System.out.println("UM");
+									flag2 = false;
+									String processo = "";
+									processo = pdf.lerPDF();
+									resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
+											config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
+									if (resultado
+											.getEtiqueta() != "NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL") {
+										return resultado;
+									}
 								}
+							} while (flag2);
+						} else {
+							WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
+							wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
+
+							boolean flag = true;
+							do {
+								try {
+									wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+									wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+									driver.findElement(By.tagName("html")).click();
+									flag = false;
+								} catch (Exception e) {
+									//
+								}
+
+							} while (flag);
+							driver.switchTo().defaultContent();
+
+							Thread.sleep(500);
+							action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
+							action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
+							Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+							DataFlavor flavor = DataFlavor.stringFlavor;
+							String processo = clipboard.getData(flavor).toString();
+							if(processo.length() > 2500){
+							resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait, config,
+									i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
+							resultado.setDriver(driver);
+							return resultado;
 							}
-						} while (flag2);
+						}
 					}
 
 				} else {
-					resultado = verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos, driver, wait,
-							config, i, tratamento, resultado, citacao, intimacao, laudoRecente, false);
+					resultado = verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos,
+							driver, wait, config, i, tratamento, resultado, citacao, intimacao, laudoRecente, false);
 					resultado.setDriver(driver);
 					return resultado;
 				}
@@ -220,11 +265,14 @@ public class Processo_PeticaoInicial {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		Triagem_Condicao condicao = new Triagem_Condicao();
 		if (condicao.verificaCondicao(processo, "PET")) {
-			//JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+			JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
 			processo = tratamento.tratamento(processo);
 			resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
 			String subnucleo = resultado.getEtiqueta();
-			//JOptionPane.showMessageDialog(null, subnucleo);
+			JOptionPane.showMessageDialog(null, subnucleo);
+			JOptionPane.showMessageDialog(null,
+					"Palavra Chave:" + resultado.getPalavraChave() + "\n Complemento: " + resultado.getComplemento());
+			JOptionPane.showMessageDialog(null, "Citação: " + citacao + "\nIntimação: " + intimacao);
 			if (subnucleo.contains("RURAL")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 				if (citacao) {
@@ -249,7 +297,7 @@ public class Processo_PeticaoInicial {
 					resultado.setDriver(driver);
 					return resultado;
 				}
-				
+
 			} else if (subnucleo.contains("BI") && resultado.getOrgaoJulgador().contains("JUIZADO ESPECIAL")) {
 				if (laudoRecente) {
 					//JOptionPane.showMessageDialog(null, "LAUDO RECENTE");
@@ -290,7 +338,7 @@ public class Processo_PeticaoInicial {
 		Processo_Movimentacao pm = new Processo_Movimentacao();
 		Processo_Documento pd = new Processo_Documento();
 		Chaves_Resultado resultado = new Chaves_Resultado();
-		
+
 		if (dentroDaPasta == true) {
 			try {
 				driver.findElement(By.xpath("//tr[" + indexPeticao + "]/td/div/img"));
@@ -299,7 +347,7 @@ public class Processo_PeticaoInicial {
 				//
 			}
 		}
-		
+
 		driver.findElement(By.xpath("//tr[1]/td/div/img")).click();
 		System.out.println("Chamando Movimentação");
 		resultado = pm.movimentacao(driver, wait, configs, bancos);
