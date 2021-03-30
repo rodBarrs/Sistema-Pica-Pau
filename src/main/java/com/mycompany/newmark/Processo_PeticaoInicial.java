@@ -162,6 +162,7 @@ public class Processo_PeticaoInicial {
 								.elementToBeClickable(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")));
 						pdf.apagarPDF();
 						localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
+						Thread.sleep(500);
 						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
 
 						boolean flag2 = true;
@@ -198,8 +199,10 @@ public class Processo_PeticaoInicial {
 					}
 
 				} else {
-					verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos, driver, wait,
+					resultado = verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos, driver, wait,
 							config, i, tratamento, resultado, citacao, intimacao, laudoRecente, false);
+					resultado.setDriver(driver);
+					return resultado;
 				}
 
 			}
@@ -217,10 +220,11 @@ public class Processo_PeticaoInicial {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		Triagem_Condicao condicao = new Triagem_Condicao();
 		if (condicao.verificaCondicao(processo, "PET")) {
-			JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+			//JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
 			processo = tratamento.tratamento(processo);
 			resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
 			String subnucleo = resultado.getEtiqueta();
+			//JOptionPane.showMessageDialog(null, subnucleo);
 			if (subnucleo.contains("RURAL")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 				if (citacao) {
@@ -236,14 +240,25 @@ public class Processo_PeticaoInicial {
 					resultado.setEtiqueta(sb.toString());
 					resultado.setDriver(driver);
 					return resultado;
+				} else {
+					System.out.println("RURAL/SEM INTIMAÇÃO E SEM CITAÇÃO");
+					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
+					sb = new StringBuilder(resultado.getEtiqueta());
+					sb.insert(0, "RURAL/");
+					resultado.setEtiqueta(sb.toString());
+					resultado.setDriver(driver);
+					return resultado;
 				}
+				
 			} else if (subnucleo.contains("BI") && resultado.getOrgaoJulgador().contains("JUIZADO ESPECIAL")) {
 				if (laudoRecente) {
+					//JOptionPane.showMessageDialog(null, "LAUDO RECENTE");
 					System.out.println("BI/LAUDORECENTE");
 					resultado.setEtiqueta(resultado.getEtiqueta() + "/EATE");
 					resultado.setDriver(driver);
 					return resultado;
 				} else {
+					//JOptionPane.showMessageDialog(null, "SEM LAUDO");
 					System.out.println("BI/SEMLAUDO");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
 					sb = new StringBuilder(resultado.getEtiqueta());

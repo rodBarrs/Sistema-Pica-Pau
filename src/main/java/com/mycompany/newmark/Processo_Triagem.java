@@ -164,12 +164,13 @@ public class Processo_Triagem {
 					// Set expandable Exception into the dialog pane.
 					erro.getDialogPane().setExpandableContent(expContent);
 					erro.showAndWait();
+					/*
 					if (erro.getResult() == ButtonType.OK) {
-						final UtilEmail email = new UtilEmail(exceptionText);
+						//final UtilEmail email = new UtilEmail(exceptionText);
 						Runnable task = new Runnable() {
 							@Override
 							public void run() {
-								email.enviarEmail();
+								//email.enviarEmail();
 							}
 							
 						};
@@ -177,6 +178,7 @@ public class Processo_Triagem {
 						mail.setDaemon(true);
 						mail.start();					
 					}
+					*/
 				}
 			});
 			return true;
