@@ -285,36 +285,38 @@ public class Processo_PeticaoInicial {
 					"Palavra Chave:" + resultado.getPalavraChave() + "\n Complemento: " + resultado.getComplemento());
 			JOptionPane.showMessageDialog(null, "Citação: " + citacao + "\nIntimação: " + intimacao);
 			*/
-			if (subnucleo.contains("RURAL")
+			if (subnucleo.contains("SSEAS")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 				if (citacao) {
-					System.out.println("RURAL/CITAÇÃO");
-					resultado.setEtiqueta(resultado.getEtiqueta() + "/GEAC-APOIO");
+					System.out.println("SSEAS/CITAÇÃO");
+					sb = new StringBuilder(resultado.getEtiqueta());
+					sb.insert(0, "EATE/");
+					resultado.setEtiqueta(sb.toString());
 					resultado.setDriver(driver);
 					return resultado;
 				} else if (intimacao) {
 					System.out.println("RURAL/INTIMAÇÃO");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
 					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "RURAL/");
+					sb.insert(0, "GEAC/SSEAS:");
 					resultado.setEtiqueta(sb.toString());
 					resultado.setDriver(driver);
 					return resultado;
 				} else {
 					System.out.println("RURAL/SEM INTIMAÇÃO E SEM CITAÇÃO");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "RURAL/");
-					resultado.setEtiqueta(sb.toString());
+					resultado.setEtiqueta(resultado.getEtiqueta() + "/SSEAS");
 					resultado.setDriver(driver);
 					return resultado;
 				}
 
-			} else if (subnucleo.contains("BI") && resultado.getOrgaoJulgador().contains("JUIZADO ESPECIAL")) {
-				if (laudoRecente) {
+			} else if (subnucleo.contains("SBI") && resultado.getOrgaoJulgador().contains("JUIZADO ESPECIAL")) {
+				if (laudoRecente || citacao) {
 					//JOptionPane.showMessageDialog(null, "LAUDO RECENTE");
 					System.out.println("BI/LAUDORECENTE");
-					resultado.setEtiqueta(resultado.getEtiqueta() + "/EATE");
+					sb = new StringBuilder(resultado.getEtiqueta());
+					sb.insert(0, "EATE/");
+					resultado.setEtiqueta(sb.toString());
 					resultado.setDriver(driver);
 					return resultado;
 				} else {
@@ -322,7 +324,7 @@ public class Processo_PeticaoInicial {
 					System.out.println("BI/SEMLAUDO");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
 					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "BI/");
+					sb.insert(0, "GEAC/SBI:");
 					resultado.setEtiqueta(sb.toString());
 					resultado.setDriver(driver);
 					return resultado;
@@ -331,13 +333,22 @@ public class Processo_PeticaoInicial {
 				resultado.setDriver(driver);
 				return resultado;
 			} else {
-				System.out.println("CC/");
-				resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-				sb = new StringBuilder(resultado.getEtiqueta());
-				sb.insert(0, "CC/");
-				resultado.setEtiqueta(sb.toString());
-				resultado.setDriver(driver);
-				return resultado;
+				if (citacao) {
+					resultado.setEtiqueta("EATE/SCC");
+				} else if (intimacao) {
+					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
+					sb = new StringBuilder(resultado.getEtiqueta());
+					sb.insert(0, "GEAC/SCC:");
+					resultado.setEtiqueta(sb.toString());
+				} else {
+					System.out.println("CC/");
+					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
+					sb = new StringBuilder(resultado.getEtiqueta());
+					sb.insert(0, "CC/");
+					resultado.setEtiqueta(sb.toString());
+					resultado.setDriver(driver);
+					return resultado;
+				}
 			}
 		}
 		resultado.setDriver(driver);

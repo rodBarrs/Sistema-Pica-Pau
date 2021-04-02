@@ -219,7 +219,7 @@ public class Controller_EtiquetasEdicao implements Initializable {
         try {
             List<Chaves_Banco> chaves = new ArrayList<>();
             Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancoSelecionado + "' ORDER BY PALAVRACHAVE");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancoSelecionado + "' AND TIPO != 'PET' ORDER BY PALAVRACHAVE");
             ResultSet resultSet = stmt.executeQuery();
             int i = 0;
             while (resultSet.next()) {

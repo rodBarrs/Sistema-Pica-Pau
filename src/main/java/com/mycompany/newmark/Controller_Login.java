@@ -290,9 +290,10 @@ public class Controller_Login implements Initializable {
 				SaidaTriagem.setText("- Erro: Login Não Realizado!");
 				BarraDeProgresso.setVisible(false);
 			} else {
-				if (Bancos.getValue().contains("Selecione um banco:")) {
+				if (Bancos.getValue().contains("Selecione")) {
 					SaidaTriagem.setText("- Selecione um banco para a triagem!");
 				} else {
+					System.out.println("olá");
 					Banco banco = new Banco();
 					String bancoSelecionado = "";
 					bancoSelecionado = banco.selecionarBanco(Bancos.getSelectionModel().getSelectedItem());

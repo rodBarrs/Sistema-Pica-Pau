@@ -10,6 +10,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import javafx.scene.control.Alert;
+
 public class UtilEmail {
 	String mensagem;
 	

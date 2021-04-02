@@ -76,7 +76,7 @@
       <JFXTextField fx:id="pesquisa" focusColor="WHITE" labelFloat="true" layoutX="897.0" layoutY="83.0" onKeyPressed="#busca" prefHeight="25.0" prefWidth="340.0" promptText="Pesquisar etiqueta" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
       <FontAwesomeIcon fill="WHITE" iconName="SEARCH" layoutX="1240.0" layoutY="100.0" onMouseClicked="#busca" />
       <JFXButton fx:id="botaoBusca" buttonType="RAISED" layoutX="1230.0" layoutY="85.0" onAction="#busca" prefHeight="25.0" prefWidth="28.0" ripplerFill="TRANSPARENT" textFill="TRANSPARENT" />
-      <RadioButton fx:id="LerMov" layoutX="893.0" layoutY="377.0" mnemonicParsing="false" selected="false" text="Ler Movimentação">
+      <RadioButton fx:id="LerMov" layoutX="937.0" layoutY="377.0" mnemonicParsing="false" selected="false" text="Ler Movimentação">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -84,12 +84,7 @@
             <ToggleGroup fx:id="grupoTipo" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="LerPet" layoutX="1032.0" layoutY="377.0" mnemonicParsing="false" text="Ler Petição" toggleGroup="$grupoTipo">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </RadioButton>
-      <RadioButton fx:id="LerDoc" layoutX="1139.0" layoutY="377.0" mnemonicParsing="false" selected="true" text="Ler Documento" toggleGroup="$grupoTipo">
+      <RadioButton fx:id="LerDoc" layoutX="1108.0" layoutY="377.0" mnemonicParsing="false" selected="true" text="Ler Documento" toggleGroup="$grupoTipo">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

@@ -63,7 +63,7 @@ public class Processo_Triagem {
 		Processo_Etiquetar etiqueta = new Processo_Etiquetar();
 		boolean grid;
 		try {
-			
+
 			do {
 				resultado = processo_grid.buscar_processo(resultado.getDriver(), wait);
 				grid = resultado.isGrid();
@@ -113,10 +113,10 @@ public class Processo_Triagem {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					Alert erro = new Alert(Alert.AlertType.CONFIRMATION);
+					Alert erro = new Alert(Alert.AlertType.INFORMATION);
 					erro.setTitle("Alerta");
 					erro.setHeaderText("Ocorreu um erro duranto o processo de triagem!");
-					erro.setContentText("Deseja submeter este erro para os desenvolvedores?\n");
+					erro.setContentText("Este relatório será enviado para os desenvolvedores");
 					StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw);
 					ex.printStackTrace(pw);
@@ -138,22 +138,20 @@ public class Processo_Triagem {
 					expContent.add(textArea, 0, 1);
 					// Set expandable Exception into the dialog pane.
 					erro.getDialogPane().setExpandableContent(expContent);
-					erro.showAndWait();
-					/*
-					if (erro.getResult() == ButtonType.OK) {
-						//final UtilEmail email = new UtilEmail(exceptionText);
-						Runnable task = new Runnable() {
-							@Override
-							public void run() {
-								//email.enviarEmail();
-							}
-							
-						};
-						Thread mail = new Thread(task);
-						mail.setDaemon(true);
-						mail.start();					
-					}
-					*/
+					
+					final UtilEmail email = new UtilEmail(exceptionText);
+					Runnable task = new Runnable() {
+						@Override
+						public void run() {
+							email.enviarEmail();
+						}
+
+					};
+					Thread mail = new Thread(task);
+					mail.setDaemon(true);
+					mail.start();
+					
+					erro.show();
 				}
 			});
 			return true;
