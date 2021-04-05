@@ -272,7 +272,7 @@ public class Processo_PeticaoInicial {
 			WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, int indexPeticao, Tratamento tratamento,
 			Chaves_Resultado resultado, boolean citacao, boolean intimacao, boolean laudoRecente, boolean dentroDaPasta)
 			throws HeadlessException, SQLException, InterruptedException, UnsupportedFlavorException, IOException {
-		StringBuilder sb;
+		StringBuilder stringBuilder;
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		Triagem_Condicao condicao = new Triagem_Condicao();
 		if (condicao.verificaCondicao(processo, "PET")) {
@@ -288,46 +288,48 @@ public class Processo_PeticaoInicial {
 			if (subnucleo.contains("SSEAS")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 				if (citacao) {
-					System.out.println("SSEAS/CITAÇÃO");
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "EATE/");
-					resultado.setEtiqueta(sb.toString());
-					resultado.setDriver(driver);
-					return resultado;
+					stringBuilder = new StringBuilder(resultado.getEtiqueta());
+					stringBuilder.insert(0, "EATE/");
+					resultado.setEtiqueta(stringBuilder.toString());
 				} else if (intimacao) {
-					System.out.println("RURAL/INTIMAÇÃO");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "GEAC/SSEAS:");
-					resultado.setEtiqueta(sb.toString());
-					resultado.setDriver(driver);
-					return resultado;
+					stringBuilder = new StringBuilder(resultado.getEtiqueta());
+					stringBuilder.insert(0, "GEAC/SSEAS:");
+					resultado.setEtiqueta(stringBuilder.toString());
 				} else {
-					System.out.println("RURAL/SEM INTIMAÇÃO E SEM CITAÇÃO");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					resultado.setEtiqueta(resultado.getEtiqueta() + "/SSEAS");
-					resultado.setDriver(driver);
-					return resultado;
+					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
+						stringBuilder = new StringBuilder(resultado.getEtiqueta());
+						stringBuilder.insert(0, "EATE/SSEAS:");
+						resultado.setEtiqueta(stringBuilder.toString());
+					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
+						stringBuilder = new StringBuilder(resultado.getEtiqueta());
+						stringBuilder.insert(0, "GEAC/SSEAS:");
+						resultado.setEtiqueta(stringBuilder.toString());
+					}
 				}
 
 			} else if (subnucleo.contains("SBI") && resultado.getOrgaoJulgador().contains("JUIZADO ESPECIAL")) {
 				if (laudoRecente || citacao) {
-					//JOptionPane.showMessageDialog(null, "LAUDO RECENTE");
-					System.out.println("BI/LAUDORECENTE");
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "EATE/");
-					resultado.setEtiqueta(sb.toString());
-					resultado.setDriver(driver);
-					return resultado;
-				} else {
-					//JOptionPane.showMessageDialog(null, "SEM LAUDO");
-					System.out.println("BI/SEMLAUDO");
+					stringBuilder = new StringBuilder(resultado.getEtiqueta());
+					stringBuilder.insert(0, "EATE/");
+					resultado.setEtiqueta(stringBuilder.toString());
+				} else if (intimacao) {
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "GEAC/SBI:");
-					resultado.setEtiqueta(sb.toString());
-					resultado.setDriver(driver);
-					return resultado;
+					stringBuilder = new StringBuilder(resultado.getEtiqueta());
+					stringBuilder.insert(0, "GEAC/SBI:");
+					resultado.setEtiqueta(stringBuilder.toString());
+				} else {
+					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
+					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
+						stringBuilder = new StringBuilder(resultado.getEtiqueta());
+						stringBuilder.insert(0, "EATE/SBI:");
+						resultado.setEtiqueta(stringBuilder.toString());
+					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
+						stringBuilder = new StringBuilder(resultado.getEtiqueta());
+						stringBuilder.insert(0, "GEAC/SBI:");
+						resultado.setEtiqueta(stringBuilder.toString());
+					}
 				}
 			} else if (subnucleo.contains("NÃO FOI POSSÍVEL")) {
 				resultado.setDriver(driver);
@@ -337,18 +339,27 @@ public class Processo_PeticaoInicial {
 					resultado.setEtiqueta("EATE/SCC");
 				} else if (intimacao) {
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "GEAC/SCC:");
-					resultado.setEtiqueta(sb.toString());
+					stringBuilder = new StringBuilder(resultado.getEtiqueta());
+					stringBuilder.insert(0, "GEAC/SCC:");
+					resultado.setEtiqueta(stringBuilder.toString());
 				} else {
-					System.out.println("CC/");
 					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					sb = new StringBuilder(resultado.getEtiqueta());
-					sb.insert(0, "CC/");
-					resultado.setEtiqueta(sb.toString());
-					resultado.setDriver(driver);
-					return resultado;
+					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
+						stringBuilder = new StringBuilder(resultado.getEtiqueta());
+						stringBuilder.insert(0, "EATE/SCC:");
+						resultado.setEtiqueta(stringBuilder.toString());
+					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
+						stringBuilder = new StringBuilder(resultado.getEtiqueta());
+						stringBuilder.insert(0, "GEAC/SCC:");
+						resultado.setEtiqueta(stringBuilder.toString());
+					}
 				}
+			}
+
+			if (resultado.getEtiqueta().toUpperCase().contains("PJE - FEDERAL - PARÁ")
+					|| resultado.getEtiqueta().toUpperCase().contains("PJE - ESTADUAL - PARÁ")) {
+				String etiquetaComposta[] = resultado.getEtiqueta().split(":");
+				resultado.setEtiqueta(etiquetaComposta[1]);
 			}
 		}
 		resultado.setDriver(driver);

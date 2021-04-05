@@ -17,6 +17,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JOptionPane;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -69,6 +72,7 @@ public class Controller_EtiquetasEdicao implements Initializable {
     public void initialize(URL location, ResourceBundle resources){
         Banco banco = new Banco();
         Bancos.setItems(banco.setarBanco());
+        Bancos.getItems().remove(0);
         tabelaEtiquetas.setVisible(false);
         logoMark.setVisible(true);
     }
@@ -219,7 +223,12 @@ public class Controller_EtiquetasEdicao implements Initializable {
         try {
             List<Chaves_Banco> chaves = new ArrayList<>();
             Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancoSelecionado + "' AND TIPO != 'PET' ORDER BY PALAVRACHAVE");
+            PreparedStatement stmt;
+            if(bancoSelecionado.contains("TODOS OS BANCOS")) {
+            	stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE TIPO != 'PET' ORDER BY PALAVRACHAVE");	
+            } else {
+            	stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancoSelecionado + "' AND TIPO != 'PET' ORDER BY PALAVRACHAVE");
+            }
             ResultSet resultSet = stmt.executeQuery();
             int i = 0;
             while (resultSet.next()) {

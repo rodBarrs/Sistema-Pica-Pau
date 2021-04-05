@@ -451,25 +451,29 @@ public class Banco {
 
 	public String selecionarBanco(String bancoSelecionadoLocal) throws SQLException {
 		String bancoSelecionado = bancoSelecionadoLocal;
-		if (bancoSelecionado.contains("TODOS OS BANCOS")) {
-			try {
-				Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-				PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BANCOS ORDER BY NOME");
-				ResultSet resultSet = stmt.executeQuery();
-				while (resultSet.next()) {
+
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BANCOS ORDER BY NOME");
+			ResultSet resultSet = stmt.executeQuery();
+			while (resultSet.next()) {
+				if (!bancoSelecionado.contains("TODOS OS BANCOS")) {
 					if (bancoSelecionadoLocal.contains(resultSet.getString("SIGLA"))
 							&& bancoSelecionadoLocal.contains(resultSet.getString("NOME"))) {
 						bancoSelecionado = resultSet.getString("SIGLA");
 						connection.close();
 						return bancoSelecionado;
 					}
+				} else {
+					return bancoSelecionado;
 				}
-				connection.close();
-			} catch (SQLException erro) {
-				Aviso aviso = new Aviso();
-				aviso.aviso(erro.getMessage() + "\nCódigo do Erro: " + erro.getErrorCode());
 			}
+			connection.close();
+		} catch (SQLException erro) {
+			Aviso aviso = new Aviso();
+			aviso.aviso(erro.getMessage() + "\nCódigo do Erro: " + erro.getErrorCode());
 		}
+
 		return bancoSelecionado;
 	}
 
