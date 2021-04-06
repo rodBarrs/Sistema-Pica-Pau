@@ -12,7 +12,7 @@ public class Chaves_Resultado
     private String Complemento = "";
     private String Etiqueta = "";
     private String Local = "";
-    private String LocalArquivo = "";
+    private String Petição = "";
     private String OrgaoJulgador = "";
     private WebDriver driver;
     private boolean grid;
@@ -65,12 +65,12 @@ public class Chaves_Resultado
         this.grid = grid;
     }
 
-	public String getLocalArquivo() {
-		return LocalArquivo;
+	public String getPetição() {
+		return Petição;
 	}
 
-	public void setLocalArquivo(String localArquivo) {
-		LocalArquivo = localArquivo;
+	public void setPetição(String localArquivo) {
+		Petição = localArquivo;
 	}
 
 	public String getOrgaoJulgador() {

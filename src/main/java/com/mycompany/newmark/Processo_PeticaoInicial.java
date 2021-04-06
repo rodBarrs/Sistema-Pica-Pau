@@ -28,7 +28,7 @@ public class Processo_PeticaoInicial {
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config,
 			String bancos) throws Exception {
 		Tratamento tratamento = new Tratamento();
-
+		Triagem_Condicao cond = new Triagem_Condicao();
 		String localArquivo = "";
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		LeituraPDF pdf = new LeituraPDF();
@@ -161,8 +161,8 @@ public class Processo_PeticaoInicial {
 					}
 				}
 				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
-				// para seguir a tragem especifica
-				if (BuscaPeticaoInicial.length() < 2500) {
+				// para seguir a triagem especifica
+				if (cond.verificaCondicao(BuscaPeticaoInicial, "PET") == false) {
 					//&& (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
 					//|| BuscaPeticaoInicial.contains("ANEXO") || BuscaPeticaoInicial.contains("PDF"))) 
 
@@ -184,7 +184,6 @@ public class Processo_PeticaoInicial {
 						wait.until(ExpectedConditions
 								.elementToBeClickable(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")));
 						pdf.apagarPDF();
-						localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
 						Thread.sleep(500);
 						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
 
@@ -213,10 +212,12 @@ public class Processo_PeticaoInicial {
 									flag2 = false;
 									String processo = "";
 									processo = pdf.lerPDF();
+									localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
 									resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
 											config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
 									if (resultado
 											.getEtiqueta() != "NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL") {
+										resultado.setPetição(localArquivo);
 										return resultado;
 									}
 								}
@@ -245,19 +246,23 @@ public class Processo_PeticaoInicial {
 							Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 							DataFlavor flavor = DataFlavor.stringFlavor;
 							String processo = clipboard.getData(flavor).toString();
-							if (processo.length() > 2500) {
+							if (cond.verificaCondicao(processo, "PET")) {
+								localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
 								resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
 										config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
 								resultado.setDriver(driver);
+								resultado.setPetição(localArquivo);
 								return resultado;
 							}
 						}
 					}
 
 				} else {
+					localArquivo = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[1]")).getText();
 					resultado = verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos,
 							driver, wait, config, i, tratamento, resultado, citacao, intimacao, laudoRecente, false);
 					resultado.setDriver(driver);
+					resultado.setPetição(localArquivo);
 					return resultado;
 				}
 
@@ -332,6 +337,7 @@ public class Processo_PeticaoInicial {
 					}
 				}
 			} else if (subnucleo.contains("NÃO FOI POSSÍVEL")) {
+				resultado.setEtiqueta("NÃO FOI POSSÍVEL IDENTIFICAR A MATÉRIA");
 				resultado.setDriver(driver);
 				return resultado;
 			} else {

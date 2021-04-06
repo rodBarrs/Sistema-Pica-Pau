@@ -465,6 +465,7 @@ public class Banco {
 						return bancoSelecionado;
 					}
 				} else {
+					connection.close();
 					return bancoSelecionado;
 				}
 			}
