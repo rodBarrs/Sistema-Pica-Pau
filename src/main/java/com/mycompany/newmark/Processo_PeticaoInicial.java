@@ -75,7 +75,7 @@ public class Processo_PeticaoInicial {
 		try {
 			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
 		} catch (Exception ex) {
-
+			//ex.printStackTrace();
 		}
 		driver.switchTo().defaultContent();
 		resultado.setOrgaoJulgador(orgaoJulgador);
@@ -150,19 +150,19 @@ public class Processo_PeticaoInicial {
 					action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 					DataFlavor flavor = DataFlavor.stringFlavor;
-					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString();
+					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString().toUpperCase();
 					BuscaPeticaoInicial = clipboard.getData(flavor).toString();
 					BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
 				} else {
 					if (pdf.verificarExistenciaPDF() == "PdfEncontrado") {
-						BuscaPeticaoInicial = pdf.lerPDF();
-						BuscaPeticaoInicialSemTratamento = BuscaPeticaoInicial;
+						BuscaPeticaoInicial = pdf.lerPDF().toUpperCase();
+						BuscaPeticaoInicialSemTratamento = BuscaPeticaoInicial.toUpperCase();
 						BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
 					}
 				}
 				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
 				// para seguir a triagem especifica
-				if (cond.verificaCondicao(BuscaPeticaoInicial, "PET") == false) {
+				if (cond.verificaCondicao(BuscaPeticaoInicialSemTratamento, "PET") == false) {
 					//&& (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
 					//|| BuscaPeticaoInicial.contains("ANEXO") || BuscaPeticaoInicial.contains("PDF"))) 
 
@@ -211,7 +211,7 @@ public class Processo_PeticaoInicial {
 									System.out.println("UM");
 									flag2 = false;
 									String processo = "";
-									processo = pdf.lerPDF();
+									processo = pdf.lerPDF().toUpperCase();
 									localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
 									resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
 											config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
@@ -245,7 +245,7 @@ public class Processo_PeticaoInicial {
 							action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
 							Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 							DataFlavor flavor = DataFlavor.stringFlavor;
-							String processo = clipboard.getData(flavor).toString();
+							String processo = clipboard.getData(flavor).toString().toUpperCase();
 							if (cond.verificaCondicao(processo, "PET")) {
 								localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
 								resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
@@ -285,13 +285,15 @@ public class Processo_PeticaoInicial {
 			processo = tratamento.tratamento(processo);
 			resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
 			String subnucleo = resultado.getEtiqueta();
-			/*JOptionPane.showMessageDialog(null, subnucleo);
-			JOptionPane.showMessageDialog(null,
-					"Palavra Chave:" + resultado.getPalavraChave() + "\n Complemento: " + resultado.getComplemento());
-			JOptionPane.showMessageDialog(null, "Citação: " + citacao + "\nIntimação: " + intimacao);
-			*/
+			//JOptionPane.showMessageDialog(null, subnucleo);
+			//JOptionPane.showMessageDialog(null,
+			//		"Palavra Chave:" + resultado.getPalavraChave() + "\n Complemento: " + resultado.getComplemento());
+			//JOptionPane.showMessageDialog(null, "Citação: " + citacao + "\nIntimação: " + intimacao +"\nLaudo Recente" + laudoRecente);
+			//JOptionPane.showMessageDialog(null, orgaoJulgador);
+			
 			if (subnucleo.contains("SSEAS")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
+				//JOptionPane.showMessageDialog(null, "SSEAS");
 				if (citacao) {
 					stringBuilder = new StringBuilder(resultado.getEtiqueta());
 					stringBuilder.insert(0, "EATE/");
@@ -314,7 +316,8 @@ public class Processo_PeticaoInicial {
 					}
 				}
 
-			} else if (subnucleo.contains("SBI") && resultado.getOrgaoJulgador().contains("JUIZADO ESPECIAL")) {
+			} else if (subnucleo.contains("SBI") && orgaoJulgador.contains("JUIZADO ESPECIAL")) {
+				//JOptionPane.showMessageDialog(null, "SBI");
 				if (laudoRecente || citacao) {
 					stringBuilder = new StringBuilder(resultado.getEtiqueta());
 					stringBuilder.insert(0, "EATE/");
@@ -337,10 +340,12 @@ public class Processo_PeticaoInicial {
 					}
 				}
 			} else if (subnucleo.contains("NÃO FOI POSSÍVEL")) {
+				//JOptionPane.showMessageDialog(null, "NÃO FOI POSSÍVEL");
 				resultado.setEtiqueta("NÃO FOI POSSÍVEL IDENTIFICAR A MATÉRIA");
 				resultado.setDriver(driver);
 				return resultado;
 			} else {
+				//JOptionPane.showMessageDialog(null, "SCC");
 				if (citacao) {
 					resultado.setEtiqueta("EATE/SCC");
 				} else if (intimacao) {

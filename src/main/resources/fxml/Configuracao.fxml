@@ -189,7 +189,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="tabelaMateria" layoutX="3.0" onMouseClicked="#selecionarMateria" onMouseEntered="#atualizar" prefHeight="443.0" prefWidth="526.0" stylesheets="@../styles/tabela.css">
+                                    <TableView fx:id="tabelaMateria" layoutX="3.0" onMouseClicked="#selecionarMateria" prefHeight="443.0" prefWidth="526.0" stylesheets="@../styles/tabela.css">
                                        <columns>
                                           <TableColumn fx:id="colunaPedido" maxWidth="530.0" minWidth="50.0" prefWidth="203.0" text="Pedido" />
                                           <TableColumn fx:id="colunaComplementoPedido" prefWidth="197.0" text="Complemento de Pedido" />
@@ -225,7 +225,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXTextField fx:id="pesquisaMateria" focusColor="WHITE" labelFloat="true" layoutX="546.0" layoutY="24.0" prefHeight="25.0" prefWidth="309.0" promptText="Pesquisar pedido" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
+                                    <JFXTextField fx:id="pesquisaMateria" focusColor="WHITE" labelFloat="true" layoutX="546.0" layoutY="24.0" onKeyPressed="#buscaMateria" onKeyReleased="#buscaMateria" prefHeight="25.0" prefWidth="309.0" promptText="Pesquisar pedido" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
                                     <JFXButton fx:id="voltarPet1" layoutX="718.0" layoutY="392.0" onAction="#RetornaMenu" prefHeight="27.0" prefWidth="161.0" ripplerFill="#1e1e1e08" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
                                        <font>
                                           <Font name="System Bold" size="12.0" />

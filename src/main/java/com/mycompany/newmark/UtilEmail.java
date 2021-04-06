@@ -20,6 +20,7 @@ public class UtilEmail {
 	}
 	
 	public void enviarEmail() {
+		System.out.println("enviando email");
 		String host = "smtp.gmail.com";
 		final String user = "markdev413@gmail.com";//change accordingly  
 		final String password = "markaguemail";//change accordingly  
@@ -48,9 +49,10 @@ public class UtilEmail {
 
 			//send the message  
 			Transport.send(message);
+			System.out.println("email enviado");
 
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 	}
 }
