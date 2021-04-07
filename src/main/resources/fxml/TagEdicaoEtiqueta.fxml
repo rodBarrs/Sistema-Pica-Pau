@@ -43,12 +43,12 @@
       <JFXButton fx:id="limparCampos" buttonType="RAISED" layoutX="203.0" layoutY="336.0" onAction="#limpar" prefHeight="25.0" prefWidth="100.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Limpar">
       </JFXButton>
       <FontAwesomeIcon iconName="BAN" layoutX="210.0" layoutY="355.0" size="20" />
-      <RadioButton fx:id="LerMov" layoutX="56.0" layoutY="236.0" mnemonicParsing="false" text="Ler Movimentação">
+      <RadioButton fx:id="LerMov" layoutX="130.0" layoutY="245.0" mnemonicParsing="false" text="Ler Movimentação">
          <toggleGroup>
             <ToggleGroup fx:id="grupoTipo" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="LerDoc" layoutX="353.0" layoutY="236.0" mnemonicParsing="false" text="Ler Documento" toggleGroup="$grupoTipo" />
+      <RadioButton fx:id="LerDoc" layoutX="279.0" layoutY="245.0" mnemonicParsing="false" text="Ler Documento" toggleGroup="$grupoTipo" />
       <HBox layoutX="157.0" layoutY="287.0" prefHeight="20.0" prefWidth="179.0" spacing="25.0">
          <children>
             <RadioButton fx:id="P1" lineSpacing="25.0" mnemonicParsing="false" text="1">
@@ -76,6 +76,5 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Text>
-      <RadioButton fx:id="LerPet" layoutX="216.0" layoutY="236.0" mnemonicParsing="false" text="Ler Petição" toggleGroup="$grupoTipo" />
    </children>
 </AnchorPane>

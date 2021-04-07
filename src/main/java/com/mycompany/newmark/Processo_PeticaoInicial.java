@@ -24,9 +24,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Processo_PeticaoInicial {
 	private String localTriagem = "PET";
-
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config,
 			String bancos) throws Exception {
+		//System.out.println("PETIÇÃO INICIAL");
 		Tratamento tratamento = new Tratamento();
 		Triagem_Condicao cond = new Triagem_Condicao();
 		String localArquivo = "";
@@ -289,7 +289,7 @@ public class Processo_PeticaoInicial {
 			//JOptionPane.showMessageDialog(null,
 			//		"Palavra Chave:" + resultado.getPalavraChave() + "\n Complemento: " + resultado.getComplemento());
 			//JOptionPane.showMessageDialog(null, "Citação: " + citacao + "\nIntimação: " + intimacao +"\nLaudo Recente" + laudoRecente);
-			//JOptionPane.showMessageDialog(null, orgaoJulgador);
+		    //JOptionPane.showMessageDialog(null, orgaoJulgador);
 			
 			if (subnucleo.contains("SSEAS")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
@@ -394,13 +394,34 @@ public class Processo_PeticaoInicial {
 		}
 
 		driver.findElement(By.xpath("//tr[1]/td/div/img")).click();
-		System.out.println("Chamando Movimentação");
-		resultado = pm.movimentacao(driver, wait, configs, bancos);
-		if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
-			System.out.println("Chamando Documento");
-			resultado = pd.documento(resultado.getDriver(), wait, configs, bancos);
+		
+		switch (configs.getTipoTriagem()){
+			case "MOV":
+				//System.out.println("chamando movimentação 400");
+				resultado = pm.movimentacao(driver, wait, configs, bancos);
+				break;
+			case "DOC":
+				//System.out.println("chamando documento 403");
+				resultado = pd.documento(driver, wait, configs, bancos);
+				break;
+			case "COM":
+				//System.out.println("chamando movimentação 406");
+				resultado = pm.movimentacao(driver, wait, configs, bancos);
+				if(resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
+					System.out.println("chamando documento 409");
+					resultado = pd.documento(driver, wait, configs, bancos);
+				}
+				break;
 		}
 		resultado.setDriver(driver);
 		return resultado;
+		//System.out.println("Chamando Movimentação");
+		//resultado = pm.movimentacao(driver, wait, configs, bancos);
+		//if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
+			//System.out.println("Chamando Documento");
+			//resultado = pd.documento(resultado.getDriver(), wait, configs, bancos);
+		//}
+		//resultado.setDriver(driver);
+		//return resultado;
 	}
 }

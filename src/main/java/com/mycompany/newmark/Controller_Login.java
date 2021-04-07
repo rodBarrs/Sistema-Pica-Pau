@@ -118,11 +118,22 @@ public class Controller_Login implements Initializable {
 
 			if (configuracao.isPeticaoInicial() == true) {
 				Saida.setText("Triando: PETIÇÃO INICIAL"
-						+ "\nO Sistema está triando EXCLUSIVAMENTE as petições iniciais.");
+						+ "\nO Sistema está triando as petições iniciais.");
 				if (configuracao.isTriarAntigo() == false) {
 					Saida.setText(Saida.getText() + "\nTriar Antigo: Desativado");
 				} else {
 					Saida.setText(Saida.getText() + "\nTriar Antigo: Ativado");
+				}
+				switch (configuracao.getTipoTriagem()) {
+				case "COM":
+					Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO e DOCUMENTO");
+					break;
+				case "MOV":
+					Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO");
+					break;
+				case "DOC":
+					Saida.setText(Saida.getText() + "\nTriando: DOCUMENTO");
+					break;
 				}
 			}
 
@@ -293,7 +304,6 @@ public class Controller_Login implements Initializable {
 				if (Bancos.getValue().contains("Selecione")) {
 					SaidaTriagem.setText("- Selecione um banco para a triagem!");
 				} else {
-					System.out.println("olá");
 					Banco banco = new Banco();
 					String bancoSelecionado = "";
 					bancoSelecionado = banco.selecionarBanco(Bancos.getSelectionModel().getSelectedItem());

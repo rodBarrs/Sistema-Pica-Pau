@@ -43,7 +43,7 @@ import javafx.stage.StageStyle;
 public class Controller_EtiquetasEdicao implements Initializable {
 
     @FXML
-    public RadioButton LerMov, LerDoc, LerPet;
+    public RadioButton LerMov, LerDoc;
     @FXML
     public JFXTextField PalavraChave, Complemento, Etiqueta;
     @FXML
@@ -144,10 +144,6 @@ public class Controller_EtiquetasEdicao implements Initializable {
                 if (LerMov.isSelected()) {
                     chave.setTIPO("MOV");
                 }
-                
-                if (LerPet.isSelected()){
-                    chave.setTIPO("PET");
-                } 
                 
                 if (LerDoc.isSelected()){
                 	chave.setTIPO("DOC");
@@ -293,11 +289,9 @@ public class Controller_EtiquetasEdicao implements Initializable {
         String Tipo = tabelaEtiquetas.getSelectionModel().getSelectedItem().getTIPO();
         if(Tipo.equals("MOV")){
             LerMov.setSelected(true);
-        } else if(Tipo.equals("DOC")){
-            LerDoc.setSelected(true);
         } else {
-        	LerPet.setSelected(true);
-        }
+            LerDoc.setSelected(true);
+        } 
         String peso = tabelaEtiquetas.getSelectionModel().getSelectedItem().getPRIORIDADE();
         switch (peso){
             case "1":

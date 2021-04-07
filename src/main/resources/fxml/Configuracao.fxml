@@ -136,7 +136,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="900.0">
                                  <children>
-                                    <TableView fx:id="tabelaIdentificador" layoutX="3.0" onMouseClicked="#selecionarIdentificador" onMouseEntered="#atualizar" prefHeight="470.0" prefWidth="530.0" stylesheets="@../styles/tabela.css">
+                                    <TableView fx:id="tabelaIdentificador" layoutX="3.0" onMouseClicked="#selecionarIdentificador" prefHeight="470.0" prefWidth="530.0" stylesheets="@../styles/tabela.css">
                                        <columns>
                                           <TableColumn fx:id="colunaIdentificador" maxWidth="530.0" minWidth="50.0" prefWidth="530.0" text="IDENTIFICADOR DE PETIÇÃO INICIAL" />
                                        </columns>
@@ -180,7 +180,7 @@
                                     <JFXButton fx:id="atualizarProvidencia1" buttonType="RAISED" layoutX="553.0" layoutY="14.0" onAction="#atualizar" prefHeight="25.0" prefWidth="86.0" ripplerFill="TRANSPARENT" text=" " textFill="TRANSPARENT" />
                                     <JFXTextField fx:id="pesquisaIdentificador" focusColor="WHITE" labelFloat="true" layoutX="556.0" layoutY="47.0" onKeyPressed="#buscaIdentificador" onKeyReleased="#buscaIdentificador" prefHeight="25.0" prefWidth="270.0" promptText="Pesquisar identificador" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
                                     <FontAwesomeIcon fill="WHITE" iconName="SEARCH" layoutX="740.0" layoutY="-32.0" onMouseClicked="#buscaProvidencia" translateX="100.0" translateY="100.0" />
-                                    <JFXButton fx:id="botaoBuscaIdentificador" buttonType="RAISED" layoutX="833.0" layoutY="51.0" onAction="#buscaMateria" prefHeight="25.0" prefWidth="28.0" ripplerFill="TRANSPARENT" textFill="TRANSPARENT" />
+                                    <JFXButton fx:id="botaoBuscaIdentificador" buttonType="RAISED" layoutX="833.0" layoutY="51.0" onAction="#buscaIdentificador" prefHeight="25.0" prefWidth="28.0" ripplerFill="TRANSPARENT" textFill="TRANSPARENT" />
                                  </children>
                               </AnchorPane>
                           </content>

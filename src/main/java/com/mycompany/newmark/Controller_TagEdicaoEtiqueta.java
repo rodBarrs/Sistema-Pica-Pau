@@ -32,7 +32,7 @@ public class Controller_TagEdicaoEtiqueta implements Initializable {
     @FXML
     JFXTextField PalavraChave, Complemento, Etiqueta;
     @FXML
-    RadioButton LerMov, LerDoc, LerPet;
+    RadioButton LerMov, LerDoc;
     @FXML
     RadioButton P1, P2, P3, P4;
     @FXML
@@ -48,11 +48,9 @@ public class Controller_TagEdicaoEtiqueta implements Initializable {
         Etiqueta.setText(chave.getETIQUETA());
         if(chave.getTIPO().equals("MOV")){
             LerMov.setSelected(true);
-        } else if(chave.getTIPO().equals("DOC")){
-            LerDoc.setSelected(true);
         } else {
-        	LerPet.setSelected(true);
-        }
+            LerDoc.setSelected(true);
+        } 
         switch (chave.getPRIORIDADE()){
             case "1":
                 P1.setSelected(true);
@@ -90,7 +88,7 @@ public class Controller_TagEdicaoEtiqueta implements Initializable {
             textoAviso = "O campo \"Etiqueta\" não pode ser vazio!";
             aviso.aviso(textoAviso);
             return false;
-        } else if (!LerDoc.isSelected() && !LerMov.isSelected() && !LerPet.isSelected()) {
+        } else if (!LerDoc.isSelected() && !LerMov.isSelected()) {
             textoAviso = "Selecione o local de triagem desta etiqueta (Movimentação, Documento ou Petição)!";
             aviso.aviso(textoAviso);
             return false;
@@ -102,11 +100,9 @@ public class Controller_TagEdicaoEtiqueta implements Initializable {
             String tipo;
             if (LerDoc.isSelected()) {
                 tipo = "DOC";
-            } else if (LerMov.isSelected()) {
-                tipo = "MOV";
             } else {
-            	tipo = "PET";
-            }
+                tipo = "MOV";
+            } 
             
             //Armazena a qual banco de dados pertence a etiqueta alterada
             Banco banco = new Banco();
