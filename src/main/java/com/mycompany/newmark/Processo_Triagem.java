@@ -120,7 +120,8 @@ public class Processo_Triagem {
 					StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw);
 					ex.printStackTrace(pw);
-					String exceptionText = sw.toString();
+					String exceptionText = "Usuário: " + System.getProperty("user.name");
+					exceptionText += "\n" + sw.toString();
 
 					Label label = new Label("The exception stacktrace was:");
 

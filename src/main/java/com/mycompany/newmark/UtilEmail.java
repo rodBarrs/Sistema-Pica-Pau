@@ -14,45 +14,40 @@ import javafx.scene.control.Alert;
 
 public class UtilEmail {
 	String mensagem;
-	
+
 	public UtilEmail(String mensagem) {
 		this.mensagem = mensagem;
 	}
-	
+
 	public void enviarEmail() {
-		System.out.println("enviando email");
-		String host = "smtp.gmail.com";
-		final String user = "markdev413@gmail.com";//change accordingly  
-		final String password = "markaguemail";//change accordingly  
+		final String username = "markdev413@gmail.com";
+		final String password = "markaguemail";
 
-		String to = "joao-paulocosta@live.com";//change accordingly  
-
-		//Get the session object  
 		Properties props = new Properties();
-		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.port", "465");
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, password);
+				return new PasswordAuthentication(username, password);
 			}
 		});
 
-		//Compose the message  
 		try {
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(user));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			message.setSubject("RELATÓRIO DE ERRO DO MARK");
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("markdev413@gmail.com"));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("nutecpfpa@gmail.com"));
+			message.setSubject("Relatório de Erro do Mark");
 			message.setText(mensagem);
 
-			//send the message  
 			Transport.send(message);
-			System.out.println("email enviado");
 
 		} catch (MessagingException e) {
-			System.out.println(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

@@ -12,6 +12,7 @@ public class Chaves_Configuracao {
     private boolean JuntManual;
     private boolean LaudoPericial;
     private boolean PeticaoInicial;
+    private boolean debugpi = false;
         
     public boolean isTriarAntigo() {
         return TriarAntigo;
@@ -64,5 +65,13 @@ public class Chaves_Configuracao {
                 + "\nLaudoPericial: " + LaudoPericial
                 + "\nPetiçãoInicial: " + PeticaoInicial;
     }
+
+	public boolean isDebugpi() {
+		return debugpi;
+	}
+
+	public void setDebugpi(boolean debugpi) {
+		this.debugpi = debugpi;
+	}
 
 }

@@ -150,8 +150,9 @@ public class Processo_PeticaoInicial {
 					action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 					DataFlavor flavor = DataFlavor.stringFlavor;
+					Thread.sleep(500);
 					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString().toUpperCase();
-					BuscaPeticaoInicial = clipboard.getData(flavor).toString();
+					BuscaPeticaoInicial = BuscaPeticaoInicialSemTratamento;
 					BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
 				} else {
 					if (pdf.verificarExistenciaPDF() == "PdfEncontrado") {
@@ -245,6 +246,7 @@ public class Processo_PeticaoInicial {
 							action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
 							Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 							DataFlavor flavor = DataFlavor.stringFlavor;
+							Thread.sleep(500);
 							String processo = clipboard.getData(flavor).toString().toUpperCase();
 							if (cond.verificaCondicao(processo, "PET")) {
 								localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
@@ -408,7 +410,7 @@ public class Processo_PeticaoInicial {
 				//System.out.println("chamando movimentação 406");
 				resultado = pm.movimentacao(driver, wait, configs, bancos);
 				if(resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
-					System.out.println("chamando documento 409");
+					//System.out.println("chamando documento 409");
 					resultado = pd.documento(driver, wait, configs, bancos);
 				}
 				break;

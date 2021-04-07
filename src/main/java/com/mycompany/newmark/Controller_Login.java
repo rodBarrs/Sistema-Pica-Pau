@@ -33,6 +33,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -52,6 +54,10 @@ public class Controller_Login implements Initializable {
 	public Usuario usuario = new Usuario();
 
 	@FXML
+	public Label labelDebug;
+	@FXML
+	public MenuItem popupDebug;
+	@FXML
 	public JFXButton btInformacao, btEditarEtiquetas, btConfigurar, btLogin, btTriar, btParar, btEditarBancos;
 	@FXML
 	public JFXTextField LoginTxt, SenhaTxtMostar;
@@ -70,9 +76,11 @@ public class Controller_Login implements Initializable {
 
 	@FXML
 	public CheckBox exibirSenha, salvarSenha;
+	private Chaves_Configuracao debugPi;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		debugPi = new Chaves_Configuracao();
 		saida();
 		exibirSenha.setSelected(false);
 		salvarSenha.setSelected(true);
@@ -83,6 +91,19 @@ public class Controller_Login implements Initializable {
 		Bancos.setValue("Selecione um banco:");
 	}
 
+	@FXML
+	public void exibirDebugPI() {
+		if(debugPi.isDebugpi()) {
+			debugPi.setDebugpi(false);
+			popupDebug.setText("Exibir Debug de Petição Inicial");
+			labelDebug.setVisible(false);
+		} else {
+			debugPi.setDebugpi(true);
+			popupDebug.setText("Ocultar Debug de Petição Inicial");
+			labelDebug.setVisible(true);
+		}
+	}
+	
 	public void saida() {
 		try {
 			Chaves_Configuracao configuracao = new Chaves_Configuracao();

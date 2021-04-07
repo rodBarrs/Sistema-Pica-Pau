@@ -122,6 +122,7 @@ public class Processo_Documento {
                             driver.switchTo().defaultContent();
                             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                             DataFlavor flavor = DataFlavor.stringFlavor;
+                            Thread.sleep(500);
                             processo = clipboard.getData(flavor).toString();
                         }
 
