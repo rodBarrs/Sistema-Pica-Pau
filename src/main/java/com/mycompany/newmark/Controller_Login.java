@@ -332,7 +332,7 @@ public class Controller_Login implements Initializable {
 						SaidaTriagem.setText("- Triagem Iniciada!");
 						BarraDeProgresso.setVisible(true);
 						Processo_Triagem triagem = new Processo_Triagem(driver, bancoSelecionado);
-						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada);
+						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada, debugPi);
 						if (triar == false) {
 							som();
 							SaidaTriagem.setText("- Erro de comunicação com plataforma Sapiens!");

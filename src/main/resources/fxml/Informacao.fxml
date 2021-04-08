@@ -68,13 +68,13 @@
                   <Image url="@Imagens/LogoMarkBranco.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="59.0" layoutY="325.0" prefHeight="31.0" prefWidth="359.0" text="Versão: 3.1.5.4 SNAPSHOT - 06/04/2021" textAlignment="CENTER" textFill="WHITE">
+            <Label alignment="CENTER" layoutX="59.0" layoutY="321.0" prefHeight="31.0" prefWidth="359.0" text="Versão: 3.2 - 06/04/2021" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
             <Line endX="315.0" layoutX="96.0" layoutY="310.0" startX="-29.5" stroke="WHITE" />
-            <Label alignment="TOP_CENTER" layoutX="56.0" layoutY="356.0" prefHeight="102.0" prefWidth="366.0" text="- Nova versão do Sistema, atualizada e reestruturada; automatização do tempo de espera; personalização do banco pelo usuário; aprimoração do modo de triagem; implementação de barra de pesquisa nas configurações e correção de bugs." textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
+            <Label alignment="TOP_CENTER" layoutX="56.0" layoutY="356.0" prefHeight="102.0" prefWidth="366.0" text="A versão 3.2 do Sistema de Triagem Mark contém uma atualização vital para a automatização processual. Nesta versão o modo de triagem &quot;Petição Inicial&quot; foi adequado para atender a nova regra de negócio aplicada para a Advocacia Geral da União." textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>

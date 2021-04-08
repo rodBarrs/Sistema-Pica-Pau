@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 public class Triagem_Etiquetas {
 
 	public Chaves_Resultado triarBanco(String processo, String bancos, String localtriagem, String tipoTriagem) {
@@ -45,6 +47,7 @@ public class Triagem_Etiquetas {
 						connection.close();
 						return resultado;
 					}
+
 				}
 				connection.close();
 				banco = true;

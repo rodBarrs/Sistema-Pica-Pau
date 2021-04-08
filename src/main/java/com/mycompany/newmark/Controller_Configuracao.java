@@ -225,6 +225,7 @@ public class Controller_Configuracao implements Initializable {
 			Aviso aviso = new Aviso();
 			aviso.confirmacaoEtiqueta(chave);
 			limpar();
+			atualizar();
 		}
 	}
 
@@ -264,6 +265,7 @@ public class Controller_Configuracao implements Initializable {
 			ObservableList<Chaves_Condicao> coluna = FXCollections.observableArrayList(identificadorPeticao());
 			tabelaIdentificador.setItems(coluna);
 			limpar();
+			atualizar();
 		}
 	}
 
@@ -278,6 +280,7 @@ public class Controller_Configuracao implements Initializable {
 			Aviso aviso = new Aviso();
 			aviso.confirmacaoCondicao(chave);
 			textoPet.clear();
+			atualizar();
 		}
 	}
 

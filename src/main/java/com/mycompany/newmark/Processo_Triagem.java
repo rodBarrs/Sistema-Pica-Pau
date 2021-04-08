@@ -46,7 +46,7 @@ public class Processo_Triagem {
 	}
 
 	//Inicia a Triagem
-	public boolean iniciarTriagem(WebDriver driver, WebDriverWait wait, String bancos, boolean triagemIniciada)
+	public boolean iniciarTriagem(WebDriver driver, WebDriverWait wait, String bancos, boolean triagemIniciada, Chaves_Configuracao debugPi)
 			throws SQLException, InterruptedException, UnsupportedFlavorException, IOException {
 		Actions actions = new Actions(driver);
 		Chaves_Resultado resultado = new Chaves_Resultado();
@@ -74,7 +74,7 @@ public class Processo_Triagem {
 					if (config.isLaudoPericial() == true) {
 						resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
 					} else if (config.isPeticaoInicial() == true) {
-						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos);
+						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos, debugPi);
 					} else {
 						switch (config.getTipoTriagem()) {
 						case "COM":
