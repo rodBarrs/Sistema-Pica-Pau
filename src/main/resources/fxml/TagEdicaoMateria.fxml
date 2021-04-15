@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="303.0" prefWidth="500.0" styleClass="fundo" stylesheets="@../styles/tema.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <VBox layoutX="56.0" layoutY="60.0" prefHeight="140.0" prefWidth="400.0" spacing="30.0">
+         <children>
+            <JFXTextField fx:id="PalavraChave" focusColor="#ebebeb" labelFloat="true" layoutX="70.0" layoutY="65.0" promptText="Frase Chave" unFocusColor="#fcfcfc">
+            </JFXTextField>
+            <JFXTextField fx:id="Complemento" focusColor="#fcfcfc" labelFloat="true" layoutX="70.0" layoutY="125.0" promptText="Complemento" unFocusColor="WHITE">
+            </JFXTextField>
+            <JFXComboBox fx:id="ComboBoxNucleo" focusColor="#3cd74b" prefHeight="44.0" prefWidth="400.0" promptText="Selecione o Núcleo" unFocusColor="WHITE" />
+         </children>
+      </VBox>
+      <JFXButton fx:id="salvar" buttonType="RAISED" layoutX="57.0" layoutY="235.0" onAction="#alterar" prefHeight="25.0" prefWidth="100.0" ripplerFill="#402323" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Salvar">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="cancelar" buttonType="RAISED" layoutX="356.0" layoutY="235.0" onAction="#cancelar" prefHeight="25.0" prefWidth="100.0" ripplerFill="#d04848" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Cancelar">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="limparCampos" buttonType="RAISED" layoutX="206.0" layoutY="235.0" onAction="#limpar" prefHeight="25.0" prefWidth="100.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Limpar">
+      </JFXButton>
+      <Text fill="WHITE" layoutX="138.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edição de Matéria Cadastrada:">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

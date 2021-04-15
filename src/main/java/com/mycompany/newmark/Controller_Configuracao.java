@@ -320,6 +320,7 @@ public class Controller_Configuracao implements Initializable {
 			ObservableList<Chaves_Condicao> coluna = FXCollections.observableArrayList(ProvJuri());
 			tabelaProvidencia.setItems(coluna);
 			limpar();
+			atualizar();
 		}
 	}
 
@@ -334,6 +335,7 @@ public class Controller_Configuracao implements Initializable {
 			Aviso aviso = new Aviso();
 			aviso.confirmacaoCondicao(chave);
 			textoProv.clear();
+			atualizar();
 		}
 	}
 
@@ -373,6 +375,7 @@ public class Controller_Configuracao implements Initializable {
 			ObservableList<Chaves_Condicao> genericos = FXCollections.observableArrayList(Cabecalho());
 			tabelaCabecalho.setItems(genericos);
 			limpar();
+			atualizar();
 		}
 	}
 
@@ -387,22 +390,46 @@ public class Controller_Configuracao implements Initializable {
 			Aviso aviso = new Aviso();
 			aviso.confirmacaoCondicao(chave);
 			textoCabecalho.clear();
+			atualizar();
 		}
 	}
 
 	public void alterarIdentificador() throws IOException, SQLException {
 		String tipo = "PET";
 		alterarCondicao(tipo);
+		atualizar();
 	}
 
 	public void alterarCabecalho() throws IOException, SQLException {
 		String tipo = "CAB";
 		alterarCondicao(tipo);
+		atualizar();
 	}
 
 	public void alterarProvidencia() throws IOException, SQLException {
 		String tipo = "PRO";
 		alterarCondicao(tipo);
+		atualizar();
+	}
+	
+	public void alterarMateria() throws IOException {
+		Chaves_Banco cb = new Chaves_Banco();
+		cb.setBANCO("JEF");
+		cb.setTIPO("PET");
+		cb.setPALAVRACHAVE(pedido.getText().trim());
+		cb.setCOMPLEMENTO(complemento.getText().trim());
+		cb.setETIQUETA(comboBoxNucleo.getSelectionModel().getSelectedItem());
+		cb.setPRIORIDADE("1");
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoMateria.fxml"));
+		loader.setController(new Controller_TagEdicaoMateria(cb));
+		Parent root = loader.load();
+		Stage stage = new Stage();
+
+		stage.setTitle("Editar Condição");
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initStyle(StageStyle.UNDECORATED);
+		stage.setScene(new Scene(root));
+		stage.show();
 	}
 
 	public void alterarCondicao(String tipo) throws IOException, SQLException {

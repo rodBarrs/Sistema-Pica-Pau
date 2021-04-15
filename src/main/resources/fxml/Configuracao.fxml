@@ -198,7 +198,7 @@
                                        <contextMenu>
                                           <ContextMenu>
                                              <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#alterarProvidencia" text="Editar" />
+                                                <MenuItem mnemonicParsing="false" onAction="#alterarMateria" text="Editar" />
                                              </items>
                                           </ContextMenu>
                                        </contextMenu>
