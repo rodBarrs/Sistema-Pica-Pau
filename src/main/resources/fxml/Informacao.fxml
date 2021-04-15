@@ -68,7 +68,7 @@
                   <Image url="@Imagens/LogoMarkBranco.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" layoutX="59.0" layoutY="321.0" prefHeight="31.0" prefWidth="359.0" text="Versão: 3.2 - 06/04/2021" textAlignment="CENTER" textFill="WHITE">
+            <Label alignment="CENTER" layoutX="59.0" layoutY="321.0" prefHeight="31.0" prefWidth="359.0" text="Versão: 3.2.1 - 15/04/2021" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

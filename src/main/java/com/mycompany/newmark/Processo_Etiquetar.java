@@ -26,7 +26,7 @@ public class Processo_Etiquetar {
                 + "\nFRASE CHAVE: " + resultado.getPalavraChave() + ";"
                 + "\nCOMPLEMENTO: " + resultado.getComplemento() + ";"
                 + "\nLOCAL: " + resultado.getLocal() + ";"
-                + "\nARQUIVO DE PETIÇÃO INICIAL: " + resultado.getPetição() + ".");
+                + "\nARQUIVO DE PETIÇÃO INICIAL: " + resultado.getPetição().substring(0, 15) + ".");
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.ENTER).build().perform();
