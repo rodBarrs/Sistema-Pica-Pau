@@ -16,6 +16,13 @@ public class Processo_Etiquetar {
 
     public void etiquetar(WebDriver driver, WebDriverWait wait, Chaves_Resultado resultado) throws InterruptedException {
         Actions action = new Actions(driver);
+        
+        try {
+        	resultado.setPetição(resultado.getPetição().substring(0, 15));
+        } catch (Exception e) {
+        	//
+        }
+        
         action.doubleClick(driver.findElement(By.xpath("//td[5]/div"))).build().perform();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")));
@@ -26,7 +33,7 @@ public class Processo_Etiquetar {
                 + "\nFRASE CHAVE: " + resultado.getPalavraChave() + ";"
                 + "\nCOMPLEMENTO: " + resultado.getComplemento() + ";"
                 + "\nLOCAL: " + resultado.getLocal() + ";"
-                + "\nARQUIVO DE PETIÇÃO INICIAL: " + resultado.getPetição().substring(0, 15) + ".");
+                + "\nARQUIVO DE PETIÇÃO INICIAL: " + resultado.getPetição() + ".");
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.ENTER).build().perform();
