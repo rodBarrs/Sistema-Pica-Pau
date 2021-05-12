@@ -8,28 +8,20 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 public class LeituraPDF {
 	File filePath = new File("C:\\Temp");
-	public String verificarExistenciaPDF() throws InterruptedException {
-		System.out.println("============ VERIFICANDO PDF ==============");
+	public String PDFBaixado() throws InterruptedException {
 		for (int i = 0; i < 5; i++) {
 			Thread.sleep(2000);
-			System.out.println("verificando pdf...");
 			if (filePath.listFiles().length == 1) {
 				for (File pdfNome : filePath.listFiles()) {
 					if(pdfNome.getName().contains(".pdf")) {
-						System.out.println("pdf encontrado: " + pdfNome.getName());
-						System.out.println("retornando 1");
-						return "PdfEncontrado";
+						return true;
 					}
 				}
 			}
 			
 		}
-		
-		if(filePath.listFiles().length > 1) {
-			System.out.println("retornando 2");
-			return "MaisDeUmPdfEncontrado";
-		}
-		return "NenhumPdfEncontrado";
+
+		return false;
 	}
 	
 	public String lerPDF() throws IOException {
@@ -40,7 +32,6 @@ public class LeituraPDF {
 
 		for (File file : filePath.listFiles()) {
 			String path = file.getAbsolutePath();
-			System.out.println(path);
 			while(flag) {
 				try {
 					document = PDDocument.load(new File(path));
@@ -62,4 +53,5 @@ public class LeituraPDF {
 			file.delete();
 		}
 	}
-}
+
+ }
