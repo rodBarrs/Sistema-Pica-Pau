@@ -39,105 +39,63 @@ public class Processo_PeticaoInicial {
 		boolean intimacao = false;
 		boolean laudoRecente = false;
 		this.debugPi = debugPi;
-		String orgaoJulgador = "";
-		// String linhaMovimentacao = "";
+		String documentoPeticaoInicial;
 
-		WebElement TabelaTref = null;
-		boolean teste = false;
-		try {
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
-			TabelaTref = driver.findElement(By.id("treeview-1015"));
-		} catch (Exception e) {
-			for (int j = 0; j < 2; j++) {
-				for (int k = 0; k < 2; k++) {
-					// Thread.sleep(2000);
-					try {
-						wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
-						TabelaTref = driver.findElement(By.id("treeview-1015"));
-						teste = true;
-						break;
-					} catch (Exception erro) {
-					}
-				}
-				if (teste = true) {
-					break;
-				} else {
-					driver.navigate().refresh();
-				}
-			}
-		}
+		//Aguarda até que Treeview esteja carregada
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
-		TabelaTref = driver.findElement(By.id("treeview-1015"));
-		// Identifica as linhas da tabela de movimentação processual <rr>
-		List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
+		//Armazena toda a movimentação num ArrayList
+		WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
+		List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
 
+		//Aguarda até que o iframe esteja carregado e então envia o Driver para o iframe (para que possa interagir com o interior do iframe)
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 		WebElement capa = driver.findElement(By.id("iframe-myiframe"));
 		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
-		try {
-			while(true) {
-				orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
-				if(orgaoJulgador.length() > 0) {
-					break;
-				}
-			}
-		} catch (Exception ex) {
-			//ex.printStackTrace();
-		}
-		driver.switchTo().defaultContent();
-		resultado.setOrgaoJulgador(orgaoJulgador);
-		// Verifica nas providências jurídicas se existem Citações,Intimações e Laudo
-		// Recente
-		for (int i = listaMovimentacao.size() - 1; i >= 0; i--) {
-			if (listaMovimentacao.get(i).getText().toUpperCase().contains("CITAÇÃO")) {
-				citacao = true;
-				break;
-			} else if (listaMovimentacao.get(i).getText().toUpperCase().contains("INTIMAÇÃO")) {
-				intimacao = true;
-				break;
-			} else if (listaMovimentacao.get(i).getText().toUpperCase().contains("LAUDO PERICIAL")) {
-				if (config.isTriarAntigo() == true) {
-					laudoRecente = true;
-				} else {
-					if (verificarData.Verificar(listaMovimentacao.get(i).getText())) {
-						laudoRecente = true;
-					}
-				}
-			}
-		}
 
+		//Aguarda até que o campo "órgão julgador" esteja carregado e então salva seu conteúdo
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")));
+		String orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
+		
+		//Devolve o driver para a página
+		driver.switchTo().defaultContent();
+		
+		//Seta previamente a etiqueta com erro
 		resultado.setLocal("PETIÇÃO INICIAL");
 		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR PASTA DE PETIÇÃO INICIAL");
 		resultado.setPalavraChave("");
 		resultado.setComplemento("");
+		
+		//Verifica a existência de uma pasta na posição 1 do sapiens (isso significaria que existe uma possível petição inicial com nome diferente)
+		Boolean existePasta = driver.findElement(By.xpath("//tr[2]/td[2]/div/img[1]")).getAttribute("class").contains("x-tree-expander");
 
-		// JOptionPane.showMessageDialog(null, listaMovimentacao.size());
-		// FOR - Enquantou houve elementos na tabela, do primeiro ao último
+		//Itera a lista de movimentação procurando por "Petição Inicial" ou uma pasta no index 1
 		for (int i = 1; i < listaMovimentacao.size(); i++) {
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td[2]/div/span")));
-			//JOptionPane.showMessageDialog(null, driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText());
-			// IF - Busca pelas expressões descritas, dentro das <tr> da movimentação
-			//JOptionPane.showMessageDialog(null,
-			//		driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).getAttribute("class"));
-			if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText().toUpperCase()
-					.contains("PETIÇÃO INICIAL")
-					|| (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).getAttribute("class")
-							.contains("x-tree-expander")) && i == 2) {
-				String BuscaPeticaoInicial = "";
-				String BuscaPeticaoInicialSemTratamento = "";
-				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
-				// Clica no <tr> identificado
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
-				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
-				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
-				pdf.apagarPDF();
-				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[2]")).click();
-				if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().contains("HTML")) {
 
+			//Providência Jurídica é o título da movimentação
+			Boolean existePeticaoInicial = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText().toUpperCase().contains("PETIÇÃO INICIAL");
+			if (existePeticaoInicial || existePasta) {
+
+				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
+
+				//Clica no título da Providência Jurídica 
+				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[1]")).click();
+
+				//Verifica se a movimentação é do tipo PDF
+				Boolean movimentacaoTemPDF = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().contains("PDF");
+				
+				if (movimentacaoTemPDF) {
+					if (pdf.PDFBaixado()) {
+						documentoPeticaoInicial = pdf.lerPDF();
+						documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
+					}
+				} else {
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 					WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
 					wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
-
+					
+					//Laço para garantir que o clique seja feito no HTML dentro do iframe
+					//Isso garante que o conteúdo do iframe que contém o documento da movimentação clicada já carregou
 					boolean flag = true;
 					do {
 						try {
@@ -148,8 +106,8 @@ public class Processo_PeticaoInicial {
 						} catch (Exception e) {
 							//
 						}
-
 					} while (flag);
+
 					driver.switchTo().defaultContent();
 
 					Thread.sleep(500);
@@ -161,12 +119,6 @@ public class Processo_PeticaoInicial {
 					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString().toUpperCase();
 					BuscaPeticaoInicial = BuscaPeticaoInicialSemTratamento;
 					BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
-				} else {
-					if (pdf.verificarExistenciaPDF() == "PdfEncontrado") {
-						BuscaPeticaoInicial = pdf.lerPDF().toUpperCase();
-						BuscaPeticaoInicialSemTratamento = BuscaPeticaoInicial.toUpperCase();
-						BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
-					}
 				}
 				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
 				// para seguir a triagem especifica

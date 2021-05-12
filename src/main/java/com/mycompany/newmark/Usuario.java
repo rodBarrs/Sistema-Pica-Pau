@@ -6,8 +6,6 @@
 package com.mycompany.newmark;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 class Usuario {
@@ -30,20 +28,9 @@ class Usuario {
         this.Senha = Senha;
     }
     
-    public void logar(WebDriver driver, WebDriverWait wait, Usuario usuario) throws InterruptedException
-    {
-        //Recebe o elemento para colocar o login
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='cpffield-1017-inputEl']")));
-        WebElement login = driver.findElement(By.xpath("//input[@id='cpffield-1017-inputEl']"));
-        //Envia o elemento para enviar os dados do login
-        login.click();
-        login.sendKeys(usuario.getLogin());
-        //Recebe o elemento para colocar a senha
-        WebElement senha = driver.findElement(By.xpath("//td[@id='textfield-1018-bodyEl']/input"));
-        senha.click();
-        senha.sendKeys(usuario.getSenha());
-        //Envia o elemento para enviar os dados da senha
-        WebElement Click = driver.findElement(By.xpath("//span[@id='button-1019-btnInnerEl']"));
-        Click.click();
+    public void logar(WebDriver driver, WebDriverWait wait, Usuario usuario) throws InterruptedException {
+    	driver.findElement(By.id("cpffield-1017-inputEl")).sendKeys(usuario.getLogin());
+		driver.findElement(By.id("textfield-1018-inputEl")).sendKeys(usuario.getSenha());
+		driver.findElement(By.id("button-1019-btnInnerEl")).click();	
     }
 }

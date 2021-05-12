@@ -6,14 +6,12 @@ package com.mycompany.newmark;
 
 import org.openqa.selenium.WebDriver;
 
-public class Chaves_Resultado
-{
+public class Chaves_Resultado {
     private String PalavraChave = "";
     private String Complemento = "";
     private String Etiqueta = "";
     private String Local = "";
     private String Petição = "";
-    private String OrgaoJulgador = "";
     private WebDriver driver;
     private boolean grid;
 
@@ -71,14 +69,6 @@ public class Chaves_Resultado
 
 	public void setPetição(String localArquivo) {
 		Petição = localArquivo;
-	}
-
-	public String getOrgaoJulgador() {
-		return OrgaoJulgador;
-	}
-
-	public void setOrgaoJulgador(String orgaoJulgador) {
-		OrgaoJulgador = orgaoJulgador;
 	}
     
 }
