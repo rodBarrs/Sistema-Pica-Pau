@@ -41,20 +41,19 @@ public class Processo_PeticaoInicial {
 		this.debugPi = debugPi;
 		String documentoPeticaoInicial;
 
-		//Aguarda até que Treeview esteja carregada
+		//Aguarda até que tabela com as movimentações (treeview) esteja carregada
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
-		//Armazena toda a movimentação num ArrayList
+		//Armazena todas as movimentações num ArrayList
 		WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
 		List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-
+			
 		//Aguarda até que o iframe esteja carregado e então envia o Driver para o iframe (para que possa interagir com o interior do iframe)
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 		WebElement capa = driver.findElement(By.id("iframe-myiframe"));
 		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
 
 		//Aguarda até que o campo "órgão julgador" esteja carregado e então salva seu conteúdo
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")));
 		String orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
 		
 		//Devolve o driver para a página
@@ -68,7 +67,6 @@ public class Processo_PeticaoInicial {
 		
 		//Verifica a existência de uma pasta na posição 1 do sapiens (isso significaria que existe uma possível petição inicial com nome diferente)
 		Boolean existePasta = driver.findElement(By.xpath("//tr[2]/td[2]/div/img[1]")).getAttribute("class").contains("x-tree-expander");
-
 		//Itera a lista de movimentação procurando por "Petição Inicial" ou uma pasta no index 1
 		for (int i = 1; i < listaMovimentacao.size(); i++) {
 
@@ -82,7 +80,7 @@ public class Processo_PeticaoInicial {
 				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[1]")).click();
 
 				//Verifica se a movimentação é do tipo PDF
-				Boolean movimentacaoTemPDF = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().contains("PDF");
+				Boolean movimentacaoTemPDF = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().toUpperCase().contains("PDF");
 				
 				if (movimentacaoTemPDF) {
 					if (pdf.PDFBaixado()) {
@@ -116,24 +114,20 @@ public class Processo_PeticaoInicial {
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 					DataFlavor flavor = DataFlavor.stringFlavor;
 					Thread.sleep(500);
-					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString().toUpperCase();
-					BuscaPeticaoInicial = BuscaPeticaoInicialSemTratamento;
-					BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
+					documentoPeticaoInicial = clipboard.getData(flavor).toString().toUpperCase();
+					documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
 				}
-				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
+				// If - Verifica se existe o termo "Petição" na variável documentoPeticaoInicial
 				// para seguir a triagem especifica
-				if (cond.verificaCondicao(BuscaPeticaoInicialSemTratamento, "PET") == false) {
-					//&& (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
-					//|| BuscaPeticaoInicial.contains("ANEXO") || BuscaPeticaoInicial.contains("PDF"))) 
+				if (!cond.verificaCondicao(documentoPeticaoInicial, "PET")) {
+					//&& (documentoPeticaoInicial.contains("PETIÇÃO") || documentoPeticaoInicial.contains("INICIAL")
+					//|| documentoPeticaoInicial.contains("ANEXO") || documentoPeticaoInicial.contains("PDF"))) 
 
 					// CADASTRAR POSSIVEIS VERIFICAÇÕES
-					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
-					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + (i + 1) + "]/td/div")));
 					int LinhaAtual = Integer.parseInt(driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText()); // Armazena a linha do Front em que está a movimentação
 					int LinhaProxima = Integer
 							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText()); // Armazena o valor da proxima linha do front
 
-					wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")));
 					driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).click();
 					// Laço para iterar dentro da lista aberta pela pasta "Petição Inicial"
 					// 'J' recebe a posição atual do Driver mais 1, o que seria o documento seguinte
@@ -170,17 +164,11 @@ public class Processo_PeticaoInicial {
 								case "PdfEncontrado":
 									//System.out.println("UM");
 									flag2 = false;
-									String processo = "";
-									processo = pdf.lerPDF().toUpperCase();
-									localArquivo = driver
-											.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
+									String processo = pdf.lerPDF().toUpperCase();
+									localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
 									resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
 											config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
-									if (resultado
-											.getEtiqueta() != "NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL") {
-										resultado.setPetição(localArquivo);
-										return resultado;
-									}
+									return resultado;
 								}
 							} while (flag2);
 						} else {
@@ -222,7 +210,7 @@ public class Processo_PeticaoInicial {
 
 				} else {
 					localArquivo = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[1]")).getText();
-					resultado = verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos,
+					resultado = verificarConteudoPeticao(documentoPeticaoInicialSemTratamento, orgaoJulgador, bancos,
 							driver, wait, config, i, tratamento, resultado, citacao, intimacao, laudoRecente, false);
 					resultado.setDriver(driver);
 					resultado.setPetição(localArquivo);
@@ -255,7 +243,7 @@ public class Processo_PeticaoInicial {
 				JOptionPane.showMessageDialog(null,
 						"Citação: " + citacao + "\nIntimação: " + intimacao + "\nLaudo Recente: " + laudoRecente, "Condicionais", 1);
 				JOptionPane.showMessageDialog(null, "Órgão Julgador Identificado: " + orgaoJulgador, "Órgão Julgador", 1);
-			}
+			} 
 			if (subnucleo.contains("SSEAS")
 					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 				if (debugPi.isDebugpi()) {
