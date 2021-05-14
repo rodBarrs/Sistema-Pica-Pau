@@ -56,7 +56,7 @@ public class Processo_Movimentacao {
         }
         
         TabelaTref = driver.findElement(By.id("treeview-1015"));
-        List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
+        List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
 
         int limite = 10;
         WebElement movimentacaoAtual;

@@ -16,21 +16,21 @@ import javax.swing.JOptionPane;
 
 public class Triagem_Etiquetas {
 
-	public Chaves_Resultado triarBanco(String processo, String bancos, String localtriagem, String tipoTriagem) {
+	public Chaves_Resultado triarBanco(String processo, String banco, String localtriagem, String tipoTriagem) {
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		Tratamento tratamento = new Tratamento();
 		processo = tratamento.tratamento(processo);
-		boolean banco = false;
-		while (banco == false) {
+		boolean bancoBool = false;
+		while (bancoBool == false) {
 			try {
 				Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 				PreparedStatement stmt;
 				ResultSet resultSet;
-				if (bancos.contains("TODOS OS BANCOS")) {
+				if (banco.contains("TODOS OS BANCOS")) {
 					stmt = connection.prepareStatement(
 							"SELECT * FROM ETIQUETAS WHERE TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
 				} else {
-					stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancos
+					stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + banco
 							+ "' AND TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
 				}
 				resultSet = stmt.executeQuery();
@@ -50,14 +50,14 @@ public class Triagem_Etiquetas {
 
 				}
 				connection.close();
-				banco = true;
+				bancoBool = true;
 			} catch (SQLException ex) {
-				banco = false;
+				bancoBool = false;
 				Logger.getLogger(Triagem_Etiquetas.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 		resultado
-				.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA (" + bancos + ", " + tipoTriagem + ")");
+				.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA (" + banco + ", " + tipoTriagem + ")");
 		return resultado;
 	}
 }

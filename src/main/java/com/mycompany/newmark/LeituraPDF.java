@@ -8,7 +8,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 public class LeituraPDF {
 	File filePath = new File("C:\\Temp");
-	public String PDFBaixado() throws InterruptedException {
+	public Boolean PDFBaixado() throws InterruptedException {
 		for (int i = 0; i < 5; i++) {
 			Thread.sleep(2000);
 			if (filePath.listFiles().length == 1) {

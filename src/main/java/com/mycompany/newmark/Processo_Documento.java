@@ -65,14 +65,12 @@ public class Processo_Documento {
                             driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
                             
                             int cont = 0; 
-                            while(cont <= 4) {
-                            	if(pdf.verificarExistenciaPDF() == "PdfEncontrado") {
+                            while(cont <= 2) {
+                            	
+                            	if(pdf.PDFBaixado()) {
                             		processo = pdf.lerPDF();
                             		break;
-                            	} else if(pdf.verificarExistenciaPDF() == "MaisDeUmPdfEncontrado") {
-                            		pdf.apagarPDF();
-                            		driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
-                            	} else if (pdf.verificarExistenciaPDF() == "NenhumPdfEncontrado") {
+                            	} else {
                             		pdf.apagarPDF();
                             		driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
                             	}
