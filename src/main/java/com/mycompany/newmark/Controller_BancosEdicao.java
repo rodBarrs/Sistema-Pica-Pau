@@ -47,7 +47,6 @@ public class Controller_BancosEdicao implements Initializable {
     public String bancoSelecionado = "";
 
     @Override
-    @SuppressWarnings("ConvertToTryWithResources")
     public void initialize(URL location, ResourceBundle resources){
         try {
             atualizar();
@@ -80,7 +79,6 @@ public class Controller_BancosEdicao implements Initializable {
     }
 
     @FXML
-    @SuppressWarnings("ConvertToTryWithResources")
     private boolean inserir() throws SQLException {
         String textoAviso = "";
         Aviso aviso = new Aviso();
@@ -111,7 +109,6 @@ public class Controller_BancosEdicao implements Initializable {
     }
 
     @FXML
-    @SuppressWarnings("ConvertToTryWithResources")
     public void excluir() throws SQLException, IOException {
         if(textoSigla.getText().equals("") || textoBanco.getText().equals("")){
             //Não faz nada
@@ -153,7 +150,7 @@ public class Controller_BancosEdicao implements Initializable {
             aviso.aviso(textoAviso);
         }
     }
-
+    
     public int contarEtiquetas(String sigla) {
         int i = 0;
         try {

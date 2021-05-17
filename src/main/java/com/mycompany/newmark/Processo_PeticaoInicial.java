@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -47,8 +46,12 @@ public class Processo_PeticaoInicial {
 		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
 
 		//Aguarda até que o campo "órgão julgador" esteja carregado e então salva seu conteúdo
-		String orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
-		JOptionPane.showMessageDialog(null, orgaoJulgador);
+		String orgaoJulgador = "";
+		try {
+			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
+		} catch (Exception e) {
+			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[5]/table/tbody/tr[3]/td[2]")).getText();
+		}
 		//Devolve o driver para a página
 		driver.switchTo().defaultContent();
 		
@@ -70,6 +73,8 @@ public class Processo_PeticaoInicial {
 				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
 
 				//Clica no título da Providência Jurídica 
+				
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[\" + i + \"]/td/div/span/span[1]")));
 				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[1]")).click();
 
@@ -79,13 +84,10 @@ public class Processo_PeticaoInicial {
 				//CAPA
 				if (movimentacaoTemPDF) {
 					pdf.apagarPDF();
-					JOptionPane.showMessageDialog(null, "MOV PDF");
 					if (pdf.PDFBaixado()) {
-						JOptionPane.showMessageDialog(null, "PDF BAIXADO!");
 						documentoPeticaoInicial = pdf.lerPDF();
 						documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
 					} else {
-						JOptionPane.showMessageDialog(null, "PDF NOPE BAIXADO!");
 					}
 				} else {
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
@@ -142,7 +144,7 @@ public class Processo_PeticaoInicial {
 						if (movimentacaoPastaContemPDF) {
 							Boolean pdfBaixado = pdf.PDFBaixado();
 							if(pdfBaixado){
-								JOptionPane.showMessageDialog(null, "PDF BAIXADO!");
+								
 								String processo = pdf.lerPDF().toUpperCase();
 								if(cond.verificaCondicao(processo, "PET")){
 									resultado = verificarNucleo(processo, orgaoJulgador, banco);
@@ -195,8 +197,7 @@ public class Processo_PeticaoInicial {
 
 				} else {
 					resultado = verificarNucleo(documentoPeticaoInicial, orgaoJulgador, banco);
-					String nucleo = resultado.getEtiqueta();
-					resultado = triagemPadrao(driver, wait, config, banco, i, false, nucleo);
+					resultado = triagemPadrao(driver, wait, config, banco, i, false, resultado.getEtiqueta());
 					resultado.setDriver(driver);
 					return resultado;
 				}
@@ -209,13 +210,11 @@ public class Processo_PeticaoInicial {
 	}
 
 	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco){
-		JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		//Identifica a matéria e salva na variável resultado
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL");
 		
 		String nucleo = resultado.getEtiqueta();
-		JOptionPane.showMessageDialog(null, nucleo);
 			
 		if (nucleo.contains("SSEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
 			return resultado;	
@@ -226,160 +225,18 @@ public class Processo_PeticaoInicial {
 		}
 
 		if (nucleo.contains("NÃO FOI POSSÍVEL")) {
+			resultado.setEtiqueta("");
 			return resultado;
 		}
 		
 		resultado.setEtiqueta("SCC");
 		return resultado;
-		
-
 	}
-	/*
-	private Chaves_Resultado verificarConteudoPeticao(String processo, String orgaoJulgador, String banco,
-			WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, int indexPeticao, Tratamento tratamento,
-			Chaves_Resultado resultado, boolean citacao, boolean intimacao, boolean laudoRecente, boolean dentroDaPasta)
-			throws HeadlessException, SQLException, InterruptedException, UnsupportedFlavorException, IOException {
-		StringBuilder stringBuilder;
-		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
-		Triagem_Condicao condicao = new Triagem_Condicao();
-		if (condicao.verificaCondicao(processo, "PET")) {
-			processo = tratamento.tratamento(processo);
-			//Busca o núcleo
-			resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INICIAL");
-			String subnucleo = resultado.getEtiqueta();
-			if (debugPi.isDebugpi()) {
-				JOptionPane.showMessageDialog(null, "Condição Válida", "Petição Inicial Identificada", 1);
-				JOptionPane.showMessageDialog(null, "Núcleo Identificado: " + subnucleo, "Identificador de Núcleo", 1);
-				JOptionPane.showMessageDialog(null, "Palavra Chave: " + resultado.getPalavraChave() + "\nComplemento: "
-						+ resultado.getComplemento(), "Combinação de Chaves Identificadas", 1);
-				JOptionPane.showMessageDialog(null,
-						"Citação: " + citacao + "\nIntimação: " + intimacao + "\nLaudo Recente: " + laudoRecente, "Condicionais", 1);
-				JOptionPane.showMessageDialog(null, "Órgão Julgador Identificado: " + orgaoJulgador, "Órgão Julgador", 1);
-			} 
-			if (subnucleo.contains("SSEAS")
-					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Iniciando Tratamento para o núcleo SSEAS", "Tratamento", 1);
-				}
-				if (citacao) {
-					//stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					//stringBuilder.insert(0, "EATE/");
-					resultado.setEtiqueta("EATE/SSEAS:CITAÇÃO");
-				} else if (intimacao) {
-					resultado = invocarTriagemPadrao(driver, wait, config, banco, indexPeticao, dentroDaPasta);
-					stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					stringBuilder.insert(0, "GEAC/SSEAS:");
-					resultado.setEtiqueta(stringBuilder.toString());
-				} else {
-					resultado = invocarTriagemPadrao(driver, wait, config, banco, indexPeticao, dentroDaPasta);
-					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "EATE/SSEAS:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "GEAC/SSEAS:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "SSEAS:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					}
-				}
-
-			} else if (subnucleo.contains("SBI") && orgaoJulgador.contains("JUIZADO ESPECIAL")) {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Iniciando Tratamento para o núcleo SBI", "Tratamento", 1);
-				}
-				if (laudoRecente) {
-					//stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					//stringBuilder.insert(0, "EATE/");
-					resultado.setEtiqueta("EATE/SBI:LAUDO");
-				} else if (citacao) {
-					resultado.setEtiqueta("EATE/SBI:CITAÇÃO");
-				} else if (intimacao) {
-					resultado = invocarTriagemPadrao(driver, wait, config, banco, indexPeticao, dentroDaPasta);
-					stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					stringBuilder.insert(0, "GEAC/SBI:");
-					resultado.setEtiqueta(stringBuilder.toString());
-				} else {
-					resultado = invocarTriagemPadrao(driver, wait, config, banco, indexPeticao, dentroDaPasta);
-					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "EATE/SBI:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "GEAC/SBI:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "SBI:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					}
-				}
-			} else if (subnucleo.contains("NÃO FOI POSSÍVEL")) {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Não foi possível identificar o núcleo");
-				}
-				resultado.setEtiqueta("NÃO FOI POSSÍVEL IDENTIFICAR A MATÉRIA");
-				resultado.setDriver(driver);
-				return resultado;
-			} else {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Iniciando Tratamento para o núcleo SCC", "Tratamento", 1);
-				}
-				if (citacao) {
-					resultado.setEtiqueta("EATE/SCC:CITAÇÃO");
-				} else if (intimacao) {
-					resultado = invocarTriagemPadrao(driver, wait, config, banco, indexPeticao, dentroDaPasta);
-					stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					stringBuilder.insert(0, "GEAC/SCC:");
-					resultado.setEtiqueta(stringBuilder.toString());
-				} else {
-					resultado = invocarTriagemPadrao(driver, wait, config, banco, indexPeticao, dentroDaPasta);
-					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "EATE/SCC:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "GEAC/SCC:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "SCC:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					}
-				}
-			}
-			if(debugPi.isDebugpi()) {
-				JOptionPane.showMessageDialog(null, "Etiqueta Final: " + resultado.getEtiqueta(), "Etiqueta Final", 1);
-			}
-			String verificarPJE = resultado.getEtiqueta().toUpperCase().replaceAll(" ", "");
-			if (verificarPJE.contains("PJE-FEDERAL")
-					|| verificarPJE.contains("PJE-ESTADUAL")) {
-				String etiquetaComposta[] = resultado.getEtiqueta().split(":");
-				try {
-					resultado.setEtiqueta(etiquetaComposta[1]);
-				} catch (Exception e) {
-					//
-				}
-				if(debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Etiqueta editada (FEDERAL/ESTADUAL identificado): " + resultado.getEtiqueta(), "Etiqueta Final", 1);
-				}
-			}
-		}
-		resultado.setDriver(driver);
-		return resultado;
-	}
-	*/
 
 	private Chaves_Resultado triagemPadrao(WebDriver driver, WebDriverWait wait, Chaves_Configuracao configs,
 			String banco, int indexPeticao, boolean dentroDaPasta, String nucleo)
 			throws InterruptedException, SQLException, UnsupportedFlavorException, IOException {
-		Processo_Movimentacao pm = new Processo_Movimentacao();
-		Processo_Documento pd = new Processo_Documento();
+
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		
 		if (dentroDaPasta) {
@@ -396,19 +253,18 @@ public class Processo_PeticaoInicial {
 		switch (configs.getTipoTriagem()) {
 		case "MOV":
 			//System.out.println("chamando movimentação 400");
-			Thread.sleep(500);
-			resultado = pm.movimentacao(driver, wait, configs, banco);
+			resultado = new Processo_Movimentacao().movimentacao(driver, wait, configs, banco);
 			break;
 		case "DOC":
 			//System.out.println("chamando documento 403");
-			resultado = pd.documento(driver, wait, configs, banco);
+			resultado = new Processo_Documento().documento(driver, wait, configs, banco);
 			break;
 		case "COM":
 			//System.out.println("chamando movimentação 406");
-			resultado = pm.movimentacao(driver, wait, configs, banco);
+			resultado = new Processo_Movimentacao().movimentacao(driver, wait, configs, banco);
 			if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
 				//System.out.println("chamando documento 409");
-				resultado = pd.documento(driver, wait, configs, banco);
+				resultado = new Processo_Documento().documento(driver, wait, configs, banco);
 			}
 			break;
 		}
@@ -419,24 +275,10 @@ public class Processo_PeticaoInicial {
 			resultado.setDriver(driver);
 			return resultado;
 		}
-
-		StringBuilder sb = new StringBuilder(resultado.getEtiqueta());
-
-		switch(nucleo) {
-			case "SSEAS":
-				sb.insert(0, "SSEAS/");
-				resultado.setEtiqueta(sb.toString());
-				break;
-			case "SBI":
-				sb.insert(0, "SBI/");
-				resultado.setEtiqueta(sb.toString());
-				break;
-			case "SCC":
-				sb.insert(0, "SCC/");
-				resultado.setEtiqueta(sb.toString());
-				break;
-		}
-
+		
+		String etiquetaFinal = nucleo + "/" + resultado.getEtiqueta();
+		
+		resultado.setEtiqueta(etiquetaFinal);
 		resultado.setDriver(driver);
 		return resultado;
 		
