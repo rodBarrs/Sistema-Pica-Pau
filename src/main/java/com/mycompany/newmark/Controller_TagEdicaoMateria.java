@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
@@ -35,6 +36,8 @@ public class Controller_TagEdicaoMateria implements Initializable {
     JFXComboBox<String> ComboBoxNucleo;
     @FXML
     JFXButton salvar, cancelar, limparCampos;
+    @FXML
+    RadioButton P1, P2, P3, P4;
     
     final ToggleGroup grupoPeso = new ToggleGroup();
     final ToggleGroup grupoTipo = new ToggleGroup();
@@ -43,6 +46,22 @@ public class Controller_TagEdicaoMateria implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         PalavraChave.setText(chave.getPALAVRACHAVE());
         Complemento.setText(chave.getCOMPLEMENTO());
+        
+        switch (chave.getPRIORIDADE()) {
+        case "1":
+        	P1.setSelected(true);
+        	break;
+        case "2":
+        	P2.setSelected(true);
+        	break;
+        case "3":
+        	P3.setSelected(true);
+        	break;
+        case "4":
+        	P4.setSelected(true);
+        	break;
+        }
+        
         ObservableList<String> items = FXCollections.observableArrayList(itemComboBox());
         ComboBoxNucleo.setItems(items);
         ComboBoxNucleo.getSelectionModel().select(chave.getETIQUETA());
@@ -53,7 +72,13 @@ public class Controller_TagEdicaoMateria implements Initializable {
         String palavraChave = PalavraChave.getText().toUpperCase().replace("'", "").replace("´", "");
         String complemento = Complemento.getText().toUpperCase().replace("'", "").replace("´", "");
         String etiqueta = ComboBoxNucleo.getSelectionModel().getSelectedItem().toString();
+        String PRIORIDADE = "";
         
+        if(P1.isSelected()) PRIORIDADE = "1"; 
+		if(P2.isSelected()) PRIORIDADE = "2"; 
+		if(P3.isSelected()) PRIORIDADE = "3"; 
+		if(P4.isSelected()) PRIORIDADE = "4"; 
+		
         String textoAviso = "";
         Aviso aviso = new Aviso();
         if((palavraChave.equals(null)) || palavraChave.equals("") || palavraChave.equals(" ")){
@@ -67,7 +92,7 @@ public class Controller_TagEdicaoMateria implements Initializable {
         } else {         
             //Armazena a qual banco de dados pertence a etiqueta alterada
             Banco banco = new Banco();
-            banco.alterarEtiquetas(chave, palavraChave, complemento, etiqueta, "PET", "1");
+            banco.alterarEtiquetas(chave, palavraChave, complemento, etiqueta, "PET", PRIORIDADE);
             
             textoAviso = "Etiqueta Alterada!";
             aviso.aviso(textoAviso);

@@ -123,14 +123,12 @@ public class Controller_BancosEdicao implements Initializable {
         }
     }
 
-    @SuppressWarnings({"ConvertToTryWithResources", "empty-statement"})
     public void atualizar() throws SQLException {
         try {
             List<Chaves_GrupoEtiquetas> chaves = new ArrayList<>();
             Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BANCOS ORDER BY NOME");
             ResultSet resultSet = stmt.executeQuery();
-            int i = 0;
             while (resultSet.next()) {
                 Chaves_GrupoEtiquetas key = new Chaves_GrupoEtiquetas();
                 key.setSigla(resultSet.getString("SIGLA"));

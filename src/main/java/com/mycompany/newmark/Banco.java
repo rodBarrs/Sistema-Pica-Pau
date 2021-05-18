@@ -20,7 +20,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Banco {
-	@SuppressWarnings("ConvertToTryWithResources")
 	public void conectar() {
 		try {
 			//Estabelece a conecção com o banco de dados

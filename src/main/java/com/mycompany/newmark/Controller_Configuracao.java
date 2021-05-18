@@ -21,8 +21,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -428,7 +426,12 @@ public class Controller_Configuracao implements Initializable {
 		cb.setPALAVRACHAVE(pedido.getText().trim());
 		cb.setCOMPLEMENTO(complemento.getText().trim());
 		cb.setETIQUETA(comboBoxNucleo.getSelectionModel().getSelectedItem());
-		cb.setPRIORIDADE("1");
+		String PRIORIDADE = "";
+		if(P1.isSelected()) PRIORIDADE = "1"; 
+		if(P2.isSelected()) PRIORIDADE = "2"; 
+		if(P3.isSelected()) PRIORIDADE = "3"; 
+		if(P4.isSelected()) PRIORIDADE = "4"; 
+		cb.setPRIORIDADE(PRIORIDADE);
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoMateria.fxml"));
 		loader.setController(new Controller_TagEdicaoMateria(cb));
 		Parent root = loader.load();
@@ -605,6 +608,21 @@ public class Controller_Configuracao implements Initializable {
 		pedido.setText(tabelaMateria.getSelectionModel().getSelectedItem().getPALAVRACHAVE());
 		complemento.setText(tabelaMateria.getSelectionModel().getSelectedItem().getCOMPLEMENTO());
 		comboBoxNucleo.getSelectionModel().select(tabelaMateria.getSelectionModel().getSelectedItem().getETIQUETA());
+		String peso = tabelaMateria.getSelectionModel().getSelectedItem().getPRIORIDADE();
+        switch (peso){
+            case "1":
+                P1.setSelected(true);
+            break;
+            case "2":
+                P2.setSelected(true);
+            break;
+            case "3":
+                P3.setSelected(true);
+            break;
+            case "4":
+                P4.setSelected(true);
+            break;
+        }
 	}
 
 	@FXML
