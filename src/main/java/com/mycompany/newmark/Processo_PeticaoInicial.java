@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -24,15 +25,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Processo_PeticaoInicial {
 	private String localTriagem = "PET";
-
+	private Chaves_Configuracao debugPi;
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config,
-			String banco) throws Exception {
+			String banco, Chaves_Configuracao debugPi) throws Exception {
 		Tratamento tratamento = new Tratamento();
 		Triagem_Condicao cond = new Triagem_Condicao();
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		LeituraPDF pdf = new LeituraPDF();
 		Actions action = new Actions(driver);
 		String documentoPeticaoInicial = "";
+		this.debugPi = debugPi;
+		
 		//Aguarda até que tabela com as movimentações (treeview) esteja carregada
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
@@ -87,8 +90,7 @@ public class Processo_PeticaoInicial {
 					if (pdf.PDFBaixado()) {
 						documentoPeticaoInicial = pdf.lerPDF();
 						documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
-					} else {
-					}
+					} 
 				} else {
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 					WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
@@ -212,19 +214,26 @@ public class Processo_PeticaoInicial {
 	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco){
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		//Identifica a matéria e salva na variável resultado
-		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL");
+		Boolean identificadoDePeticao = true;
+		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL", identificadoDePeticao);
 		
 		String nucleo = resultado.getEtiqueta();
-			
-		if (nucleo.contains("SSEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
-			return resultado;	
+		
+		if(debugPi.isDebugpi()) {
+			JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+			JOptionPane.showMessageDialog(null, "NÚCLEO IDENTIFICADO: " + nucleo);
+			JOptionPane.showMessageDialog(null, "PALAVRA CHAVE NÚCLEO: " + resultado.getPalavraChave() + 
+					"\nCOMPLEMENTO: " + resultado.getComplemento());
 		}
+		
+		Boolean SSEASValido = nucleo.contains("SSEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL") || orgaoJulgador.contains("JEF"));
+		Boolean naoFoiPossivel = nucleo.contains("NÃO FOI POSSÍVEL");
+		Boolean SBIValido = nucleo.contains("SBI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
+		
+		if (SSEASValido) return resultado;			
+		if (SBIValido) return resultado;	
 
-		if (nucleo.contains("SBI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"))) {
-			return resultado;	
-		}
-
-		if (nucleo.contains("NÃO FOI POSSÍVEL")) {
+		if (naoFoiPossivel) {
 			resultado.setEtiqueta("");
 			return resultado;
 		}

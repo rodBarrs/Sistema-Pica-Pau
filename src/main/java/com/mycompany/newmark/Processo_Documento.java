@@ -128,7 +128,8 @@ public class Processo_Documento {
                             if (condicao.verificaCondicao(processo, condicaoCabecalho)) {
                                 limite--;
                                 try {
-                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, config.getTipoTriagem());
+                                	Boolean identificadoDePeticao = false;
+                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, config.getTipoTriagem(), identificadoDePeticao);
                                     if (!resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
                                             && !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
                                         linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText();

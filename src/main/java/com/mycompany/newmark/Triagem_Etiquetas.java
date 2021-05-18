@@ -16,7 +16,8 @@ import javax.swing.JOptionPane;
 
 public class Triagem_Etiquetas {
 
-	public Chaves_Resultado triarBanco(String processo, String banco, String localtriagem, String tipoTriagem) {
+	public Chaves_Resultado triarBanco(String processo, String banco, String localtriagem, String tipoTriagem,
+			Boolean identificadorDePeticao) {
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		Tratamento tratamento = new Tratamento();
 		processo = tratamento.tratamento(processo);
@@ -26,12 +27,16 @@ public class Triagem_Etiquetas {
 				Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 				PreparedStatement stmt;
 				ResultSet resultSet;
-				if (banco.contains("TODOS OS BANCOS")) {
-					stmt = connection.prepareStatement(
-							"SELECT * FROM ETIQUETAS WHERE TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+				if (identificadorDePeticao) {
+					stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' ORDER BY PRIORIDADE DESC");
 				} else {
-					stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + banco
-							+ "' AND TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+					if (banco.contains("TODOS OS BANCOS")) {
+						stmt = connection.prepareStatement(
+								"SELECT * FROM ETIQUETAS WHERE TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+					} else {
+						stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + banco
+								+ "' AND TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+					}
 				}
 				resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
@@ -56,8 +61,7 @@ public class Triagem_Etiquetas {
 				Logger.getLogger(Triagem_Etiquetas.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		resultado
-				.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA (" + banco + ", " + tipoTriagem + ")");
+		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA (" + banco + ", " + tipoTriagem + ")");
 		return resultado;
 	}
 }

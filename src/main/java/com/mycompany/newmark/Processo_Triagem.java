@@ -74,7 +74,7 @@ public class Processo_Triagem {
 					if (config.isLaudoPericial() == true) {
 						resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
 					} else if (config.isPeticaoInicial() == true) {
-						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos);
+						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos, debugPi);
 					} else {
 						switch (config.getTipoTriagem()) {
 						case "COM":

@@ -65,7 +65,8 @@ public class Processo_Movimentacao {
             if (verificarData.Verificar(movimentacaoAtual.getText()) || config.isTriarAntigo()) {
                 if (condicao.verificaCondicao(movimentacaoAtual.getText(),condicaoProv)){
                     limite--;
-                    resultado = triagem.triarBanco(movimentacaoAtual.getText(), bancos, localTriagem, config.getTipoTriagem());
+                    Boolean identificadoDePeticao = false;
+                    resultado = triagem.triarBanco(movimentacaoAtual.getText(), bancos, localTriagem, config.getTipoTriagem(), identificadoDePeticao);
                     if (!resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
                             && !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
                         linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText();

@@ -203,7 +203,8 @@ public class Processo_Pericial {
                                     String processo = "";
                                     processo = clipboard1.getData(flavor1).toString();
                                     processo = tratamento.tratamento(processo);
-                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, "PERICIAL");
+                                    Boolean identificadoDePeticao = false;
+                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, "PERICIAL", identificadoDePeticao);
                                     linhaMovimentacao = driver.findElement(By.xpath("//tr[" + aqui + "]/td/div")).getText();
                                     resultado.setLocal("Documento (" + linhaMovimentacao + ")");
                                     resultado.setDriver(driver);

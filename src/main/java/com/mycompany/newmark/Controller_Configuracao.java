@@ -65,7 +65,7 @@ public class Controller_Configuracao implements Initializable {
 	@FXML
 	TableView<Chaves_Banco> tabelaMateria;
 	@FXML
-	TableColumn<Chaves_Banco, String> colunaPedido, colunaComplementoPedido, colunaNucleo;
+	TableColumn<Chaves_Banco, String> colunaPedido, colunaComplementoPedido, colunaNucleo, colunaPeso;
 	@FXML
 	JFXTextField textoCabecalho, textoProv, textoPet, contTotal, contNao, contDoc, contSeq, pesquisaCabecalho,
 			pesquisaProvidencia, pesquisaIdentificador, pesquisaMateria, pedido, complemento;
@@ -76,7 +76,7 @@ public class Controller_Configuracao implements Initializable {
 			buscaIdentificador;
 	@FXML
 	RadioButton verificaData, triarAntigo, tipoCOM, tipoDOC, tipoMOV, html, pdf, desativadoPericial, ativadoPericial,
-			desativadoPeticaoInicial, ativadoPeticaoInicial;
+			desativadoPeticaoInicial, ativadoPeticaoInicial, P1, P2, P3, P4;
 	@FXML
 	private JFXComboBox<String> comboBoxNucleo;
 	final ToggleGroup grupoTriarAntigo = new ToggleGroup();
@@ -106,6 +106,7 @@ public class Controller_Configuracao implements Initializable {
 		colunaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		colunaComplementoPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
 		colunaNucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+		colunaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
 		ObservableList<Chaves_Banco> identMat = FXCollections.observableArrayList(identificadorMateria());
 		tabelaMateria.setItems(identMat);
 		//Inicialização das opções de Núcleo em "Identificador de Matéria"
@@ -171,6 +172,7 @@ public class Controller_Configuracao implements Initializable {
 				key.setPALAVRACHAVE(resultSet.getString("PALAVRACHAVE"));
 				key.setCOMPLEMENTO(resultSet.getString("COMPLEMENTO"));
 				key.setETIQUETA(resultSet.getString("ETIQUETA"));
+				key.setPRIORIDADE(resultSet.getString("PRIORIDADE"));
 				identMat.add(key);
 			}
 			connection.close();
@@ -199,12 +201,19 @@ public class Controller_Configuracao implements Initializable {
 			String COMPLEMENTO = complemento.getText().toUpperCase();
 			String NUCLEO = comboBoxNucleo.getSelectionModel().getSelectedItem().toUpperCase();
 			String TIPO = "PET";
+			String PRIORIDADE = "";
+			
+			if(P1.isSelected()) PRIORIDADE = "1"; 
+			if(P2.isSelected()) PRIORIDADE = "2"; 
+			if(P3.isSelected()) PRIORIDADE = "3"; 
+			if(P4.isSelected()) PRIORIDADE = "4"; 
+
 			elemento.setPALAVRACHAVE(PEDIDO);
 			elemento.setCOMPLEMENTO(COMPLEMENTO);
 			elemento.setETIQUETA(NUCLEO);
 			elemento.setTIPO(TIPO);
 			elemento.setBANCO("JEF");
-			elemento.setPRIORIDADE("1");
+			elemento.setPRIORIDADE(PRIORIDADE);
 			bd.inserirEtiquetas(elemento);
 			atualizar();
 			limpar();
@@ -629,11 +638,13 @@ public class Controller_Configuracao implements Initializable {
 			key.setPALAVRACHAVE(resultSet.getString("PALAVRACHAVE"));
 			key.setCOMPLEMENTO(resultSet.getString("COMPLEMENTO"));
 			key.setETIQUETA(resultSet.getString("ETIQUETA"));
+			key.setPRIORIDADE(resultSet.getString("PRIORIDADE"));
 			chaves.add(key);
 		}
 		colunaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		colunaComplementoPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
 		colunaNucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+		colunaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PESO"));
 		ObservableList<Chaves_Banco> materia = FXCollections.observableArrayList(chaves);
 		tabelaMateria.setItems(materia);
 		connection.close();
