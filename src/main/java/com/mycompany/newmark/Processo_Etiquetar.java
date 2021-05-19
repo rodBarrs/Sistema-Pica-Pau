@@ -30,10 +30,10 @@ public class Processo_Etiquetar {
         driver.findElement(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")).sendKeys(resultado.getEtiqueta());
         driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")).clear();
         driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")).sendKeys("MARK:"
-                + "\nFRASE CHAVE: " + resultado.getPalavraChave() + ";"
-                + "\nCOMPLEMENTO: " + resultado.getComplemento() + ";"
+                + "\nFC: " + resultado.getPalavraChave() + ";"
+                + "\nCOMP: " + resultado.getComplemento() + ";"
                 + "\nLOCAL: " + resultado.getLocal() + ";"
-                + "\nARQUIVO DE PETIÇÃO INICIAL: " + resultado.getPetição() + ".");
+                + "\nINDEX PI: " + Chaves_Resultado.getNomePeticao() + ".");
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.ENTER).build().perform();

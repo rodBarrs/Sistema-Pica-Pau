@@ -91,11 +91,11 @@ public class Processo_PeticaoInicial {
 
 				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
 
-				// Clica no título da Providência Jurídica
+				// Clica na div da Providência Jurídica
 
 				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[\" + i + \"]/td/div/span/span[1]")));
-				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[1]")).click();
+				driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
 
 				// Verifica se a movimentação é do tipo PDF
 				Boolean movimentacaoTemPDF = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]"))
@@ -111,7 +111,7 @@ public class Processo_PeticaoInicial {
 							documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
 							break;
 						} else {
-							driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[1]")).click();
+							driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
 
 						}
 					}
@@ -168,7 +168,7 @@ public class Processo_PeticaoInicial {
 						Thread.sleep(500);
 
 						// Clica para abrir o PDF
-						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).click();
+						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div")).click();
 
 						Boolean movimentacaoPastaContemPDF = driver
 								.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]")).getText()
@@ -181,6 +181,8 @@ public class Processo_PeticaoInicial {
 								if (pdfBaixado) {
 									String processo = pdf.lerPDF().toUpperCase();
 									if (cond.verificaCondicao(processo, "PET")) {
+										String posicaoDaPeticao = String.valueOf(j - 1);
+										Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
 										resultado = verificarNucleo(processo, orgaoJulgador, banco);
 										String nucleo = resultado.getEtiqueta();
 										resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
@@ -188,7 +190,7 @@ public class Processo_PeticaoInicial {
 										return resultado;
 									}
 								} else {
-									driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).click();
+									driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div")).click();
 								}
 							}
 
@@ -223,6 +225,8 @@ public class Processo_PeticaoInicial {
 
 							contemPeticaoInicial = cond.verificaCondicao(processo, "PET");
 							if (contemPeticaoInicial) {
+								String posicaoDaPeticao = String.valueOf(j - 1);
+								Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
 								resultado = verificarNucleo(processo, orgaoJulgador, banco);
 								String nucleo = resultado.getEtiqueta();
 								resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
@@ -233,6 +237,8 @@ public class Processo_PeticaoInicial {
 					}
 
 				} else {
+					String posicaoDaPeticao = String.valueOf(i - 1);
+					Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
 					resultado = verificarNucleo(documentoPeticaoInicial, orgaoJulgador, banco);
 					resultado = triagemPadrao(driver, wait, config, banco, i, false, resultado.getEtiqueta());
 					resultado.setDriver(driver);
@@ -241,6 +247,7 @@ public class Processo_PeticaoInicial {
 
 			}
 		}
+		Chaves_Resultado.setNomePeticao("PETIÇÃO NÃO ENCONTRADA");
 		resultado.setDriver(driver);
 		return resultado;
 

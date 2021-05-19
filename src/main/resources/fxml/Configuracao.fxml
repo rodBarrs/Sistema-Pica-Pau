@@ -212,23 +212,23 @@
                                           <JFXComboBox fx:id="comboBoxNucleo" focusColor="#bdff53" prefHeight="25.0" prefWidth="397.0" promptText="SELECIONE O NÚCLEO" unFocusColor="WHITE" />
                                        </children>
                                     </VBox>
-                                    <JFXButton fx:id="botaoLimpar" layoutX="547.0" layoutY="353.0" onAction="#limpar" prefHeight="27.0" prefWidth="161.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Limpar Campos">
+                                    <JFXButton fx:id="botaoLimpar" layoutX="547.0" layoutY="355.0" onAction="#limpar" prefHeight="27.0" prefWidth="161.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Limpar Campos">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXButton fx:id="botaoInserir" alignment="CENTER" layoutX="547.0" layoutY="317.0" onAction="#inserirMat" prefHeight="27.0" prefWidth="332.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Registro" textAlignment="CENTER">
+                                    <JFXButton fx:id="botaoInserir" alignment="CENTER" layoutX="547.0" layoutY="319.0" onAction="#inserirMat" prefHeight="27.0" prefWidth="161.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Registro" textAlignment="CENTER">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXButton fx:id="botaoExcluir" alignment="CENTER" layoutX="718.0" layoutY="353.0" onAction="#excluirMat" prefHeight="27.0" prefWidth="161.0" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Excluir Registro" textAlignment="CENTER">
+                                    <JFXButton fx:id="botaoExcluir" alignment="CENTER" layoutX="718.0" layoutY="319.0" onAction="#excluirMat" prefHeight="27.0" prefWidth="161.0" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Excluir Registro" textAlignment="CENTER">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
                                     <JFXTextField fx:id="pesquisaMateria" focusColor="WHITE" labelFloat="true" layoutX="545.0" layoutY="2.0" onKeyPressed="#buscaMateria" onKeyReleased="#buscaMateria" prefHeight="25.0" prefWidth="309.0" promptText="Pesquisar pedido" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
-                                    <JFXButton fx:id="voltarPet1" layoutX="718.0" layoutY="392.0" onAction="#RetornaMenu" prefHeight="27.0" prefWidth="161.0" ripplerFill="#1e1e1e08" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
+                                    <JFXButton fx:id="voltarPet1" layoutX="718.0" layoutY="355.0" onAction="#RetornaMenu" prefHeight="27.0" prefWidth="161.0" ripplerFill="#1e1e1e08" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -274,6 +274,11 @@
                                           </RadioButton>
                                        </children>
                                     </HBox>
+                                    <JFXButton fx:id="botaoLimpar1" layoutX="547.0" layoutY="394.0" onAction="#editorDeEtiquetas" prefHeight="27.0" prefWidth="332.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Editor de Etiquetas">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </JFXButton>
                                  </children>
                               </AnchorPane>
                           </content>
@@ -478,7 +483,7 @@
       </Tab>
       <Tab text="Contador">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="618.0">
                <children>
                   <Label layoutX="40.0" layoutY="60.0" text="Monitora o número de processos etiquetados pelo Mark." textFill="WHITE">
                      <font>

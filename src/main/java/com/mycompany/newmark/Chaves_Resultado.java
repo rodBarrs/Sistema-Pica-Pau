@@ -7,6 +7,7 @@ package com.mycompany.newmark;
 import org.openqa.selenium.WebDriver;
 
 public class Chaves_Resultado {
+	public static String nomePeticao;
     private String PalavraChave = "";
     private String Complemento = "";
     private String Etiqueta = "";
@@ -14,8 +15,16 @@ public class Chaves_Resultado {
     private String Petição = "";
     private WebDriver driver;
     private boolean grid;
+    
+    public static String getNomePeticao() {
+		return nomePeticao;
+	}
 
-    public String getPalavraChave() {
+	public static void setNomePeticao(String nomePeticao) {
+		Chaves_Resultado.nomePeticao = nomePeticao;
+	}
+
+	public String getPalavraChave() {
         return PalavraChave;
     }
 

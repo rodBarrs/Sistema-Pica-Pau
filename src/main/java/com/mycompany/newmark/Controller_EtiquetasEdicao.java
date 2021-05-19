@@ -125,10 +125,6 @@ public class Controller_EtiquetasEdicao implements Initializable {
                 textoAviso = "O campo \"Palavra Chave\" não pode ser vazio!";
                 aviso.aviso(textoAviso);
                 return false;
-            } else if(complemento == null || complemento.equals("") || complemento.equals(" ")) {
-                textoAviso = "O campo \"Complemento\" não pode ser vazio!";
-                aviso.aviso(textoAviso);
-                return false;
             } else if(etiqueta == null || etiqueta.equals("") || etiqueta.equals(" ")) {
                 textoAviso = "O campo \"Etiqueta\" não pode ser vazio!";
                 aviso.aviso(textoAviso);

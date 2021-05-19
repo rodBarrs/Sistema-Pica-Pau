@@ -5,6 +5,7 @@
  */
 package com.mycompany.newmark;
 
+import com.gargoylesoftware.htmlunit.javascript.host.event.Event;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,6 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
@@ -48,6 +51,8 @@ public class Controller_Configuracao implements Initializable {
 		this.chave = chave;
 	}
 
+	@FXML
+	Tab nomeTeste;
 	@FXML
 	TableView<Chaves_Condicao> tabelaIdentificador;
 	@FXML
@@ -88,26 +93,26 @@ public class Controller_Configuracao implements Initializable {
 	}
 
 	public void atualizar() {
-		//Inicialização da tabela de cabeçalho
+		// Inicialização da tabela de cabeçalho
 		colunaCabecalho.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
 		ObservableList<Chaves_Condicao> cabecalho = FXCollections.observableArrayList(Cabecalho());
 		tabelaCabecalho.setItems(cabecalho);
-		//Inicialização da tabela de Providência Juridica
+		// Inicialização da tabela de Providência Juridica
 		colunaProvidencia.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
 		ObservableList<Chaves_Condicao> providencia = FXCollections.observableArrayList(ProvJuri());
 		tabelaProvidencia.setItems(providencia);
-		//Inicialização da tabela de Identificador de Petição Inicial
+		// Inicialização da tabela de Identificador de Petição Inicial
 		colunaIdentificador.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
 		ObservableList<Chaves_Condicao> identPeticao = FXCollections.observableArrayList(identificadorPeticao());
 		tabelaIdentificador.setItems(identPeticao);
-		//Inicialização da tabela de Identificador de Matéria
+		// Inicialização da tabela de Identificador de Matéria
 		colunaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		colunaComplementoPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
 		colunaNucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
 		colunaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
 		ObservableList<Chaves_Banco> identMat = FXCollections.observableArrayList(identificadorMateria());
 		tabelaMateria.setItems(identMat);
-		//Inicialização das opções de Núcleo em "Identificador de Matéria"
+		// Inicialização das opções de Núcleo em "Identificador de Matéria"
 		ObservableList<String> items = FXCollections.observableArrayList(itemComboBox());
 		comboBoxNucleo.setItems(items);
 
@@ -146,6 +151,11 @@ public class Controller_Configuracao implements Initializable {
 			desativadoPeticaoInicial.setSelected(true);
 		}
 		contadores();
+	}
+
+	@FXML
+	public void editorDeEtiquetas(ActionEvent event){
+		new Controller_Login().editarEtiquetas(event);
 	}
 
 	public ObservableList<String> itemComboBox() {
@@ -200,11 +210,15 @@ public class Controller_Configuracao implements Initializable {
 			String NUCLEO = comboBoxNucleo.getSelectionModel().getSelectedItem().toUpperCase();
 			String TIPO = "PET";
 			String PRIORIDADE = "";
-			
-			if(P1.isSelected()) PRIORIDADE = "1"; 
-			if(P2.isSelected()) PRIORIDADE = "2"; 
-			if(P3.isSelected()) PRIORIDADE = "3"; 
-			if(P4.isSelected()) PRIORIDADE = "4"; 
+
+			if (P1.isSelected())
+				PRIORIDADE = "1";
+			if (P2.isSelected())
+				PRIORIDADE = "2";
+			if (P3.isSelected())
+				PRIORIDADE = "3";
+			if (P4.isSelected())
+				PRIORIDADE = "4";
 
 			elemento.setPALAVRACHAVE(PEDIDO);
 			elemento.setCOMPLEMENTO(COMPLEMENTO);
@@ -279,7 +293,7 @@ public class Controller_Configuracao implements Initializable {
 	@FXML
 	public void excluirPet() {
 		if (textoPet.getText().equals("")) {
-			// 
+			//
 		} else {
 			Chaves_Condicao chave = new Chaves_Condicao();
 			chave.setTEXTO(tabelaIdentificador.getSelectionModel().getSelectedItem().getTEXTO());
@@ -334,7 +348,7 @@ public class Controller_Configuracao implements Initializable {
 	@FXML
 	public void excluirProvJuri(ActionEvent event) {
 		if (textoProv.getText().equals("")) {
-			//Não faz nada
+			// Não faz nada
 		} else {
 			Chaves_Condicao chave = new Chaves_Condicao();
 			chave.setTEXTO(tabelaProvidencia.getSelectionModel().getSelectedItem().getTEXTO());
@@ -389,7 +403,7 @@ public class Controller_Configuracao implements Initializable {
 	@FXML
 	public void excluirCabecalho() {
 		if (textoCabecalho.getText().equals("")) {
-			//Não faz nada
+			// Não faz nada
 		} else {
 			Chaves_Condicao chave = new Chaves_Condicao();
 			chave.setTEXTO(tabelaCabecalho.getSelectionModel().getSelectedItem().getTEXTO());
@@ -418,7 +432,7 @@ public class Controller_Configuracao implements Initializable {
 		alterarCondicao(tipo);
 		atualizar();
 	}
-	
+
 	public void alterarMateria() throws IOException {
 		Chaves_Banco cb = new Chaves_Banco();
 		cb.setBANCO("JEF");
@@ -427,10 +441,14 @@ public class Controller_Configuracao implements Initializable {
 		cb.setCOMPLEMENTO(complemento.getText().trim());
 		cb.setETIQUETA(comboBoxNucleo.getSelectionModel().getSelectedItem());
 		String PRIORIDADE = "";
-		if(P1.isSelected()) PRIORIDADE = "1"; 
-		if(P2.isSelected()) PRIORIDADE = "2"; 
-		if(P3.isSelected()) PRIORIDADE = "3"; 
-		if(P4.isSelected()) PRIORIDADE = "4"; 
+		if (P1.isSelected())
+			PRIORIDADE = "1";
+		if (P2.isSelected())
+			PRIORIDADE = "2";
+		if (P3.isSelected())
+			PRIORIDADE = "3";
+		if (P4.isSelected())
+			PRIORIDADE = "4";
 		cb.setPRIORIDADE(PRIORIDADE);
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoMateria.fxml"));
 		loader.setController(new Controller_TagEdicaoMateria(cb));
@@ -484,21 +502,21 @@ public class Controller_Configuracao implements Initializable {
 		Banco banco = new Banco();
 
 		if (verificaData.isSelected()) {
-			//Irá verificar a data, considerará apenas os ultimos 30 dias
+			// Irá verificar a data, considerará apenas os ultimos 30 dias
 			antigoTria = false;
 		} else {
-			//NÃO irá verififcar data e considerará as ulitmas 10 movimentações
+			// NÃO irá verififcar data e considerará as ulitmas 10 movimentações
 			antigoTria = true;
 		}
 
 		if (tipoCOM.isSelected()) {
-			//Realizará a Triagem COMPLETA
+			// Realizará a Triagem COMPLETA
 			tipoTria = "COM";
 		} else if (tipoDOC.isSelected()) {
-			//Realizará a Triagem APENAS nos Documentos
+			// Realizará a Triagem APENAS nos Documentos
 			tipoTria = "DOC";
 		} else {
-			//Realizará a Triagem APENAS na Movimentação
+			// Realizará a Triagem APENAS na Movimentação
 			tipoTria = "MOV";
 		}
 
@@ -506,7 +524,7 @@ public class Controller_Configuracao implements Initializable {
 			// Irá ler somente movimentações presente no HTML
 			juntadaTria = false;
 		} else {
-			//Irá ler movimentações que possuem PDF e HTML
+			// Irá ler movimentações que possuem PDF e HTML
 			juntadaTria = true;
 		}
 
@@ -525,7 +543,7 @@ public class Controller_Configuracao implements Initializable {
 			// Irá realiziar a busca pelo laudo pericial na movimentação
 			pericial = true;
 		} else {
-			// Irá ignorar o laudo pericial na movimentação 
+			// Irá ignorar o laudo pericial na movimentação
 			pericial = false;
 		}
 
@@ -609,20 +627,20 @@ public class Controller_Configuracao implements Initializable {
 		complemento.setText(tabelaMateria.getSelectionModel().getSelectedItem().getCOMPLEMENTO());
 		comboBoxNucleo.getSelectionModel().select(tabelaMateria.getSelectionModel().getSelectedItem().getETIQUETA());
 		String peso = tabelaMateria.getSelectionModel().getSelectedItem().getPRIORIDADE();
-        switch (peso){
-            case "1":
-                P1.setSelected(true);
-            break;
-            case "2":
-                P2.setSelected(true);
-            break;
-            case "3":
-                P3.setSelected(true);
-            break;
-            case "4":
-                P4.setSelected(true);
-            break;
-        }
+		switch (peso) {
+		case "1":
+			P1.setSelected(true);
+			break;
+		case "2":
+			P2.setSelected(true);
+			break;
+		case "3":
+			P3.setSelected(true);
+			break;
+		case "4":
+			P4.setSelected(true);
+			break;
+		}
 	}
 
 	@FXML
