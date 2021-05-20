@@ -57,11 +57,12 @@ public class Banco {
 					+ "ContErro     INT                 NOT NULL    DEFAULT (0),        \n"
 					+ "PRIMARY KEY (ID)                                                 \n" + ");");
 
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS ETIQUETAS (              \n"
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS ETIQUETAS (                  \n"
+					+ "ID           INTEGER       PRIMARY KEY AUTOINCREMENT,            \n"
 					+ "PALAVRACHAVE VARCHAR (45)        NOT NULL,                       \n"
 					+ "COMPLEMENTO  VARCHAR (100)       NOT NULL,                       \n"
 					+ "ETIQUETA     VARCHAR (100)       NOT NULL,                       \n"
-					+ "TIPO         STRING              NOT NULL    DEFAULT ('MOV'), \n"
+					+ "TIPO         STRING              NOT NULL    DEFAULT ('MOV'),    \n"
 					+ "[PRIORIDADE] VARCHAR (100)       NOT NULL    DEFAULT (0),        \n"
 					+ "BANCO        VARCHAR (3)         NOT NULL,                       \n"
 					+ "PRIMARY KEY (PALAVRACHAVE,COMPLEMENTO,BANCO)                     \n" + ");");

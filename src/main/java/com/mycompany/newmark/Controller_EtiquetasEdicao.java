@@ -157,6 +157,7 @@ public class Controller_EtiquetasEdicao implements Initializable {
         List<Chaves_Banco> chaves = new ArrayList<>();
         Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancoSelecionado + "' "
+                + "AND TIPO != 'PET' "
                 + "AND (ETIQUETA LIKE '%" + pesquisa.getText().toUpperCase().trim().replace("'", "").replace("´", "") + "%' "
                 + "OR PALAVRACHAVE LIKE '%" + pesquisa.getText().toUpperCase().trim().replace("'", "").replace("´", "") + "%' "
                 + "OR COMPLEMENTO LIKE '%" + pesquisa.getText().toUpperCase().trim().replace("'", "").replace("´", "") + "%' "
@@ -194,7 +195,7 @@ public class Controller_EtiquetasEdicao implements Initializable {
             Aviso aviso = new Aviso();
             String textoAviso = "Primeiro selecione um Banco na barra de seleção no canto superior direito!";
             aviso.aviso(textoAviso);
-        } else if (PalavraChave.getText().equals("") || Complemento.getText().equals("") ){
+        } else if (PalavraChave.getText().equals("")){
             //Não faz nada
         } else {
             Chaves_Banco chave = new Chaves_Banco();

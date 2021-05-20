@@ -36,7 +36,12 @@ public class Processo_PeticaoInicial {
 		Actions action = new Actions(driver);
 		String documentoPeticaoInicial = "";
 		this.debugPi = debugPi;
-
+		
+		//Limpa conteúdo estáticos da Chaves_Resultado
+		Chaves_Resultado.setNomePeticao("");
+		Chaves_Resultado.setPalavraChavePeticao("");
+		Chaves_Resultado.setComplementoChavePeticao("");
+		
 		// Aguarda até que tabela com as movimentações (treeview) esteja carregada
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
@@ -259,7 +264,8 @@ public class Processo_PeticaoInicial {
 		Boolean identificadoDePeticao = true;
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL",
 				identificadoDePeticao);
-
+		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
+		Chaves_Resultado.setComplementoChavePeticao(resultado.getComplemento());
 		String nucleo = resultado.getEtiqueta();
 
 		if (debugPi.isDebugpi()) {

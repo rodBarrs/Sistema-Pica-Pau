@@ -33,7 +33,9 @@ public class Processo_Etiquetar {
                 + "\nFC: " + resultado.getPalavraChave() + ";"
                 + "\nCOMP: " + resultado.getComplemento() + ";"
                 + "\nLOCAL: " + resultado.getLocal() + ";"
-                + "\nINDEX PI: " + Chaves_Resultado.getNomePeticao() + ".");
+                + "\nINDEX PI: " + Chaves_Resultado.getNomePeticao() + ";"
+                + "\nFC PI: " + Chaves_Resultado.getPalavraChavePeticao() + ";"
+                + "\nCOMP PI:" + Chaves_Resultado.getComplementoChavePeticao() + ".");
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.TAB).build().perform();
         action.sendKeys(Keys.ENTER).build().perform();
