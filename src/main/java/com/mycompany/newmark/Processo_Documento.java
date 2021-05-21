@@ -125,7 +125,7 @@ public class Processo_Documento {
                         }
 
                         if (processo.length() > 1) {
-                            if (condicao.verificaCondicao(processo, condicaoCabecalho)) {
+                            //if (condicao.verificaCondicao(processo, condicaoCabecalho)) {
                                 limite--;
                                 try {
                                 	Boolean identificadoDePeticao = false;
@@ -142,7 +142,7 @@ public class Processo_Documento {
                                     driver.findElement(By.id("button-1005-btnEl")).click();
                                     erro.printStackTrace();
                                 }
-                            }
+                           //}
                         } else {
                             resultado.setEtiqueta("ERRO EM TRIAGEM: INSTABILIDADE NO SAPIENS");
                         }

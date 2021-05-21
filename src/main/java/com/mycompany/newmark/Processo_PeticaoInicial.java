@@ -157,8 +157,8 @@ public class Processo_PeticaoInicial {
 				if (!contemPeticaoInicial) {
 
 					int proximaLinha = Integer
-							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText());
-
+							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText()) + 1;
+			
 					// Clica na seta para expandir a pasta
 					driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).click();
 
@@ -240,7 +240,12 @@ public class Processo_PeticaoInicial {
 							}
 						}
 					}
-
+					
+					Chaves_Resultado.setNomePeticao("PETIÇÃO NÃO ENCONTRADA");
+					resultado = triagemPadrao(driver, wait, config, banco, i, true, "");	
+					resultado.setDriver(driver);
+					return resultado; 
+					
 				} else {
 					String posicaoDaPeticao = String.valueOf(i - 1);
 					Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
@@ -253,6 +258,7 @@ public class Processo_PeticaoInicial {
 			}
 		}
 		Chaves_Resultado.setNomePeticao("PETIÇÃO NÃO ENCONTRADA");
+		resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");	
 		resultado.setDriver(driver);
 		return resultado;
 
