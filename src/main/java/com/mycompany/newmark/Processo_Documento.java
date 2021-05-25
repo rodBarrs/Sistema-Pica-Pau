@@ -48,7 +48,7 @@ public class Processo_Documento {
         for (int i = listaMovimentacao.size(); i > 0 && limite > 0; i--) {
             wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div")));
             movimentacaoAtual = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div"));
-            if (verificarData.Verificar(movimentacaoAtual.getText()) || config.isTriarAntigo()) {
+            if (config.isTriarAntigo() || verificarData.verificar(movimentacaoAtual.getText())) {
                 if (condicao.verificaCondicao(movimentacaoAtual.getText(), condicaoProv)) {
                     if ((!config.isJuntManual() == false && !movimentacaoAtual.getText().contains("PDF")) || (config.isJuntManual() == true)) {
 
@@ -133,7 +133,7 @@ public class Processo_Documento {
                                     if (!resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
                                             && !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
                                         linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText();
-                                        resultado.setLocal("Documento (" + linhaMovimentacao + ")");
+                                        resultado.setLocal("DOC " + linhaMovimentacao );
                                         resultado.setDriver(driver);
                                         return resultado;
                                     }

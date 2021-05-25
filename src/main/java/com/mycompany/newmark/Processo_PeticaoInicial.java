@@ -38,9 +38,8 @@ public class Processo_PeticaoInicial {
 		this.debugPi = debugPi;
 		
 		//Limpa conteúdo estáticos da Chaves_Resultado
-		Chaves_Resultado.setNomePeticao("");
+		Chaves_Resultado.setSeqPeticao("");
 		Chaves_Resultado.setPalavraChavePeticao("");
-		Chaves_Resultado.setComplementoChavePeticao("");
 		
 		// Aguarda até que tabela com as movimentações (treeview) esteja carregada
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
@@ -79,7 +78,6 @@ public class Processo_PeticaoInicial {
 		resultado.setLocal("PETIÇÃO INICIAL");
 		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR PASTA DE PETIÇÃO INICIAL");
 		resultado.setPalavraChave("");
-		resultado.setComplemento("");
 
 		// Verifica a existência de uma pasta na posição 1 do sapiens (isso significaria
 		// que existe uma possível petição inicial com nome diferente)
@@ -187,7 +185,7 @@ public class Processo_PeticaoInicial {
 									String processo = pdf.lerPDF().toUpperCase();
 									if (cond.verificaCondicao(processo, "PET")) {
 										String posicaoDaPeticao = String.valueOf(j - 1);
-										Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
+										Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
 										resultado = verificarNucleo(processo, orgaoJulgador, banco);
 										String nucleo = resultado.getEtiqueta();
 										resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
@@ -231,7 +229,7 @@ public class Processo_PeticaoInicial {
 							contemPeticaoInicial = cond.verificaCondicao(processo, "PET");
 							if (contemPeticaoInicial) {
 								String posicaoDaPeticao = String.valueOf(j - 1);
-								Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
+								Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
 								resultado = verificarNucleo(processo, orgaoJulgador, banco);
 								String nucleo = resultado.getEtiqueta();
 								resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
@@ -241,14 +239,14 @@ public class Processo_PeticaoInicial {
 						}
 					}
 					
-					Chaves_Resultado.setNomePeticao("PETIÇÃO NÃO ENCONTRADA");
+					Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
 					resultado = triagemPadrao(driver, wait, config, banco, i, true, "");	
 					resultado.setDriver(driver);
 					return resultado; 
 					
 				} else {
 					String posicaoDaPeticao = String.valueOf(i - 1);
-					Chaves_Resultado.setNomePeticao("(" + posicaoDaPeticao + ")");
+					Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
 					resultado = verificarNucleo(documentoPeticaoInicial, orgaoJulgador, banco);
 					resultado = triagemPadrao(driver, wait, config, banco, i, false, resultado.getEtiqueta());
 					resultado.setDriver(driver);
@@ -257,7 +255,7 @@ public class Processo_PeticaoInicial {
 
 			}
 		}
-		Chaves_Resultado.setNomePeticao("PETIÇÃO NÃO ENCONTRADA");
+		Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
 		resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");	
 		resultado.setDriver(driver);
 		return resultado;
@@ -271,14 +269,12 @@ public class Processo_PeticaoInicial {
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL",
 				identificadoDePeticao);
 		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
-		Chaves_Resultado.setComplementoChavePeticao(resultado.getComplemento());
 		String nucleo = resultado.getEtiqueta();
 
 		if (debugPi.isDebugpi()) {
 			JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
 			JOptionPane.showMessageDialog(null, "NÚCLEO IDENTIFICADO: " + nucleo);
-			JOptionPane.showMessageDialog(null, "PALAVRA CHAVE NÚCLEO: " + resultado.getPalavraChave()
-					+ "\nCOMPLEMENTO: " + resultado.getComplemento());
+			JOptionPane.showMessageDialog(null, "PALAVRA CHAVE NÚCLEO: " + resultado.getPalavraChave());
 		}
 
 		Boolean SSEASValido = nucleo.contains("SSEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL")

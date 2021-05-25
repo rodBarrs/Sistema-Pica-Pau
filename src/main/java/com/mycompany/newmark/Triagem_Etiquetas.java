@@ -46,8 +46,7 @@ public class Triagem_Etiquetas {
 					COMPLEMENTO = tratamento.tratamento(COMPLEMENTO);
 					
 					if (processo.contains(PALAVRACHAVE) && processo.contains(COMPLEMENTO)) {
-						resultado.setPalavraChave(resultSet.getString("PALAVRACHAVE"));
-						resultado.setComplemento(resultSet.getString("COMPLEMENTO"));
+						resultado.setPalavraChave(resultSet.getString("ID"));
 						resultado.setEtiqueta(resultSet.getString("ETIQUETA"));
 						connection.close();
 						return resultado;

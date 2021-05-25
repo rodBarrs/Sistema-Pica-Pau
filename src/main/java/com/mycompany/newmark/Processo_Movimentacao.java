@@ -62,7 +62,7 @@ public class Processo_Movimentacao {
         WebElement movimentacaoAtual;
         for (int i = listaMovimentacao.size(); i>0 && limite>0; i--) {
             movimentacaoAtual = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div"));
-            if (verificarData.Verificar(movimentacaoAtual.getText()) || config.isTriarAntigo()) {
+            if (verificarData.verificar(movimentacaoAtual.getText()) || config.isTriarAntigo()) {
                 if (condicao.verificaCondicao(movimentacaoAtual.getText(),condicaoProv)){
                     limite--;
                     Boolean identificadoDePeticao = false;
@@ -70,7 +70,7 @@ public class Processo_Movimentacao {
                     if (!resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
                             && !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
                         linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText();
-                        resultado.setLocal("Movimentação (" + linhaMovimentacao + ")");
+                        resultado.setLocal("MOV " +  linhaMovimentacao);
                         resultado.setDriver(driver);
                         return resultado;
                     }

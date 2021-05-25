@@ -60,7 +60,6 @@ public class Processo_Pericial {
         resultado.setLocal("LAUDO PERICIAL");
         resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR LAUDO PERICIAL");
         resultado.setPalavraChave("");
-        resultado.setComplemento("");
 
         //FOR - Enquantou houve elementos na tabela, do último para o primeiro
         for (int i = listaMovimentacao.size(); i > 0; i--) {

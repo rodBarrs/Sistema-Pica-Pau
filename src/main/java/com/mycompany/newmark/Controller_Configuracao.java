@@ -5,10 +5,6 @@
  */
 package com.mycompany.newmark;
 
-import com.gargoylesoftware.htmlunit.javascript.host.event.Event;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -22,10 +18,15 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -33,6 +34,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -52,15 +55,13 @@ public class Controller_Configuracao implements Initializable {
 	}
 
 	@FXML
+	Spinner<Integer> spinnerDias = new Spinner<Integer>();;
+	@FXML
 	Tab nomeTeste;
 	@FXML
 	TableView<Chaves_Condicao> tabelaIdentificador;
 	@FXML
 	TableColumn<Chaves_Condicao, String> colunaIdentificador;
-	@FXML
-	TableView<Chaves_Condicao> tabelaCabecalho;
-	@FXML
-	TableColumn<Chaves_Condicao, String> colunaCabecalho;
 	@FXML
 	TableView<Chaves_Condicao> tabelaProvidencia;
 	@FXML
@@ -68,15 +69,13 @@ public class Controller_Configuracao implements Initializable {
 	@FXML
 	TableView<Chaves_Banco> tabelaMateria;
 	@FXML
-	TableColumn<Chaves_Banco, String> colunaPedido, colunaComplementoPedido, colunaNucleo, colunaPeso;
+	TableColumn<Chaves_Banco, String> colunaPedido, colunaComplementoPedido, colunaNucleo, colunaPeso, colunaId;
 	@FXML
-	JFXTextField textoCabecalho, textoProv, textoPet, contTotal, contNao, contDoc, contSeq, pesquisaCabecalho,
-			pesquisaProvidencia, pesquisaIdentificador, pesquisaMateria, pedido, complemento;
+	JFXTextField textoProv, textoPet, contTotal, contNao, contDoc, contSeq, pesquisaProvidencia, pesquisaIdentificador,
+			pesquisaMateria, pesquisaMateriaId, pedido, complemento;
 	@FXML
-	JFXButton limparCabecalho, limparProv, inserirCabecalho, excluirCabecalho, voltarCabecalho, inserirProv,
-			excluirProv, voltarProv, atualizarCabecalho, atualizarProvidencia, salvarAvancada, voltarAvancada,
-			salvarEspecifica, voltarEspecifica, voltarContador, botaoBuscaCabecalho, botaoBuscaProvidencia,
-			buscaIdentificador;
+	JFXButton limparProv, inserirProv, excluirProv, voltarProv, atualizarProvidencia, salvarAvancada, voltarAvancada,
+			salvarEspecifica, voltarEspecifica, voltarContador, botaoBuscaProvidencia;
 	@FXML
 	RadioButton verificaData, triarAntigo, tipoCOM, tipoDOC, tipoMOV, html, pdf, desativadoPericial, ativadoPericial,
 			desativadoPeticaoInicial, ativadoPeticaoInicial, P1, P2, P3, P4;
@@ -93,10 +92,6 @@ public class Controller_Configuracao implements Initializable {
 	}
 
 	public void atualizar() {
-		// Inicialização da tabela de cabeçalho
-		colunaCabecalho.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
-		ObservableList<Chaves_Condicao> cabecalho = FXCollections.observableArrayList(Cabecalho());
-		tabelaCabecalho.setItems(cabecalho);
 		// Inicialização da tabela de Providência Juridica
 		colunaProvidencia.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
 		ObservableList<Chaves_Condicao> providencia = FXCollections.observableArrayList(ProvJuri());
@@ -106,6 +101,7 @@ public class Controller_Configuracao implements Initializable {
 		ObservableList<Chaves_Condicao> identPeticao = FXCollections.observableArrayList(identificadorPeticao());
 		tabelaIdentificador.setItems(identPeticao);
 		// Inicialização da tabela de Identificador de Matéria
+		colunaId.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
 		colunaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		colunaComplementoPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
 		colunaNucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
@@ -115,6 +111,9 @@ public class Controller_Configuracao implements Initializable {
 		// Inicialização das opções de Núcleo em "Identificador de Matéria"
 		ObservableList<String> items = FXCollections.observableArrayList(itemComboBox());
 		comboBoxNucleo.setItems(items);
+
+		SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 30);
+		spinnerDias.setValueFactory(valueFactory);
 
 		Chaves_Configuracao configuracao = new Chaves_Configuracao();
 		Banco banco = new Banco();
@@ -154,7 +153,7 @@ public class Controller_Configuracao implements Initializable {
 	}
 
 	@FXML
-	public void editorDeEtiquetas(ActionEvent event){
+	public void editorDeEtiquetas(ActionEvent event) {
 		new Controller_Login().editarEtiquetas(event);
 	}
 
@@ -173,10 +172,11 @@ public class Controller_Configuracao implements Initializable {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			PreparedStatement stmt = connection
-					.prepareStatement("SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' ORDER BY PALAVRACHAVE");
+					.prepareStatement("SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' ORDER BY ID");
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				Chaves_Banco key = new Chaves_Banco();
+				key.setID(resultSet.getInt("ID"));
 				key.setPALAVRACHAVE(resultSet.getString("PALAVRACHAVE"));
 				key.setCOMPLEMENTO(resultSet.getString("COMPLEMENTO"));
 				key.setETIQUETA(resultSet.getString("ETIQUETA"));
@@ -360,69 +360,8 @@ public class Controller_Configuracao implements Initializable {
 		}
 	}
 
-	public List<Chaves_Condicao> Cabecalho() {
-		List<Chaves_Condicao> cabecalho = new ArrayList<>();
-		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-			PreparedStatement stmt = connection
-					.prepareStatement("SELECT * FROM CONDICAO WHERE TIPO = 'CAB' ORDER BY TEXTO");
-			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
-				Chaves_Condicao key = new Chaves_Condicao();
-				key.setTIPO("TIPO");
-				key.setTEXTO(resultSet.getString("TEXTO"));
-				cabecalho.add(key);
-			}
-			connection.close();
-		} catch (SQLException ex) {
-			Logger.getLogger(Controller_Configuracao.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return cabecalho;
-	}
-
-	@FXML
-	public void inserirCabecalho() {
-		Chaves_Condicao chave = new Chaves_Condicao();
-		String texto = textoCabecalho.getText().toUpperCase();
-		Aviso aviso = new Aviso();
-		if ((texto.equals(null)) || texto.equals("") || texto.equals(" ")) {
-			String textoAviso = "O campo \"Cabeçalho do documento\" não pode ser vazio!";
-			aviso.aviso(textoAviso);
-		} else {
-			chave.setTIPO("CAB");
-			chave.setTEXTO(texto);
-			inserirCondicao(chave.getTIPO(), chave.getTEXTO());
-			colunaCabecalho.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
-			ObservableList<Chaves_Condicao> genericos = FXCollections.observableArrayList(Cabecalho());
-			tabelaCabecalho.setItems(genericos);
-			limpar();
-			atualizar();
-		}
-	}
-
-	@FXML
-	public void excluirCabecalho() {
-		if (textoCabecalho.getText().equals("")) {
-			// Não faz nada
-		} else {
-			Chaves_Condicao chave = new Chaves_Condicao();
-			chave.setTEXTO(tabelaCabecalho.getSelectionModel().getSelectedItem().getTEXTO());
-			chave.setTIPO("CAB");
-			Aviso aviso = new Aviso();
-			aviso.confirmacaoCondicao(chave);
-			textoCabecalho.clear();
-			atualizar();
-		}
-	}
-
 	public void alterarIdentificador() throws IOException, SQLException {
 		String tipo = "PET";
-		alterarCondicao(tipo);
-		atualizar();
-	}
-
-	public void alterarCabecalho() throws IOException, SQLException {
-		String tipo = "CAB";
 		alterarCondicao(tipo);
 		atualizar();
 	}
@@ -467,10 +406,6 @@ public class Controller_Configuracao implements Initializable {
 			Chaves_Condicao chave = new Chaves_Condicao();
 			chave.setTIPO(tipo);
 			switch (tipo) {
-			case "CAB":
-				chave.setTEXTO(tabelaCabecalho.getSelectionModel().getSelectedItem().getTEXTO().replace("'", "")
-						.replace("´", ""));
-				break;
 			case "PRO":
 				chave.setTEXTO(tabelaProvidencia.getSelectionModel().getSelectedItem().getTEXTO().replace("'", "")
 						.replace("´", ""));
@@ -584,7 +519,6 @@ public class Controller_Configuracao implements Initializable {
 
 	@FXML
 	public void limpar() {
-		textoCabecalho.clear();
 		textoProv.clear();
 		textoPet.clear();
 		pedido.clear();
@@ -650,12 +584,6 @@ public class Controller_Configuracao implements Initializable {
 	}
 
 	@FXML
-	public void selecionarCabecalho() {
-		textoCabecalho.clear();
-		textoCabecalho.setText(tabelaCabecalho.getSelectionModel().getSelectedItem().getTEXTO());
-	}
-
-	@FXML
 	public void selecionarProv() {
 		textoProv.clear();
 		textoProv.setText(tabelaProvidencia.getSelectionModel().getSelectedItem().getTEXTO());
@@ -671,12 +599,45 @@ public class Controller_Configuracao implements Initializable {
 		ResultSet resultSet = stmt.executeQuery();
 		while (resultSet.next()) {
 			Chaves_Banco key = new Chaves_Banco();
+			key.setID(resultSet.getInt("ID"));
 			key.setPALAVRACHAVE(resultSet.getString("PALAVRACHAVE"));
 			key.setCOMPLEMENTO(resultSet.getString("COMPLEMENTO"));
 			key.setETIQUETA(resultSet.getString("ETIQUETA"));
 			key.setPRIORIDADE(resultSet.getString("PRIORIDADE"));
 			chaves.add(key);
 		}
+		colunaId.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
+		colunaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
+		colunaComplementoPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
+		colunaNucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+		colunaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PESO"));
+		ObservableList<Chaves_Banco> materia = FXCollections.observableArrayList(chaves);
+		tabelaMateria.setItems(materia);
+		connection.close();
+	}
+
+	@FXML
+	public void buscaMateriaId() throws SQLException {
+		List<Chaves_Banco> chaves = new ArrayList<>();
+		Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+		PreparedStatement stmt = null;
+		if (pesquisaMateriaId.getText().isEmpty()) {
+			stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' ORDER BY ID");
+		} else {
+			stmt = connection.prepareStatement(
+					"SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' AND ID = '" + pesquisaMateriaId.getText() + "'");
+		}
+		ResultSet resultSet = stmt.executeQuery();
+		while (resultSet.next()) {
+			Chaves_Banco key = new Chaves_Banco();
+			key.setID(resultSet.getInt("ID"));
+			key.setPALAVRACHAVE(resultSet.getString("PALAVRACHAVE"));
+			key.setCOMPLEMENTO(resultSet.getString("COMPLEMENTO"));
+			key.setETIQUETA(resultSet.getString("ETIQUETA"));
+			key.setPRIORIDADE(resultSet.getString("PRIORIDADE"));
+			chaves.add(key);
+		}
+		colunaId.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
 		colunaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		colunaComplementoPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
 		colunaNucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
@@ -703,26 +664,6 @@ public class Controller_Configuracao implements Initializable {
 		colunaIdentificador.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
 		ObservableList<Chaves_Condicao> cabecalho = FXCollections.observableArrayList(chaves);
 		tabelaIdentificador.setItems(cabecalho);
-		connection.close();
-	}
-
-	@FXML
-	public void buscaCabecalho() throws SQLException {
-		List<Chaves_Condicao> chaves = new ArrayList<>();
-		Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONDICAO WHERE TEXTO like '%"
-				+ pesquisaCabecalho.getText().toUpperCase().trim().replace("'", "").replace("´", "") + "%' "
-				+ " AND TIPO = 'CAB' ORDER BY TEXTO");
-		ResultSet resultSet = stmt.executeQuery();
-		while (resultSet.next()) {
-			Chaves_Condicao key = new Chaves_Condicao();
-			key.setTIPO("CAB");
-			key.setTEXTO(resultSet.getString("TEXTO"));
-			chaves.add(key);
-		}
-		colunaCabecalho.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
-		ObservableList<Chaves_Condicao> cabecalho = FXCollections.observableArrayList(chaves);
-		tabelaCabecalho.setItems(cabecalho);
 		connection.close();
 	}
 

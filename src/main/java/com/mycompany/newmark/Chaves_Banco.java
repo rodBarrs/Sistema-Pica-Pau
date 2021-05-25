@@ -13,6 +13,15 @@ public class Chaves_Banco {
     private String TIPO = null;
     private String PRIORIDADE = null;
     private String BANCO = null;
+    private Integer ID;
+    
+    public Integer getID() {
+        return ID;
+    }
+
+    public void setID(Integer ID) {
+        this.ID = ID;
+    }
 
     public String getPALAVRACHAVE() {
         return PALAVRACHAVE;

@@ -65,7 +65,7 @@ public class Banco {
 					+ "TIPO         STRING              NOT NULL    DEFAULT ('MOV'),    \n"
 					+ "[PRIORIDADE] VARCHAR (100)       NOT NULL    DEFAULT (0),        \n"
 					+ "BANCO        VARCHAR (3)         NOT NULL,                       \n"
-					+ "PRIMARY KEY (PALAVRACHAVE,COMPLEMENTO,BANCO)                     \n" + ");");
+					+ "PRIMARY KEY (ID)                     \n" + ");");
 
 			//Verifica se o banco foi criado pelo codigo acima, caso tenha sido, o codigo a baixo implementará as linhas de configuração e contador para o correto funcionamento das demais classes
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONFIGURACAO");

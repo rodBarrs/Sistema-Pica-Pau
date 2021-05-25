@@ -7,39 +7,28 @@ package com.mycompany.newmark;
 import org.openqa.selenium.WebDriver;
 
 public class Chaves_Resultado {
-	private static String nomePeticao;
+	private static String seqPeticao;
 	private static String palavraChavePeticao;
-	private static String complementoChavePeticao;
     private String PalavraChave = "";
-    private String Complemento = "";
     private String Etiqueta = "";
     private String Local = "";
-    private String Petição = "";
     private WebDriver driver;
     private boolean grid;
     
-    public static String getPalavraChavePeticao() {
+    public static String getSeqPeticao() {
+		return seqPeticao;
+	}
+
+	public static void setSeqPeticao(String seqPeticao) {
+		Chaves_Resultado.seqPeticao = seqPeticao;
+	}
+
+	public static String getPalavraChavePeticao() {
 		return palavraChavePeticao;
 	}
 
 	public static void setPalavraChavePeticao(String palavraChavePeticao) {
 		Chaves_Resultado.palavraChavePeticao = palavraChavePeticao;
-	}
-
-	public static String getComplementoChavePeticao() {
-		return complementoChavePeticao;
-	}
-
-	public static void setComplementoChavePeticao(String complementoChavePeticao) {
-		Chaves_Resultado.complementoChavePeticao = complementoChavePeticao;
-	}
-
-	public static String getNomePeticao() {
-		return nomePeticao;
-	}
-
-	public static void setNomePeticao(String nomePeticao) {
-		Chaves_Resultado.nomePeticao = nomePeticao;
 	}
 
 	public String getPalavraChave() {
@@ -48,14 +37,6 @@ public class Chaves_Resultado {
 
     public void setPalavraChave(String PalavraChave) {
         this.PalavraChave = PalavraChave;
-    }
-
-    public String getComplemento() {
-        return Complemento;
-    }
-
-    public void setComplemento(String Complemento) {
-        this.Complemento = Complemento;
     }
 
     public String getEtiqueta() {
@@ -90,12 +71,5 @@ public class Chaves_Resultado {
         this.grid = grid;
     }
 
-	public String getPetição() {
-		return Petição;
-	}
-
-	public void setPetição(String localArquivo) {
-		Petição = localArquivo;
-	}
     
 }
