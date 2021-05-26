@@ -5,6 +5,8 @@
  */
 package com.mycompany.newmark;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -23,6 +25,7 @@ import javax.swing.JOptionPane;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.sun.glass.events.KeyEvent;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -111,16 +114,19 @@ public class Controller_Configuracao implements Initializable {
 		// Inicialização das opções de Núcleo em "Identificador de Matéria"
 		ObservableList<String> items = FXCollections.observableArrayList(itemComboBox());
 		comboBoxNucleo.setItems(items);
-
 		SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 30);
 		spinnerDias.setValueFactory(valueFactory);
 
 		Chaves_Configuracao configuracao = new Chaves_Configuracao();
 		Banco banco = new Banco();
 		configuracao = banco.pegarConfiguracao(configuracao);
-		if (configuracao.isTriarAntigo()) {
+		if (configuracao.getIntervaloDias() == -1) {
+			spinnerDias.setDisable(true);
 			triarAntigo.setSelected(true);
 		} else {
+			spinnerDias.setDisable(false);
+			valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, configuracao.getIntervaloDias());
+			spinnerDias.setValueFactory(valueFactory);
 			verificaData.setSelected(true);
 		}
 		if (configuracao.isJuntManual()) {
@@ -431,17 +437,37 @@ public class Controller_Configuracao implements Initializable {
 		}
 	}
 
+	@FXML
+	public void validarSpinner() throws AWTException {
+		Robot r = new Robot();
+		r.keyPress(KeyEvent.VK_ENTER);
+	}
+	
+	@FXML
+	public void verificaDataSelecionado() {
+		spinnerDias.setDisable(false);
+	}
+
+	@FXML
+	public void ignorarDataSelecionado() {
+		spinnerDias.setDisable(true);
+	}
+
 	public void salvarAvancada(ActionEvent event) {
-		boolean antigoTria, juntadaTria;
+		Aviso aviso = new Aviso();
+		boolean juntadaTria;
+		Integer periodoData;
 		String tipoTria;
 		Banco banco = new Banco();
-
 		if (verificaData.isSelected()) {
-			// Irá verificar a data, considerará apenas os ultimos 30 dias
-			antigoTria = false;
+			// Verificará as datas com o intervalo dado pelo usuário
+			periodoData = spinnerDias.getValue();
+			if(periodoData <= 0 || periodoData > 100) {
+				aviso.aviso("O valor para o período de data não deve ser menor que 1 ou maior que 100");
+			}
 		} else {
 			// NÃO irá verififcar data e considerará as ulitmas 10 movimentações
-			antigoTria = true;
+			periodoData = -1;
 		}
 
 		if (tipoCOM.isSelected()) {
@@ -463,8 +489,7 @@ public class Controller_Configuracao implements Initializable {
 			juntadaTria = true;
 		}
 
-		banco.salvarAvancadas(antigoTria, tipoTria, juntadaTria);
-		Aviso aviso = new Aviso();
+		banco.salvarAvancadas(periodoData, tipoTria, juntadaTria);		
 		String textoAviso = "Configuração salva com sucesso!";
 		aviso.aviso(textoAviso);
 	}

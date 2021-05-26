@@ -110,10 +110,10 @@ public class Controller_Login implements Initializable {
 			Banco banco = new Banco();
 			configuracao = banco.pegarConfiguracao(configuracao);
 			Saida.setText("CONFIGURAÇÕES:");
-			if (configuracao.isTriarAntigo() == false) {
-				Saida.setText(Saida.getText() + "\nTriar Antigo: Desativado");
+			if (configuracao.getIntervaloDias() == -1) {
+				Saida.setText(Saida.getText() + "\nConfiguração de Data: Ignorar datas");
 			} else {
-				Saida.setText(Saida.getText() + "\nTriar Antigo: Ativado");
+				Saida.setText(Saida.getText() + "\\nConfiguração de Data: Considerando datas");
 			}
 			switch (configuracao.getTipoTriagem()) {
 			case "COM":
@@ -140,10 +140,10 @@ public class Controller_Login implements Initializable {
 			if (configuracao.isPeticaoInicial() == true) {
 				Saida.setText("Triando: PETIÇÃO INICIAL"
 						+ "\nO Sistema está triando as petições iniciais.");
-				if (configuracao.isTriarAntigo() == false) {
-					Saida.setText(Saida.getText() + "\nTriar Antigo: Desativado");
+				if (configuracao.getIntervaloDias() == -1) {
+					Saida.setText(Saida.getText() + "\nConfiguração de Data: Ignorar datas");
 				} else {
-					Saida.setText(Saida.getText() + "\nTriar Antigo: Ativado");
+					Saida.setText(Saida.getText() + "\nConfiguração de Data: Considerando datas");
 				}
 				switch (configuracao.getTipoTriagem()) {
 				case "COM":

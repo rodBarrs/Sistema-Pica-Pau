@@ -48,7 +48,7 @@ public class Processo_Documento {
         for (int i = listaMovimentacao.size(); i > 0 && limite > 0; i--) {
             wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div")));
             movimentacaoAtual = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div"));
-            if (config.isTriarAntigo() || verificarData.verificar(movimentacaoAtual.getText())) {
+            if (verificarData.verificar(movimentacaoAtual.getText(), config.getIntervaloDias())) {
                 if (condicao.verificaCondicao(movimentacaoAtual.getText(), condicaoProv)) {
                     if ((!config.isJuntManual() == false && !movimentacaoAtual.getText().contains("PDF")) || (config.isJuntManual() == true)) {
 

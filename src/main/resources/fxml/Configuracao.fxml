@@ -254,7 +254,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="salvarAvancada" buttonType="RAISED" layoutX="309.0" layoutY="410.0" onAction="#salvarAvancada" prefHeight="25.0" prefWidth="122.0" ripplerFill="#c4c4c400" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Salvar">
+                  <JFXButton fx:id="salvarAvancada" buttonType="RAISED" layoutX="309.0" layoutY="410.0" onAction="#salvarAvancada" onMouseEntered="#validarSpinner" prefHeight="25.0" prefWidth="122.0" ripplerFill="#c4c4c400" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Salvar">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -266,7 +266,7 @@
                   </JFXButton>
                   <VBox layoutX="40.0" layoutY="128.0" prefHeight="65.0" prefWidth="250.0" spacing="15.0">
                      <children>
-                        <RadioButton fx:id="verificaData" mnemonicParsing="false" selected="true" text="Consultar Movimentações até" textFill="WHITE">
+                        <RadioButton fx:id="verificaData" mnemonicParsing="false" onAction="#verificaDataSelecionado" selected="true" text="Consultar Movimentações até" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -274,7 +274,7 @@
                               <ToggleGroup fx:id="grupoTriarAntigo" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="triarAntigo" mnemonicParsing="false" text="Ignorar Data" textFill="WHITE" toggleGroup="$grupoTriarAntigo">
+                        <RadioButton fx:id="triarAntigo" mnemonicParsing="false" onAction="#ignorarDataSelecionado" text="Ignorar Data" textFill="WHITE" toggleGroup="$grupoTriarAntigo">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>

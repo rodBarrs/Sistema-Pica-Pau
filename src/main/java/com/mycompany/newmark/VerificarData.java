@@ -1,12 +1,17 @@
 package com.mycompany.newmark;
 
 import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
+
+import javax.swing.JOptionPane;
 
 public class VerificarData {
 	
-	public boolean verificar(String textoMovimentacao) {
-
+	public boolean verificar(String textoMovimentacao, Integer intervaloDias) {
+		if(intervaloDias == -1) {
+			return true;
+		}
 		try {
 			LocalDateTime dataAtual = LocalDateTime.now();
 			textoMovimentacao = textoMovimentacao.replaceAll(" ", "");
@@ -24,7 +29,7 @@ public class VerificarData {
 
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			LocalDateTime dataFinalMovimentacao = LocalDateTime.parse(dataMovimentacao, formatter);
-			return dataFinalMovimentacao.isAfter(dataAtual.minusDays(30));
+			return dataFinalMovimentacao.isAfter(dataAtual.minusDays(intervaloDias));
 		} catch (Exception e) {
 			return false;
 		}

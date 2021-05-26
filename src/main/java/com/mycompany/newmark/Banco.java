@@ -39,7 +39,7 @@ public class Banco {
 
 			comandoSql.execute("CREATE TABLE IF NOT EXISTS CONFIGURACAO (           \n"
 					+ "ID           INT                 NOT NULL    DEFAULT (1997),     \n"
-					+ "TriarAntigo  BOOLEAN             NOT NULL    DEFAULT (false),    \n"
+					+ "TriarAntigo  INTEGER             NOT NULL    DEFAULT (30),    \n"
 					+ "TipoTriagem  VARCHAR (3)         NOT NULL    DEFAULT ('COM'),    \n"
 					+ "JuntManual   BOOLEAN             NOT NULL    DEFAULT (false),     \n"
 					+ "LaudoPericial BOOLEAN            NOT NULL    DEFAULT (false),    \n"
@@ -79,7 +79,7 @@ public class Banco {
 						+ "VALUES (1997,0,0,0,0,0);");
 				comandoSql.execute(
 						"INSERT INTO CONFIGURACAO (ID,TriarAntigo, TipoTriagem, JuntManual, LaudoPericial, PeticaoInicial, Login, Senha)  \n"
-								+ "VALUES (1997,'false','COM','true','false','true','','');");
+								+ "VALUES (1997,'30','COM','true','false','true','','');");
 			}
 
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
@@ -233,11 +233,11 @@ public class Banco {
 		}
 	}
 
-	public void salvarAvancadas(boolean antigo, String triagem, boolean juntadamanual) {
+	public void salvarAvancadas(Integer periodoData, String triagem, boolean juntadamanual) {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONFIGURACAO SET" + " TriarAntigo = '" + antigo + "'          \n"
+			comandoSql.execute("UPDATE CONFIGURACAO SET" + " TriarAntigo = '" + periodoData + "'          \n"
 					+ ", TipoTriagem = '" + triagem + "'        \n" + ", JuntManual = '" + juntadamanual + "'   \n"
 					+ " WHERE ID = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
@@ -330,7 +330,7 @@ public class Banco {
 
 	public Chaves_Configuracao pegarConfiguracao(Chaves_Configuracao config) {
 		try {
-			boolean TriarAntigo;
+			Integer TriarAntigo;
 			boolean JuntManual;
 			boolean LaudoPericial;
 			boolean PeticaoInicial;
@@ -339,12 +339,7 @@ public class Banco {
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONFIGURACAO WHERE ID = 1997");
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {
-				String TriarAntigoString = resultadoBanco.getString("TriarAntigo");
-				if (TriarAntigoString.contains("false")) {
-					TriarAntigo = false;
-				} else {
-					TriarAntigo = true;
-				}
+				TriarAntigo = resultadoBanco.getInt("TriarAntigo");
 
 				String TipoTriagemLocal = resultadoBanco.getString("TipoTriagem");
 
@@ -369,7 +364,7 @@ public class Banco {
 					PeticaoInicial = true;
 				}
 
-				config.setTriarAntigo(TriarAntigo);
+				config.setIntervaloDias(TriarAntigo);
 				config.setTipoTriagem(TipoTriagemLocal);
 				config.setJuntManual(JuntManual);
 				config.setLaudoPericial(LaudoPericial);

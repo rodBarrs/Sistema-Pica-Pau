@@ -334,7 +334,7 @@ public class Processo_PeticaoInicial {
 
 		String etiqueta = resultado.getEtiqueta().toUpperCase().replaceAll("-", "").replaceAll(" ", "");
 
-		if (etiqueta.contains("PJEFEDERAL") || etiqueta.contains("PJEPAR")) {
+		if (etiqueta.contains("PJEFEDERAL") || etiqueta.contains("PJEPAR") || etiqueta.contains("PJEESTADUAL")) {
 			resultado.setDriver(driver);
 			return resultado;
 		}
