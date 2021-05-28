@@ -38,7 +38,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class Controller_EtiquetasEdicao implements Initializable {
+public class ControllerEtiquetas implements Initializable {
 
 	@FXML
 	public RadioButton LerMov, LerDoc;

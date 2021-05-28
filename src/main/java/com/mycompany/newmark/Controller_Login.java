@@ -58,7 +58,7 @@ public class Controller_Login implements Initializable {
 	@FXML
 	public MenuItem popupDebug;
 	@FXML
-	public JFXButton btInformacao, btEditarEtiquetas, btConfigurar, btLogin, btTriar, btParar, btEditarBancos;
+	public JFXButton btInformacao, btAdministracao, btLogin, btTriar, btParar;
 	@FXML
 	public JFXTextField LoginTxt, SenhaTxtMostar;
 	@FXML
@@ -229,12 +229,12 @@ public class Controller_Login implements Initializable {
 	}
 
 	@FXML
-	public void editarEtiquetas(ActionEvent event) {
+	public void abrirJanelaAdministracao(ActionEvent event) {
 		Node node = (Node) event.getSource();
 		Stage stage = (Stage) node.getScene().getWindow();
 		Parent root = null;
 		try {
-			root = FXMLLoader.load(getClass().getResource("/fxml/EtiquetasEdicao.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/fxml/Administracao.fxml"));
 		} catch (Exception erro) {
 			Aviso aviso = new Aviso();
 			aviso.aviso(erro.getMessage());

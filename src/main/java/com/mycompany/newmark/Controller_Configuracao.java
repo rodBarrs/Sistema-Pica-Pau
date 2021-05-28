@@ -378,34 +378,7 @@ public class Controller_Configuracao implements Initializable {
 		atualizar();
 	}
 
-	public void alterarMateria() throws IOException {
-		Chaves_Banco cb = new Chaves_Banco();
-		cb.setBANCO("JEF");
-		cb.setTIPO("PET");
-		cb.setPALAVRACHAVE(pedido.getText().trim());
-		cb.setCOMPLEMENTO(complemento.getText().trim());
-		cb.setETIQUETA(comboBoxNucleo.getSelectionModel().getSelectedItem());
-		String PRIORIDADE = "";
-		if (P1.isSelected())
-			PRIORIDADE = "1";
-		if (P2.isSelected())
-			PRIORIDADE = "2";
-		if (P3.isSelected())
-			PRIORIDADE = "3";
-		if (P4.isSelected())
-			PRIORIDADE = "4";
-		cb.setPRIORIDADE(PRIORIDADE);
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoMateria.fxml"));
-		loader.setController(new Controller_TagEdicaoMateria(cb));
-		Parent root = loader.load();
-		Stage stage = new Stage();
 
-		stage.setTitle("Editar Condição");
-		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.initStyle(StageStyle.UNDECORATED);
-		stage.setScene(new Scene(root));
-		stage.show();
-	}
 
 	public void alterarCondicao(String tipo) throws IOException, SQLException {
 		try {

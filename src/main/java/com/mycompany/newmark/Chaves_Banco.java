@@ -7,68 +7,68 @@
 package com.mycompany.newmark;
 
 public class Chaves_Banco {
-    private String PALAVRACHAVE = null;
-    private String COMPLEMENTO = null;
-    private String ETIQUETA = null;
-    private String TIPO = null;
-    private String PRIORIDADE = null;
-    private String BANCO = null;
-    private Integer ID;
-    
-    public Integer getID() {
-        return ID;
-    }
+	private String PALAVRACHAVE = null;
+	private String COMPLEMENTO = null;
+	private String ETIQUETA = null;
+	private String TIPO = null;
+	private String PRIORIDADE = null;
+	private String BANCO = null;
+	private Integer ID;
 
-    public void setID(Integer ID) {
-        this.ID = ID;
-    }
+	public Integer getID() {
+		return ID;
+	}
 
-    public String getPALAVRACHAVE() {
-        return PALAVRACHAVE;
-    }
+	public void setID(Integer ID) {
+		this.ID = ID;
+	}
 
-    public void setPALAVRACHAVE(String PALAVRACHAVE) {
-        this.PALAVRACHAVE = PALAVRACHAVE;
-    }
+	public String getPALAVRACHAVE() {
+		return PALAVRACHAVE;
+	}
 
-    public String getCOMPLEMENTO() {
-        return COMPLEMENTO;
-    }
+	public void setPALAVRACHAVE(String PALAVRACHAVE) {
+		this.PALAVRACHAVE = PALAVRACHAVE;
+	}
 
-    public void setCOMPLEMENTO(String COMPLEMENTO) {
-        this.COMPLEMENTO = COMPLEMENTO;
-    }
+	public String getCOMPLEMENTO() {
+		return COMPLEMENTO;
+	}
 
-    public String getETIQUETA() {
-        return ETIQUETA;
-    }
+	public void setCOMPLEMENTO(String COMPLEMENTO) {
+		this.COMPLEMENTO = COMPLEMENTO;
+	}
 
-    public void setETIQUETA(String ETIQUETA) {
-        this.ETIQUETA = ETIQUETA;
-    }
+	public String getETIQUETA() {
+		return ETIQUETA;
+	}
 
-    public String getTIPO() {
-        return TIPO;
-    }
+	public void setETIQUETA(String ETIQUETA) {
+		this.ETIQUETA = ETIQUETA;
+	}
 
-    public void setTIPO(String TIPO) {
-        this.TIPO = TIPO;
-    }
+	public String getTIPO() {
+		return TIPO;
+	}
 
-    public String getPRIORIDADE() {
-        return PRIORIDADE;
-    }
+	public void setTIPO(String TIPO) {
+		this.TIPO = TIPO;
+	}
 
-    public void setPRIORIDADE(String PRIORIDADE) {
-        this.PRIORIDADE = PRIORIDADE;
-    }
+	public String getPRIORIDADE() {
+		return PRIORIDADE;
+	}
 
-    public String getBANCO() {
-        return BANCO;
-    }
+	public void setPRIORIDADE(String PRIORIDADE) {
+		this.PRIORIDADE = PRIORIDADE;
+	}
 
-    public void setBANCO(String BANCO) {
-        this.BANCO = BANCO;
-    }
-      
+	public String getBANCO() {
+		return BANCO;
+	}
+
+	public void setBANCO(String BANCO) {
+		this.BANCO = BANCO;
+	}
+
 }

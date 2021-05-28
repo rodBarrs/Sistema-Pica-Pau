@@ -6,6 +6,7 @@
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
@@ -22,18 +23,13 @@
    <children>
       <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" styleClass="fundo" stylesheets="@../styles/tema.css">
          <children>
-            <JFXButton fx:id="btInformacao" buttonType="RAISED" layoutX="79.0" layoutY="372.0" onAction="#informacao" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000018" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Informações">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </JFXButton>
                
-            <JFXButton fx:id="btTriar" buttonType="RAISED" focusTraversable="false" layoutX="659.0" layoutY="359.0" onAction="#triar" prefHeight="27.0" prefWidth="170.0" ripplerFill="TRANSPARENT" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Iniciar Triagenm">
+            <JFXButton fx:id="btTriar" focusTraversable="false" layoutX="659.0" layoutY="359.0" onAction="#triar" prefHeight="27.0" prefWidth="170.0" ripplerFill="TRANSPARENT" style="-fx-background-color: #012840;" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Iniciar Triagenm">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="btParar" buttonType="RAISED" layoutX="659.0" layoutY="396.0" onAction="#parar" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000029" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Parar Triagem">
+            <JFXButton fx:id="btParar" layoutX="659.0" layoutY="396.0" onAction="#parar" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000029" style="-fx-background-color: #FF0000;" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Parar Triagem">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></JFXButton>
@@ -53,17 +49,15 @@
                   <Font name="System Bold" size="12.0" />
                </font></JFXButton>
             <FontAwesomeIcon fill="#070606" iconName="SIGN_IN" layoutX="373.0" layoutY="433.0" size="15" wrappingWidth="17.28570556640625" />
-            <JFXButton fx:id="btEditarBancos" buttonType="RAISED" layoutX="79.0" layoutY="332.0" onAction="#editarBancos" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000018" styleClass="botaoBordo" stylesheets="@../styles/botoes.css" text="Editar Bancos">
+            <JFXButton fx:id="btAdministracao" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="319.0" onAction="#abrirJanelaAdministracao" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000017" style="-fx-background-color: #0D4373;" styleClass="botaoVerde" stylesheets="@../styles/botoes.css" text="Administração">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
             </JFXButton>
-            <JFXButton fx:id="btEditarEtiquetas" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="292.0" onAction="#editarEtiquetas" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000017" styleClass="botaoVerde" stylesheets="@../styles/botoes.css" text="Editar Etiquetas">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </JFXButton>
-            <JFXButton fx:id="btConfigurar" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="252.0" onAction="#configuracao" prefHeight="27.0" prefWidth="170.0" ripplerFill="TRANSPARENT" styleClass="botaoRoxo" stylesheets="@../styles/botoes.css" text="Configurar Triagem">
+            <JFXButton fx:id="btConfigurar" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="279.0" onAction="#configuracao" prefHeight="27.0" prefWidth="170.0" ripplerFill="TRANSPARENT" style="-fx-background-color: #310047;" styleClass="botaoRoxo" stylesheets="@../styles/botoes.css" text="Configurações">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -97,9 +91,8 @@
                </font>
             </Label>
             <ComboBox fx:id="Bancos" layoutX="659.0" layoutY="324.0" prefWidth="170.0" />
-            <FontAwesomeIcon fill="WHITE" iconName="INFO" layoutX="92.0" layoutY="391.0" size="15" />
-            <FontAwesomeIcon fill="WHITE" iconName="EDIT" layoutX="87.0" layoutY="312.0" size="15" />
-            <FontAwesomeIcon fill="WHITE" iconName="GEAR" layoutX="87.0" layoutY="272.0" size="15" />
+            <FontAwesomeIcon fill="WHITE" iconName="KEY" layoutX="87.0" layoutY="338.0" size="15" />
+            <FontAwesomeIcon fill="WHITE" iconName="GEAR" layoutX="87.0" layoutY="298.0" size="15" />
             <JFXTextArea fx:id="SaidaTriagem" editable="false" focusColor="#ffffff00" focusTraversable="false" layoutX="652.0" layoutY="432.0" prefHeight="49.0" prefWidth="185.0" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="TRANSPARENT" wrapText="true">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -124,12 +117,13 @@
             <CheckBox fx:id="exibirSenha" layoutX="345.0" layoutY="378.0" mnemonicParsing="false" onAction="#exibirSenha" text="Exibir Senha" />
             <CheckBox fx:id="salvarSenha" layoutX="462.0" layoutY="378.0" mnemonicParsing="false" text="Salvar Senha" />
             <JFXTextField fx:id="SenhaTxtMostar" focusColor="WHITE" labelFloat="true" layoutX="340.0" layoutY="339.0" onKeyPressed="#apertouEnter" prefHeight="25.0" prefWidth="220.0" promptText="Senha" unFocusColor="#fffffffe" />
-            <FontAwesomeIcon fill="WHITE" iconName="PLAY" layoutX="91.0" layoutY="350.0" text="" />
             <Label fx:id="labelDebug" layoutX="12.0" layoutY="463.0" prefHeight="27.0" prefWidth="436.0" text="EXIBINDO ALERTAS DE DEBUG PARA TRIAGEM NA PETIÇÃO INICIAL" textFill="WHITE" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
+            <JFXButton layoutX="7.0" layoutY="468.0" onAction="#informacao" prefHeight="25.0" prefWidth="24.0" text=" " />
+            <FontAwesomeIcon disable="true" fill="WHITE" iconName="INFO" layoutX="16.0" layoutY="486.0" size="15" />
          </children>
       </AnchorPane>
    </children>
