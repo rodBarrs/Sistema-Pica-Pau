@@ -20,8 +20,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -44,6 +42,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -56,7 +55,7 @@ public class Controller_Configuracao implements Initializable {
 	public Controller_Configuracao() {
 		this.chave = chave;
 	}
-
+	
 	@FXML
 	Spinner<Integer> spinnerDias = new Spinner<Integer>();;
 	@FXML
@@ -160,7 +159,7 @@ public class Controller_Configuracao implements Initializable {
 
 	@FXML
 	public void editorDeEtiquetas(ActionEvent event) {
-		new Controller_Login().editarEtiquetas(event);
+		//new Controller_Login().editarEtiquetas(event);
 	}
 
 	public ObservableList<String> itemComboBox() {

@@ -7,6 +7,7 @@
 package com.mycompany.newmark;
 
 public class Chaves_Banco {
+
 	private String PALAVRACHAVE = null;
 	private String COMPLEMENTO = null;
 	private String ETIQUETA = null;

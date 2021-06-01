@@ -39,7 +39,7 @@
                                           <Image url="@Imagens/MarkBranco.png" />
                                        </image>
                                     </ImageView>
-                                    <TableView fx:id="tabelaIdentificadorMateria" maxHeight="591.0" maxWidth="874.0" minHeight="591.0" minWidth="874.0" onMouseClicked="#selecionarIdentificadorMateria" prefHeight="591.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
+                                    <TableView fx:id="tabelaIdentificadorMateria" editable="true" maxHeight="591.0" maxWidth="874.0" minHeight="591.0" minWidth="874.0" onMouseClicked="#selecionarIdentificadorMateria" prefHeight="591.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
                                        <columns>
                                           <TableColumn fx:id="identificadorMateriaID" prefWidth="48.0" text="ID" />
                                           <TableColumn fx:id="identificadorMateriaPedido" maxWidth="530.0" minWidth="50.0" prefWidth="292.0" text="Pedido" />
@@ -55,7 +55,7 @@
                                           </ContextMenu>
                                        </contextMenu>
                                     </TableView>
-                                    <JFXTextField fx:id="buscaIdentificadorMateria" focusColor="WHITE" labelFloat="true" layoutX="887.0" layoutY="6.0" onKeyReleased="#buscaIdentificadorMateria" prefHeight="25.0" prefWidth="311.0" promptText="Pesquisar pedido" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
+                                    <JFXTextField fx:id="buscaIdentificadorMateria" focusColor="WHITE" layoutX="887.0" layoutY="6.0" onKeyReleased="#buscaIdentificadorMateria" prefHeight="25.0" prefWidth="311.0" promptText="Pesquisar pedido" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
                                     <JFXTextField fx:id="buscaIdentificadorMateriaID" focusColor="WHITE" layoutX="1201.0" layoutY="6.0" onKeyReleased="#buscaIDIdentificadorMateria" prefHeight="25.0" prefWidth="65.0" promptText="ID" unFocusColor="WHITE" />
                                     <VBox layoutX="887.0" layoutY="51.0" maxHeight="370.0" maxWidth="370.0" minHeight="135.0" minWidth="380.0" prefHeight="152.0" prefWidth="370.0" spacing="30.0" stylesheets="@../styles/dark_theme.css">
                                        <children>
@@ -80,28 +80,28 @@
                                     </JFXTextField>
                                     <HBox alignment="CENTER_LEFT" layoutX="1047.0" layoutY="307.0" prefHeight="27.0" prefWidth="222.0" spacing="25.0">
                                        <children>
-                                          <RadioButton fx:id="P11" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" selected="true" text="1">
-                                             <font>
-                                                <Font name="System Bold" size="12.0" />
-                                             </font>
-                                          </RadioButton>
-                                          <RadioButton fx:id="P21" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="2">
-                                             <font>
-                                                <Font name="System Bold" size="12.0" />
-                                             </font>
-                                          </RadioButton>
-                                          <RadioButton fx:id="P31" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="3">
-                                             <font>
-                                                <Font name="System Bold" size="12.0" />
-                                             </font>
-                                          </RadioButton>
-                                          <RadioButton fx:id="P41" mnemonicParsing="false" prefHeight="27.0" prefWidth="37.0" text="4">
+                                          <RadioButton fx:id="identificadorMateriaP1" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" selected="true" text="1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="grupoPeso1" />
+                                                <ToggleGroup fx:id="grupoPeso" />
                                              </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton fx:id="identificadorMateriaP2" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="2" toggleGroup="$grupoPeso">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </RadioButton>
+                                          <RadioButton fx:id="identificadorMateriaP3" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="3" toggleGroup="$grupoPeso">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </RadioButton>
+                                          <RadioButton fx:id="identificadorMateriaP4" mnemonicParsing="false" prefHeight="27.0" prefWidth="37.0" text="4" toggleGroup="$grupoPeso">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
                                           </RadioButton>
                                        </children>
                                     </HBox>
@@ -125,12 +125,12 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <JFXTextField fx:id="numeroIdentificadorMateria" editable="false" focusColor="#ffffff00" labelFloat="true" layoutX="995.0" layoutY="561.0" prefHeight="25.0" prefWidth="28.0" promptText="--" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="#ffffff00">
+                                    <JFXTextField fx:id="numeroIdentificadorMateria" editable="false" focusColor="#ffffff00" layoutX="995.0" layoutY="561.0" prefHeight="25.0" prefWidth="28.0" promptText="--" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="#ffffff00">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXTextField>
-                                    <JFXButton fx:id="atualizarIdentificadorMateria" layoutX="1081.0" layoutY="237.0" onAction="#atualizarIdentificadorMateria" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                                    <JFXButton fx:id="atualizarIdentificadorMateria" layoutX="1081.0" layoutY="237.0" onAction="#inicializarMenuPeticaoInicial" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -147,7 +147,7 @@
                                  <children>
                                     <TableView fx:id="tabelaIdentificadorPeticao" onMouseClicked="#selecionarIdentificadorPeticao" prefHeight="591.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
                                        <columns>
-                                          <TableColumn fx:id="colunaIdentificadorPeticao" maxWidth="873.0" minWidth="50.0" prefWidth="873.0" text="IDENTIFICADOR DE PETIÇÃO INICIAL" />
+                                          <TableColumn fx:id="colunaIdentificadorPeticaoInicial" maxWidth="873.0" minWidth="50.0" prefWidth="873.0" text="IDENTIFICADOR DE PETIÇÃO INICIAL" />
                                        </columns>
                                        <contextMenu>
                                           <ContextMenu>
@@ -185,7 +185,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <JFXTextField fx:id="numeroPeticaoInicial" editable="false" focusColor="#ffffff00" labelFloat="true" layoutX="995.0" layoutY="561.0" prefHeight="25.0" prefWidth="28.0" promptText="--" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="#ffffff00">
+                                    <JFXTextField fx:id="numeroPeticaoInicial" editable="false" focusColor="#ffffff00" layoutX="995.0" layoutY="561.0" prefHeight="25.0" prefWidth="28.0" promptText="--" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="#ffffff00">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -293,20 +293,20 @@
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="grupoPeso" />
+                                                <ToggleGroup fx:id="grupoPeso1" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="P2" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="2" toggleGroup="$grupoPeso">
+                                          <RadioButton fx:id="P2" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="2" toggleGroup="$grupoPeso1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </RadioButton>
-                                          <RadioButton fx:id="P3" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="3" toggleGroup="$grupoPeso">
+                                          <RadioButton fx:id="P3" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="3" toggleGroup="$grupoPeso1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </RadioButton>
-                                          <RadioButton fx:id="P4" mnemonicParsing="false" prefHeight="27.0" prefWidth="37.0" text="4" toggleGroup="$grupoPeso">
+                                          <RadioButton fx:id="P4" mnemonicParsing="false" prefHeight="27.0" prefWidth="37.0" text="4" toggleGroup="$grupoPeso1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
@@ -398,7 +398,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <JFXTextField fx:id="numeroTipoMovimentacao" editable="false" focusColor="#ffffff00" labelFloat="true" layoutX="995.0" layoutY="561.0" prefHeight="25.0" prefWidth="28.0" promptText="--" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="#ffffff00">
+                                    <JFXTextField fx:id="numeroTipoMovimentacao" editable="false" focusColor="#ffffff00" layoutX="995.0" layoutY="561.0" prefHeight="25.0" prefWidth="28.0" promptText="--" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="#ffffff00">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -424,9 +424,9 @@
                   </ImageView>
                   <TableView fx:id="tabelaBancos" onMouseClicked="#selecionarBanco" prefHeight="622.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
                      <columns>
-                        <TableColumn fx:id="colunaSigla" editable="false" minWidth="-Infinity" prefWidth="142.0" resizable="false" text="Sigla" />
-                        <TableColumn fx:id="colunaNome" minWidth="-Infinity" prefWidth="544.0" text="Nome" />
-                        <TableColumn fx:id="colunaNetiquetas" minWidth="-Infinity" prefWidth="187.0" text="Nº de Etiquetas" />
+                        <TableColumn fx:id="bancoSigla" editable="false" minWidth="-Infinity" prefWidth="142.0" resizable="false" text="Sigla" />
+                        <TableColumn fx:id="bancoNome" minWidth="-Infinity" prefWidth="544.0" text="Nome" />
+                        <TableColumn fx:id="bancoNumeroDeEtiquetas" minWidth="-Infinity" prefWidth="187.0" text="Nº de Etiquetas" />
                      </columns>
                   </TableView>
                   <VBox layoutX="887.0" layoutY="3.0" prefHeight="162.0" prefWidth="379.0">
@@ -476,7 +476,7 @@
                </children></AnchorPane>
         </content>
       </Tab>
-      <Tab text="Usuários">
+      <Tab disable="true" text="Usuários">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>

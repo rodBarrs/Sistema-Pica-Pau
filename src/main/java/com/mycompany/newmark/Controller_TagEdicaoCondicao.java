@@ -7,6 +7,8 @@ package com.mycompany.newmark;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import com.mycompany.newmark.DAO.IdentificadorPeticaoInicialDAO;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -41,8 +43,7 @@ import javafx.stage.Stage;
             textoAviso = "O campo \"Condição\" não pode ser vazio!";
             aviso.aviso(textoAviso);
         } else {
-            Banco banco = new Banco();
-            banco.alterarCondicao(chave, novoTexto);
+            new IdentificadorPeticaoInicialDAO().atualizarIdentificadorPeticao(chave.getTEXTO(), novoTexto);
             
             textoAviso = "Alteração realizada!";
             aviso.aviso(textoAviso);

@@ -25,133 +25,122 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Processo_Documento {
 
-    public Chaves_Resultado documento(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
-        LeituraPDF pdf = new LeituraPDF();
-    	Chaves_Resultado resultado = new Chaves_Resultado();
-        resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
-        Triagem_Etiquetas triagem = new Triagem_Etiquetas();
-        VerificarData verificarData = new VerificarData();
-        Triagem_Condicao condicao = new Triagem_Condicao();
-        String linhaMovimentacao = "";
-        String condicaoProv = "PRO";
-        String condicaoCabecalho = "CAB";
-        String localTriagem = "DOC";
-        String processo = "";
+	public Chaves_Resultado documento(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, String bancos)
+			throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
+		LeituraPDF pdf = new LeituraPDF();
+		Chaves_Resultado resultado = new Chaves_Resultado();
+		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
+		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
+		VerificarData verificarData = new VerificarData();
+		Triagem_Condicao condicao = new Triagem_Condicao();
+		String linhaMovimentacao = "";
+		String condicaoProv = "PRO";
+		String condicaoCabecalho = "CAB";
+		String localTriagem = "DOC";
+		String processo = "";
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
-        WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
-        List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
+		WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
+		List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
 
-        int limite = 10;
-        WebElement movimentacaoAtual;
-        for (int i = listaMovimentacao.size(); i > 0 && limite > 0; i--) {
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div")));
-            movimentacaoAtual = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div"));
-            if (verificarData.verificar(movimentacaoAtual.getText(), config.getIntervaloDias())) {
-                if (condicao.verificaCondicao(movimentacaoAtual.getText(), condicaoProv)) {
-                    if ((!config.isJuntManual() == false && !movimentacaoAtual.getText().contains("PDF")) || (config.isJuntManual() == true)) {
+		int limite = 10;
+		WebElement movimentacaoAtual;
+		for (int i = listaMovimentacao.size(); i > 0 && limite > 0; i--) {
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div")));
+			movimentacaoAtual = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div"));
+			if (verificarData.verificar(movimentacaoAtual.getText(), config.getIntervaloDias())) {
+				if (condicao.verificaCondicao(movimentacaoAtual.getText(), condicaoProv)) {
+					if ((!config.isJuntManual() == false && !movimentacaoAtual.getText().contains("PDF"))
+							|| (config.isJuntManual() == true)) {
 
-                        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
-                        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
-                        
-                        //Armazena o span que contém o texto onde diz se o item é um PDF ou HTML
-                        String spanText = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().toUpperCase();
-                        
-                        // Verifica se o documento é um pdf para tratamento apropriado
-                        if (spanText.contains("PDF")) {
-                        	pdf.apagarPDF();
-                        	//Click na linha
-                            driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
-                            
-                            int cont = 0; 
-                            while(cont <= 2) {
-                            	
-                            	if(pdf.PDFBaixado()) {
-                            		processo = pdf.lerPDF();
-                            		break;
-                            	} else {
-                            		pdf.apagarPDF();
-                            		driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
-                            	}
-                            	cont++;
-                            }
-                            
-                        	/*
-                            //Espera até que o iframe onde se carrega o PDF esteja visível
-                            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
-                            //Armazena o iframe
-                            WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
-                            //Envia o driver para dentro do Switch
-                            driver.switchTo().frame(iframe);
-                            //Aguarda até que os dois itens "Viewer" e "page" estejam visíveis, os dois estarem visíveis significa que o PDF carregou
-                            //Esta verificação só é funcional ao utilizar o Firefox
-                            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("viewer")));
-                            wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("page")));
-                            driver.findElement(By.id("viewerContainer")).click();
-                            //Retorna o Driver para a página pai
-                            driver.switchTo().defaultContent();
-                            */
-                        } else {
-                        	driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
-                        	//Envia o driver para o iframe e verifca os itens internos para confirmação do carregamento
-                            wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
-                            WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
-                            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
-                            //wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-                            //wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+						wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
+						wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
 
-                            // Garante o clique no iframe
-                            boolean flag = true;
-                            do {
-                                try {
-                                    wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
-                                    wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
-                                    driver.findElement(By.tagName("body")).click();
-                                    flag = false;
-                                } catch (Exception e) {
-                                    // Nothing to do at all
-                                }
+						// Armazena o span que contém o texto onde diz se o item é um PDF ou HTML
+						String spanText = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]"))
+								.getText().toUpperCase();
 
-                            } while (flag);
-                            Actions action = new Actions(driver);
-                            action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
-                            action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
-                            driver.switchTo().defaultContent();
-                            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                            DataFlavor flavor = DataFlavor.stringFlavor;
-                            Thread.sleep(500);
-                            processo = clipboard.getData(flavor).toString();
-                        }
+						// Verifica se o documento é um pdf para tratamento apropriado
+						if (spanText.contains("PDF")) {
+							pdf.apagarPDF();
+							// Click na linha
+							driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
 
-                        if (processo.length() > 1) {
-                            //if (condicao.verificaCondicao(processo, condicaoCabecalho)) {
-                                limite--;
-                                try {
-                                	Boolean identificadoDePeticao = false;
-                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, config.getTipoTriagem(), identificadoDePeticao);
-                                    if (!resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
-                                            && !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
-                                        linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText();
-                                        resultado.setLocal("DOC " + linhaMovimentacao );
-                                        resultado.setDriver(driver);
-                                        return resultado;
-                                    }
-                                } catch (Exception erro) {
-                                    wait.until(ExpectedConditions.presenceOfElementLocated(By.id("button-1005-btnEl")));
-                                    driver.findElement(By.id("button-1005-btnEl")).click();
-                                    erro.printStackTrace();
-                                }
-                           //}
-                        } else {
-                            resultado.setEtiqueta("ERRO EM TRIAGEM: INSTABILIDADE NO SAPIENS");
-                        }
-                    }
-                }
-            }
-            //Volta pro FOR
-        }
-        resultado.setDriver(driver);
-        return resultado;
-    }
+							int cont = 0;
+							while (cont <= 2) {
+
+								if (pdf.PDFBaixado()) {
+									processo = pdf.lerPDF();
+									break;
+								} else {
+									pdf.apagarPDF();
+									driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+								}
+								cont++;
+							}
+
+						} else {
+							driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+							// Envia o driver para o iframe e verifca os itens internos para confirmação do
+							// carregamento
+							wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
+							WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
+							wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
+							// Garante o clique no iframe
+							boolean flag = true;
+							do {
+								try {
+									wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+									wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+									driver.findElement(By.tagName("body")).click();
+									flag = false;
+								} catch (Exception e) {
+									// Nothing to do at all
+								}
+
+							} while (flag);
+							Actions action = new Actions(driver);
+							action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
+							action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
+							driver.switchTo().defaultContent();
+							Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+							DataFlavor flavor = DataFlavor.stringFlavor;
+							Thread.sleep(500);
+							processo = clipboard.getData(flavor).toString();
+						}
+
+						if (processo.length() > 1) {
+
+							limite--;
+							try {
+								Boolean identificadoDePeticao = false;
+								resultado = triagem.triarBanco(processo, bancos, localTriagem, config.getTipoTriagem(),
+										identificadoDePeticao);
+								if (!resultado.getEtiqueta()
+										.contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
+										&& !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
+									linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div"))
+											.getText();
+									resultado.setLocal("DOC " + linhaMovimentacao);
+									resultado.setDriver(driver);
+									return resultado;
+								}
+							} catch (Exception erro) {
+								wait.until(ExpectedConditions.presenceOfElementLocated(By.id("button-1005-btnEl")));
+								driver.findElement(By.id("button-1005-btnEl")).click();
+								erro.printStackTrace();
+							}
+
+						} else {
+							resultado.setEtiqueta("ERRO EM TRIAGEM: INSTABILIDADE NO SAPIENS");
+						}
+					}
+				}
+			}
+			// Volta pro FOR
+		}
+		resultado.setDriver(driver);
+		return resultado;
+	}
 }

@@ -28,7 +28,6 @@ public class Controller_TagAviso implements Initializable {
     JFXTextArea textoSaida;
     @FXML
     JFXButton ok;
-    @FXML
     
 
     @Override

@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.mycompany.newmark.DAO.IdentificadorMateriaDAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,15 +70,18 @@ public class Controller_TagEdicaoMateria implements Initializable {
     
     @FXML
     public boolean alterar(ActionEvent event) throws SQLException {
+    	
+    	Integer id = chave.getID();
+    	System.out.println(id);
         String palavraChave = PalavraChave.getText().toUpperCase().replace("'", "").replace("´", "");
         String complemento = Complemento.getText().toUpperCase().replace("'", "").replace("´", "");
         String etiqueta = ComboBoxNucleo.getSelectionModel().getSelectedItem().toString();
-        String PRIORIDADE = "";
+        String prioridade = "";
         
-        if(P1.isSelected()) PRIORIDADE = "1"; 
-		if(P2.isSelected()) PRIORIDADE = "2"; 
-		if(P3.isSelected()) PRIORIDADE = "3"; 
-		if(P4.isSelected()) PRIORIDADE = "4"; 
+        if(P1.isSelected()) prioridade = "1"; 
+		if(P2.isSelected()) prioridade = "2"; 
+		if(P3.isSelected()) prioridade = "3"; 
+		if(P4.isSelected()) prioridade = "4"; 
 		
         String textoAviso = "";
         Aviso aviso = new Aviso();
@@ -91,8 +95,7 @@ public class Controller_TagEdicaoMateria implements Initializable {
             return false;
         } else {         
             //Armazena a qual banco de dados pertence a etiqueta alterada
-            Banco banco = new Banco();
-            banco.alterarEtiquetas(chave, palavraChave, complemento, etiqueta, "PET", PRIORIDADE);
+        	new IdentificadorMateriaDAO().atualizarIndetificadorMateria(id, palavraChave, complemento, etiqueta, prioridade);
             
             textoAviso = "Etiqueta Alterada!";
             aviso.aviso(textoAviso);

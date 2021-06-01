@@ -15,6 +15,7 @@ public class EtiquetaDAO {
 		final String SQL = "SELECT * FROM ETIQUETAS WHERE BANCO = '" + banco + "' AND TIPO != 'PET' ORDER BY ID";
 
 		List<Chaves_Banco> chaves = new ArrayList<>();
+		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			
@@ -30,9 +31,12 @@ public class EtiquetaDAO {
 
 				chaves.add(key);
 			}
-		} catch (Exception e) { }
-		return chaves;
+		} catch (Exception e) { 
+			
+		}
 
+		return chaves;
+		
 	}
 
 }
