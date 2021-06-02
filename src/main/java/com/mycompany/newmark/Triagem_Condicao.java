@@ -20,10 +20,10 @@ public class Triagem_Condicao {
         Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
         PreparedStatement stmt;
         ResultSet resultSet;
-        stmt = connection.prepareStatement("SELECT * FROM CONDICAO WHERE TIPO = '" + tipo + "'");
+        stmt = connection.prepareStatement("SELECT * FROM condicao WHERE tipo = '" + tipo + "'");
         resultSet = stmt.executeQuery();
         while (resultSet.next()){
-            String texto = resultSet.getString("TEXTO");
+            String texto = resultSet.getString("texto");
             if (processo.contains(texto)) {
                 connection.close();
                 return true;

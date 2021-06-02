@@ -26,19 +26,19 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			//Cria o banco de dados, com todas as tabelas caso o mesmo não seja localizado no diretorio especificado
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS BANCOS (                 \n"
-					+ "SIGLA        VARCHAR (3)         NOT NULL,                       \n"
-					+ "NOME         STRING              NOT NULL,                       \n"
-					+ "PRIMARY KEY (SIGLA),                                             \n"
-					+ " UNIQUE (SIGLA, NOME)                                            \n" + ");");
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS bancos (                 \n"
+					+ "sigla        VARCHAR (3)         NOT NULL,                       \n"
+					+ "nome         STRING              NOT NULL,                       \n"
+					+ "PRIMARY KEY (sigla),                                             \n"
+					+ " UNIQUE (sigla, nome)                                            \n" + ");");
 
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS CONDICAO (               \n"
-					+ "TEXTO        VARCHAR (100)       NOT NULL,                       \n"
-					+ "TIPO         VARCHAR (3)         NOT NULL,                       \n"
-					+ "PRIMARY KEY (TEXTO,TIPO)                                         \n" + ");");
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS condicao (               \n"
+					+ "texto        VARCHAR (100)       NOT NULL,                       \n"
+					+ "tipo         VARCHAR (3)         NOT NULL,                       \n"
+					+ "PRIMARY KEY (texto,tipo)                                         \n" + ");");
 
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS CONFIGURACAO (           \n"
-					+ "ID           INT                 NOT NULL    DEFAULT (1997),     \n"
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS configuracao (           \n"
+					+ "id           INT                 NOT NULL    DEFAULT (1997),     \n"
 					+ "TriarAntigo  INTEGER             NOT NULL    DEFAULT (30),    \n"
 					+ "TipoTriagem  VARCHAR (3)         NOT NULL    DEFAULT ('COM'),    \n"
 					+ "JuntManual   BOOLEAN             NOT NULL    DEFAULT (false),     \n"
@@ -46,47 +46,75 @@ public class Banco {
 					+ "PeticaoInicial BOOLEAN           NOT NULL    DEFAULT (true),     \n"
 					+ "Login        STRING                          DEFAULT (''),       \n"
 					+ "Senha        STRING                          DEFAULT (''),       \n"
-					+ "PRIMARY KEY (ID)                                                 \n" + ");");
+					+ "PRIMARY KEY (id)                                                 \n" + ");");
 
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS CONTADOR (               \n"
-					+ "ID           INT                 NOT NULL    DEFAULT (1997),     \n"
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS contador (               \n"
+					+ "id           INT                 NOT NULL    DEFAULT (1997),     \n"
 					+ "ContTotal    INT                 NOT NULL    DEFAULT (0),        \n"
 					+ "ContNao      INT                 NOT NULL    DEFAULT (0),        \n"
 					+ "ContDoc      INT                 NOT NULL    DEFAULT (0),        \n"
 					+ "ContSeq      INT                 NOT NULL    DEFAULT (0),        \n"
 					+ "ContErro     INT                 NOT NULL    DEFAULT (0),        \n"
-					+ "PRIMARY KEY (ID)                                                 \n" + ");");
+					+ "PRIMARY KEY (id)                                                 \n" + ");");
 
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS ETIQUETAS (                  \n"
-					+ "ID           INTEGER       PRIMARY KEY AUTOINCREMENT,            \n"
-					+ "PALAVRACHAVE VARCHAR (45)        NOT NULL,                       \n"
-					+ "COMPLEMENTO  VARCHAR (100)       NOT NULL,                       \n"
-					+ "ETIQUETA     VARCHAR (100)       NOT NULL,                       \n"
-					+ "TIPO         STRING              NOT NULL    DEFAULT ('MOV'),    \n"
-					+ "[PRIORIDADE] VARCHAR (100)       NOT NULL    DEFAULT (0),        \n"
-					+ "BANCO        VARCHAR (3)         NOT NULL,                       \n"
-					+ "PRIMARY KEY (ID)                     \n" + ");");
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS etiquetas (                  \n"
+					+ "id           INTEGER       PRIMARY KEY AUTOINCREMENT,            \n"
+					+ "palavrachave VARCHAR (45)        NOT NULL,                       \n"
+					+ "complemento  VARCHAR (100)       NOT NULL,                       \n"
+					+ "etiqueta     VARCHAR (100)       NOT NULL,                       \n"
+					+ "tipo         STRING              NOT NULL    DEFAULT ('MOV'),    \n"
+					+ "prioridade VARCHAR (100)       NOT NULL    DEFAULT (0),        \n"
+					+ "banco        VARCHAR (3)         NOT NULL,                       \n"
+					+ "PRIMARY KEY (id)                     \n" + ");");
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS identificador_materia (\n"
+					+ "    id           INTEGER       PRIMARY KEY AUTOINCREMENT\n"
+					+ "                               NOT NULL,\n"
+					+ "    palavrachave VARCHAR (255) NOT NULL,\n"
+					+ "    complemento  VARCHAR (255) NOT NULL,\n"
+					+ "    etiqueta     VARCHAR (255) NOT NULL,\n"
+					+ "    prioridade   VARCHAR (1)   NOT NULL\n"
+					+ "                               DEFAULT [1]\n"
+					+ ");\n"
+					+ "");
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS usuarios (\n"
+					+ "    id    INTEGER       PRIMARY KEY AUTOINCREMENT\n"
+					+ "                        NOT NULL,\n"
+					+ "    nome  VARCHAR (100) NOT NULL\n"
+					+ "                        DEFAULT admin,\n"
+					+ "    senha VARCHAR (30)  NOT NULL\n"
+					+ "                        DEFAULT admin\n"
+					+ ");\n"
+					+ "");
 
 			//Verifica se o banco foi criado pelo codigo acima, caso tenha sido, o codigo a baixo implementará as linhas de configuração e contador para o correto funcionamento das demais classes
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONFIGURACAO");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM configuracao");
 			ResultSet resultSet = stmt.executeQuery();
 			int linhasBanco = 0;
 			while (resultSet.next()) {
 				linhasBanco++;
 			}
 			if (linhasBanco == 0) {
-				comandoSql.execute("INSERT INTO CONTADOR (ID,ContTotal, ContNao, ContDoc, ContSeq, ContErro)       \n"
+				comandoSql.execute("INSERT INTO contador (id,ContTotal, ContNao, ContDoc, ContSeq, ContErro)       \n"
 						+ "VALUES (1997,0,0,0,0,0);");
 				comandoSql.execute(
-						"INSERT INTO CONFIGURACAO (ID,TriarAntigo, TipoTriagem, JuntManual, LaudoPericial, PeticaoInicial, Login, Senha)  \n"
+						"INSERT INTO configuracao (id,TriarAntigo, TipoTriagem, JuntManual, LaudoPericial, PeticaoInicial, Login, Senha)  \n"
 								+ "VALUES (1997,'30','COM','true','false','true','','');");
 			}
-
+			
+			stmt = connection.prepareStatement("SELECT * FROM usuarios");
+			ResultSet rs = stmt.executeQuery();
+			Integer teste = 0;
+			while(rs.next()) {
+				teste++;
+			}
+			
+			if(teste == 0) {
+				comandoSql.execute("INSERT INTO usuarios (nome, senha) VALUES ('admin', 'admin')");
+			}
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 		} catch (SQLException erro) {
-			Aviso aviso = new Aviso();
-			aviso.aviso(erro.getMessage());
+			erro.printStackTrace();
 		}
 	}
 
@@ -98,7 +126,7 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql
-					.execute("INSERT INTO ETIQUETAS (PALAVRACHAVE,COMPLEMENTO,ETIQUETA,TIPO,PRIORIDADE,BANCO) VALUES ("
+					.execute("INSERT INTO etiquetas (palavrachave ,complemento,etiqueta,tipo,prioridade,banco) VALUES ("
 							+ "'" + chave.getPALAVRACHAVE() + "'," + "'" + chave.getCOMPLEMENTO() + "'," + "'"
 							+ chave.getETIQUETA() + "'," + "'" + chave.getTIPO() + "'," + "'" + chave.getPRIORIDADE()
 							+ "'," + "'" + chave.getBANCO() + "');");
@@ -124,10 +152,10 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE ETIQUETAS SET " + "PALAVRACHAVE = '" + PalavraChave + "', " + "COMPLEMENTO = '"
-					+ Complemento + "', " + "ETIQUETA = '" + Etiqueta + "', " + "TIPO = '" + Tipo + "', "
-					+ "PRIORIDADE = '" + Prioridade + "' " + "WHERE PALAVRACHAVE = '" + chave.getPALAVRACHAVE() + "' "
-					+ "AND COMPLEMENTO = '" + chave.getCOMPLEMENTO() + "' " + "AND BANCO = '" + chave.getBANCO()
+			comandoSql.execute("UPDATE etiquetas SET " + "palavrachave = '" + PalavraChave + "', " + "complemento = '"
+					+ Complemento + "', " + "etiqueta = '" + Etiqueta + "', " + "tipo = '" + Tipo + "', "
+					+ "prioridade = '" + Prioridade + "' " + "WHERE palavrachave = '" + chave.getPALAVRACHAVE() + "' "
+					+ "AND complemento = '" + chave.getCOMPLEMENTO() + "' " + "AND banco = '" + chave.getBANCO()
 					+ "';");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
@@ -149,8 +177,8 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("DELETE FROM ETIQUETAS WHERE" + "(PALAVRACHAVE = '" + chave.getPALAVRACHAVE() + "') AND "
-					+ "(COMPLEMENTO = '" + chave.getCOMPLEMENTO() + "') AND " + "(BANCO = '" + chave.getBANCO()
+			comandoSql.execute("DELETE FROM etiquetas WHERE" + "(palavrachave = '" + chave.getPALAVRACHAVE() + "') AND "
+					+ "(complemento = '" + chave.getCOMPLEMENTO() + "') AND " + "(banco = '" + chave.getBANCO()
 					+ "');");
 			connection.close();
 			String textoAviso = "Etiqueta deletada!";
@@ -169,7 +197,7 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			//Inserindo
-			comandoSql.execute("INSERT INTO CONDICAO VALUES(" + "'"
+			comandoSql.execute("INSERT INTO condicao VALUES(" + "'"
 					+ chave.getTEXTO().toUpperCase().replaceAll("'", "").replaceAll("\"", "").trim() + "','"
 					+ chave.getTIPO() + "');");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
@@ -197,8 +225,8 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONDICAO SET TEXTO = '" + texto + "'" + " WHERE TEXTO = '" + chave.getTEXTO()
-					+ "'" + " AND TIPO = '" + chave.getTIPO() + "';");
+			comandoSql.execute("UPDATE condicao SET texto = '" + texto + "'" + " WHERE texto = '" + chave.getTEXTO()
+					+ "'" + " AND tipo = '" + chave.getTIPO() + "';");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 		} catch (SQLException erro) {
@@ -220,7 +248,7 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			//Excluir
-			comandoSql.execute("DELETE FROM CONDICAO WHERE TIPO ='" + chave.getTIPO() + "' AND TEXTO = '"
+			comandoSql.execute("DELETE FROM condicao WHERE tipo ='" + chave.getTIPO() + "' AND texto = '"
 					+ chave.getTEXTO() + "';");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
@@ -237,9 +265,9 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONFIGURACAO SET" + " TriarAntigo = '" + periodoData + "'          \n"
+			comandoSql.execute("UPDATE configuracao SET" + " TriarAntigo = '" + periodoData + "'          \n"
 					+ ", TipoTriagem = '" + triagem + "'        \n" + ", JuntManual = '" + juntadamanual + "'   \n"
-					+ " WHERE ID = 1997;");
+					+ " WHERE id = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 		} catch (SQLException erro) {
@@ -254,8 +282,8 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONFIGURACAO SET" + " LaudoPericial = '" + laudoPericial + "'   \n"
-					+ ", PeticaoInicial = '" + peticaoInicial + "' \n" + " WHERE ID = 1997;");
+			comandoSql.execute("UPDATE configuracao SET" + " LaudoPericial = '" + laudoPericial + "'   \n"
+					+ ", PeticaoInicial = '" + peticaoInicial + "' \n" + " WHERE id = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 		} catch (SQLException erro) {
@@ -269,8 +297,8 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONFIGURACAO SET Login = '" + usuario.getLogin() + "'   \n" + ", Senha = '"
-					+ usuario.getSenha() + "' " + "WHERE ID = 1997;");
+			comandoSql.execute("UPDATE configuracao SET Login = '" + usuario.getLogin() + "'   \n" + ", Senha = '"
+					+ usuario.getSenha() + "' " + "WHERE id = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 		} catch (SQLException erro) {
@@ -286,8 +314,8 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 
-			comandoSql.execute("UPDATE CONTADOR SET" + " ContNao = ContNao + 1" + ", ContTotal = ContTotal + 1"
-					+ " WHERE ID = 1997;");
+			comandoSql.execute("UPDATE contador SET" + " ContNao = ContNao + 1" + ", ContTotal = ContTotal + 1"
+					+ " WHERE id = 1997;");
 			connection.close();
 		} catch (SQLException erro) {
 			Logger.getLogger(Banco.class.getName()).log(Level.SEVERE, null, erro);
@@ -300,8 +328,8 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONTADOR SET" + " ContDoc = ContDoc + 1" + ", ContTotal = ContTotal + 1"
-					+ " WHERE ID = 1997;");
+			comandoSql.execute("UPDATE contador SET" + " ContDoc = ContDoc + 1" + ", ContTotal = ContTotal + 1"
+					+ " WHERE id = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			comandoSql.close();
 			connection.close();
@@ -316,8 +344,8 @@ public class Banco {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
-			comandoSql.execute("UPDATE CONTADOR SET" + " ContSeq = ContSeq + 1" + ", ContTotal = ContTotal + 1"
-					+ " WHERE ID = 1997;");
+			comandoSql.execute("UPDATE contador SET" + " ContSeq = ContSeq + 1" + ", ContTotal = ContTotal + 1"
+					+ " WHERE id = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			comandoSql.close();
 			connection.close();
@@ -336,7 +364,7 @@ public class Banco {
 			boolean PeticaoInicial;
 
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONFIGURACAO WHERE ID = 1997");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM configuracao WHERE id = 1997");
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {
 				TriarAntigo = resultadoBanco.getInt("TriarAntigo");
@@ -387,7 +415,7 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			//Inserindo
-			comandoSql.execute("INSERT INTO BANCOS VALUES(" + "'"
+			comandoSql.execute("INSERT INTO bancos VALUES(" + "'"
 					+ chave.getTIPO().toUpperCase().replaceAll("'", "").replaceAll("\"", "").trim() + "','"
 					+ chave.getTEXTO().toUpperCase().replaceAll("'", "").replaceAll("\"", "").trim() + "');");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
@@ -412,7 +440,7 @@ public class Banco {
 			Statement comandoSql = connection.createStatement();
 			//Excluir
 			comandoSql.execute(
-					"DELETE FROM BANCOS WHERE SIGLA ='" + chave.getTIPO() + "' AND NOME = '" + chave.getTEXTO() + "';");
+					"DELETE FROM bancos WHERE sigla ='" + chave.getTIPO() + "' AND nome = '" + chave.getTEXTO() + "';");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 
@@ -430,10 +458,10 @@ public class Banco {
 			List<String> lista = new ArrayList<>();
 			lista.add("TODOS OS BANCOS");
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BANCOS ORDER BY NOME");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM bancos ORDER BY nome");
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
-				lista.add(resultSet.getString("SIGLA") + " - " + resultSet.getString("NOME"));
+				lista.add(resultSet.getString("sigla") + " - " + resultSet.getString("nome"));
 			}
 			Lista = FXCollections.observableArrayList(lista);
 			connection.close();
@@ -449,13 +477,13 @@ public class Banco {
 
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BANCOS ORDER BY NOME");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM bancos ORDER BY nome");
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				if (!bancoSelecionado.contains("TODOS OS BANCOS")) {
-					if (bancoSelecionadoLocal.contains(resultSet.getString("SIGLA"))
-							&& bancoSelecionadoLocal.contains(resultSet.getString("NOME"))) {
-						bancoSelecionado = resultSet.getString("SIGLA");
+					if (bancoSelecionadoLocal.contains(resultSet.getString("sigla"))
+							&& bancoSelecionadoLocal.contains(resultSet.getString("nome"))) {
+						bancoSelecionado = resultSet.getString("sigla");
 						connection.close();
 						return bancoSelecionado;
 					}

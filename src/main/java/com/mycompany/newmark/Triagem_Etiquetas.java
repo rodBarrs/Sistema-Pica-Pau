@@ -28,26 +28,26 @@ public class Triagem_Etiquetas {
 				PreparedStatement stmt;
 				ResultSet resultSet;
 				if (identificadorDePeticao) {
-					stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' ORDER BY PRIORIDADE DESC");
+					stmt = connection.prepareStatement("SELECT * FROM identificador_materia ORDER BY prioridade DESC");
 				} else {
 					if (banco.contains("TODOS OS BANCOS")) {
 						stmt = connection.prepareStatement(
-								"SELECT * FROM ETIQUETAS WHERE TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+								"SELECT * FROM etiquetas WHERE tipo = '" + localtriagem + "' ORDER BY prioridade DESC");
 					} else {
-						stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + banco
-								+ "' AND TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+						stmt = connection.prepareStatement("SELECT * FROM etiquetas WHERE banco = '" + banco
+								+ "' AND tipo = '" + localtriagem + "' ORDER BY prioridade DESC");
 					}
 				}
 				resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
-					String PALAVRACHAVE = resultSet.getString("PALAVRACHAVE");
+					String PALAVRACHAVE = resultSet.getString("palavrachave");
 					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);				
-					String COMPLEMENTO = resultSet.getString("COMPLEMENTO");
+					String COMPLEMENTO = resultSet.getString("complemento");
 					COMPLEMENTO = tratamento.tratamento(COMPLEMENTO);
 					
 					if (processo.contains(PALAVRACHAVE) && processo.contains(COMPLEMENTO)) {
-						resultado.setPalavraChave(resultSet.getString("ID"));
-						resultado.setEtiqueta(resultSet.getString("ETIQUETA"));
+						resultado.setPalavraChave(resultSet.getString("id"));
+						resultado.setEtiqueta(resultSet.getString("etiqueta"));
 						connection.close();
 						return resultado;
 					}

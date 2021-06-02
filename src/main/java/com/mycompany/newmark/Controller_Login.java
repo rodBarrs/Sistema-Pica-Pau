@@ -10,6 +10,9 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.mycompany.newmark.DAO.UsuarioLocalDAO;
+import com.mycompany.newmark.entities.UsuarioLocal;
+
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
@@ -93,7 +96,7 @@ public class Controller_Login implements Initializable {
 
 	@FXML
 	public void exibirDebugPI() {
-		if(debugPi.isDebugpi()) {
+		if (debugPi.isDebugpi()) {
 			debugPi.setDebugpi(false);
 			popupDebug.setText("Exibir Debug de Petição Inicial");
 			labelDebug.setVisible(false);
@@ -103,7 +106,7 @@ public class Controller_Login implements Initializable {
 			labelDebug.setVisible(true);
 		}
 	}
-	
+
 	public void saida() {
 		try {
 			Chaves_Configuracao configuracao = new Chaves_Configuracao();
@@ -138,8 +141,7 @@ public class Controller_Login implements Initializable {
 			}
 
 			if (configuracao.isPeticaoInicial() == true) {
-				Saida.setText("Triando: PETIÇÃO INICIAL"
-						+ "\nO Sistema está triando as petições iniciais.");
+				Saida.setText("Triando: PETIÇÃO INICIAL" + "\nO Sistema está triando as petições iniciais.");
 				if (configuracao.getIntervaloDias() == -1) {
 					Saida.setText(Saida.getText() + "\nConfiguração de Data: Ignorar datas");
 				} else {
@@ -182,7 +184,7 @@ public class Controller_Login implements Initializable {
 	public void pegarSenha() {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONFIGURACAO WHERE ID = 1997");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM configuracao WHERE id = 1997");
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {
 				LoginTxt.setText(resultadoBanco.getString("Login"));
@@ -230,26 +232,42 @@ public class Controller_Login implements Initializable {
 
 	@FXML
 	public void abrirJanelaAdministracao(ActionEvent event) {
-		Node node = (Node) event.getSource();
-		Stage stage = (Stage) node.getScene().getWindow();
-		Parent root = null;
-		try {
-			root = FXMLLoader.load(getClass().getResource("/fxml/Administracao.fxml"));
-		} catch (Exception erro) {
-			Aviso aviso = new Aviso();
-			aviso.aviso(erro.getMessage());
-			erro.printStackTrace();
-			Logger.getLogger(Chaves_Configuracao.class.getName()).log(Level.SEVERE, null, erro);
+		if (logarUsuario()) {
+			UsuarioLocal.setEstaLogado(true);
+			Node node = (Node) event.getSource();
+			Stage stage = (Stage) node.getScene().getWindow();
+			Parent root = null;
+			try {
+				root = FXMLLoader.load(getClass().getResource("/fxml/Administracao.fxml"));
+			} catch (Exception erro) {
+				Aviso aviso = new Aviso();
+				aviso.aviso(erro.getMessage());
+				erro.printStackTrace();
+				Logger.getLogger(Chaves_Configuracao.class.getName()).log(Level.SEVERE, null, erro);
+			}
+
+			Scene scene = new Scene(root);
+			stage.setScene(scene);
+			stage.centerOnScreen();
+			stage.setResizable(false);
+			stage.setMinWidth(900);
+			stage.setMinHeight(500);
+			stage.setTitle("Sistema de Triagem Mark - Banco de Etiquetas");
+			stage.show();
+		} else {
+			new Aviso().aviso("Credenciais inválidas");
 		}
 
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
-		stage.centerOnScreen();
-		stage.setResizable(false);
-		stage.setMinWidth(900);
-		stage.setMinHeight(500);
-		stage.setTitle("Sistema de Triagem Mark - Banco de Etiquetas");
-		stage.show();
+	}
+
+	public Boolean logarUsuario() {
+		if (UsuarioLocal.getEstaLogado()) {
+			return true;
+		} else {
+			String usuario = JOptionPane.showInputDialog(null, "Insira o usuário");
+			String senha = JOptionPane.showInputDialog(null, "Insira a senha");
+			return new UsuarioLocalDAO().logarUsuario(usuario, senha);
+		}
 	}
 
 	@FXML
@@ -332,7 +350,8 @@ public class Controller_Login implements Initializable {
 						SaidaTriagem.setText("- Triagem Iniciada!");
 						BarraDeProgresso.setVisible(true);
 						Processo_Triagem triagem = new Processo_Triagem(driver, bancoSelecionado);
-						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada, debugPi);
+						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada,
+								debugPi);
 						if (triar == false) {
 							som();
 							SaidaTriagem.setText("- Erro de comunicação com plataforma Sapiens!");

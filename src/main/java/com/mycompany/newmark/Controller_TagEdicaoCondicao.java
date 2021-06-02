@@ -8,6 +8,7 @@ package com.mycompany.newmark;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.mycompany.newmark.DAO.IdentificadorPeticaoInicialDAO;
+import com.mycompany.newmark.DAO.TipoMovimentacaoDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,12 +43,15 @@ import javafx.stage.Stage;
         if((novoTexto.equals(null)) || novoTexto.equals("") || novoTexto.equals(" ")) {
             textoAviso = "O campo \"Condição\" não pode ser vazio!";
             aviso.aviso(textoAviso);
-        } else {
-            new IdentificadorPeticaoInicialDAO().atualizarIdentificadorPeticao(chave.getTEXTO(), novoTexto);
             
-            textoAviso = "Alteração realizada!";
-            aviso.aviso(textoAviso);
-
+        } else {
+        	if(chave.getTIPO().contains("PET")) {
+        		new IdentificadorPeticaoInicialDAO().atualizarIdentificadorPeticao(chave.getTEXTO(), novoTexto);
+        	} else if (chave.getTIPO().contains("PRO")) {
+        		new TipoMovimentacaoDAO().atualizarTipoMovimento(chave.getTEXTO(), novoTexto);
+        	}
+            
+           
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
             Parent root = null;

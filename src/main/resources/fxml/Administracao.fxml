@@ -174,12 +174,12 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXButton layoutX="1135.0" layoutY="234.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="132.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
+                                    <JFXButton layoutX="1135.0" layoutY="267.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="132.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <Separator layoutX="887.0" layoutY="212.0" prefHeight="19.0" prefWidth="380.0" />
+                                    <Separator layoutX="887.0" layoutY="244.0" prefHeight="19.0" prefWidth="380.0" />
                                     <Label layoutX="886.0" layoutY="565.0" prefHeight="17.0" prefWidth="108.0" text="Total de Etiquetas:" textFill="#f5f5f5">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
@@ -195,6 +195,11 @@
                                           <Image url="@Imagens/MarkBranco.png" />
                                        </image>
                                     </ImageView>
+                                    <JFXButton fx:id="atualizarIdentificadorPeticao" layoutX="1083.0" layoutY="209.0" onAction="#inicializarMenuPeticaoInicial" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </JFXButton>
                                  </children>
                               </AnchorPane>
                           </content>
@@ -238,8 +243,8 @@
                                        </contextMenu>
                                     </TableView>
                                     <JFXComboBox fx:id="comboBoxBancos" editable="true" focusColor="WHITE" layoutX="887.0" layoutY="5.0" onHidden="#selecionarBancoEtiqueta" prefHeight="25.0" prefWidth="380.0" promptText="Selecione o banco" unFocusColor="WHITE" />
-                                    <JFXTextField fx:id="pesquisa" focusColor="WHITE" labelFloat="true" layoutX="887.0" layoutY="48.0" onKeyReleased="#buscaEtiqueta" prefHeight="25.0" prefWidth="311.0" promptText="Pesquisar etiqueta" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
-                                    <JFXTextField fx:id="pesquisaId" focusColor="WHITE" layoutX="1201.0" layoutY="48.0" onKeyReleased="#buscaEtiquetaID" prefHeight="25.0" prefWidth="65.0" promptText="ID" unFocusColor="WHITE" />
+                                    <JFXTextField fx:id="pesquisaEtiqueta" focusColor="WHITE" labelFloat="true" layoutX="887.0" layoutY="48.0" onKeyReleased="#buscaEtiqueta" prefHeight="25.0" prefWidth="311.0" promptText="Pesquisar etiqueta" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
+                                    <JFXTextField fx:id="pesquisaEtiquetaId" focusColor="WHITE" layoutX="1201.0" layoutY="48.0" onKeyReleased="#buscaEtiquetaID" prefHeight="25.0" prefWidth="65.0" promptText="ID" unFocusColor="WHITE" />
                                     <VBox layoutX="887.0" layoutY="100.0" maxHeight="370.0" maxWidth="370.0" minHeight="135.0" minWidth="380.0" prefHeight="152.0" prefWidth="370.0" spacing="30.0" stylesheets="@../styles/dark_theme.css">
                                        <children>
                                           <JFXTextField fx:id="palavraChave" focusColor="WHITE" labelFloat="true" promptText="FRASE CHAVE *" unFocusColor="WHITE" />
@@ -271,7 +276,7 @@
                                     </JFXTextField>
                                     <HBox alignment="CENTER_LEFT" layoutX="1045.0" layoutY="353.0" prefHeight="24.0" prefWidth="221.0" spacing="20.0">
                                        <children>
-                                          <RadioButton fx:id="LerDoc" contentDisplay="RIGHT" mnemonicParsing="false" selected="true" text="Documento">
+                                          <RadioButton fx:id="documento" contentDisplay="RIGHT" mnemonicParsing="false" selected="true" text="Documento">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
@@ -279,7 +284,7 @@
                                                 <ToggleGroup fx:id="grupoTipo" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="LerMov" contentDisplay="RIGHT" mnemonicParsing="false" selected="false" text="Movimentação" toggleGroup="$grupoTipo">
+                                          <RadioButton fx:id="movimentacao" contentDisplay="RIGHT" mnemonicParsing="false" selected="false" text="Movimentação" toggleGroup="$grupoTipo">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
@@ -288,7 +293,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" layoutX="1046.0" layoutY="406.0" prefHeight="27.0" prefWidth="222.0" spacing="25.0">
                                        <children>
-                                          <RadioButton fx:id="P1" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" selected="true" text="1">
+                                          <RadioButton fx:id="etiquetaP1" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" selected="true" text="1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
@@ -296,17 +301,17 @@
                                                 <ToggleGroup fx:id="grupoPeso1" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="P2" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="2" toggleGroup="$grupoPeso1">
+                                          <RadioButton fx:id="etiquetaP2" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="2" toggleGroup="$grupoPeso1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </RadioButton>
-                                          <RadioButton fx:id="P3" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="3" toggleGroup="$grupoPeso1">
+                                          <RadioButton fx:id="etiquetaP3" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" text="3" toggleGroup="$grupoPeso1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </RadioButton>
-                                          <RadioButton fx:id="P4" mnemonicParsing="false" prefHeight="27.0" prefWidth="37.0" text="4" toggleGroup="$grupoPeso1">
+                                          <RadioButton fx:id="etiquetaP4" mnemonicParsing="false" prefHeight="27.0" prefWidth="37.0" text="4" toggleGroup="$grupoPeso1">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
@@ -339,7 +344,7 @@
                                        </font>
                                     </JFXTextField>
                                     <Separator layoutX="887.0" layoutY="327.0" prefHeight="4.0" prefWidth="380.0" />
-                                    <JFXButton fx:id="atualizar" layoutX="1081.0" layoutY="284.0" onAction="#atualizarTabelaEtiqueta" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                                    <JFXButton fx:id="atualizar" layoutX="1081.0" layoutY="284.0" onAction="#inicializarMenuTriagemPadrao" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -376,7 +381,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                    <JFXTextField focusColor="WHITE" labelFloat="true" layoutX="887.0" layoutY="127.0" prefHeight="25.0" prefWidth="380.0" promptText="Tipo de Movimentação" styleClass="TextField" stylesheets="@../styles/dark_theme.css" unFocusColor="#fcfcfc" />
+                                    <JFXTextField fx:id="tipoMovimentacao" focusColor="WHITE" labelFloat="true" layoutX="887.0" layoutY="127.0" prefHeight="25.0" prefWidth="380.0" promptText="Tipo de Movimentação" styleClass="TextField" stylesheets="@../styles/dark_theme.css" unFocusColor="#fcfcfc" />
                                     <JFXButton fx:id="botaoInserir111" alignment="CENTER" contentDisplay="CENTER" layoutX="1083.0" layoutY="172.0" onAction="#inserirTipoMovimentacao" prefHeight="27.0" prefWidth="185.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Registro">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
@@ -387,12 +392,12 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXButton fx:id="botaoVoltar111" layoutX="1136.0" layoutY="228.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="132.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
+                                    <JFXButton fx:id="botaoVoltar111" layoutX="1136.0" layoutY="256.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="132.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <Separator layoutX="888.0" layoutY="207.0" prefHeight="19.0" prefWidth="380.0" />
+                                    <Separator layoutX="888.0" layoutY="235.0" prefHeight="19.0" prefWidth="380.0" />
                                     <Label layoutX="886.0" layoutY="565.0" prefHeight="17.0" prefWidth="108.0" text="Total de Etiquetas:" textFill="#f5f5f5">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
@@ -403,6 +408,11 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXTextField>
+                                    <JFXButton fx:id="atualizar1" layoutX="1083.0" layoutY="207.0" onAction="#inicializarMenuTriagemPadrao" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </JFXButton>
                                  </children>
                               </AnchorPane>
                           </content>
@@ -453,7 +463,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXTextField>
-                  <JFXButton fx:id="atualizar2" layoutX="1087.0" layoutY="254.0" onAction="#atualizarTabelaBanco" prefHeight="27.0" prefWidth="176.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                  <JFXButton fx:id="atualizar2" layoutX="1087.0" layoutY="254.0" onAction="#inicializarBancoDeDados" prefHeight="27.0" prefWidth="176.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -476,7 +486,7 @@
                </children></AnchorPane>
         </content>
       </Tab>
-      <Tab disable="true" text="Usuários">
+      <Tab text="Usuários">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -485,28 +495,22 @@
                         <Image url="@Imagens/MarkBranco.png" />
                      </image>
                   </ImageView>
-                  <TableView fx:id="tabelaBancos1" prefHeight="622.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
+                  <TableView fx:id="tabelaUsuarios" onMouseClicked="#selecionarUsuario" prefHeight="622.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
                      <columns>
-                        <TableColumn fx:id="colunaSigla1" editable="false" minWidth="-Infinity" prefWidth="449.0" resizable="false" text="Nome" />
-                        <TableColumn fx:id="colunaSigla11" editable="false" minWidth="-Infinity" prefWidth="424.0" resizable="false" text="CPF" />
+                        <TableColumn fx:id="nomeUsuario" editable="false" minWidth="-Infinity" prefWidth="873.0" resizable="false" text="Nome" />
                      </columns>
                   </TableView>
-                  <JFXTextField fx:id="textoBanco1" focusColor="WHITE" labelFloat="true" layoutX="891.0" layoutY="14.0" prefHeight="25.0" prefWidth="371.0" promptText="Nome do usuário" unFocusColor="WHITE">
+                  <JFXTextField fx:id="textoNomeUsuario" focusColor="WHITE" labelFloat="true" layoutX="891.0" layoutY="14.0" prefHeight="25.0" prefWidth="371.0" promptText="Nome do usuário" unFocusColor="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXTextField>
-                  <JFXButton fx:id="atualizar21" layoutX="1086.0" layoutY="248.0" onAction="#atualizarUsuarios" prefHeight="27.0" prefWidth="176.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                  <JFXButton layoutX="891.0" layoutY="141.0" onAction="#inicializarUsuarios" prefHeight="27.0" prefWidth="372.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="botaoInserir21" alignment="CENTER" layoutX="891.0" layoutY="206.0" onAction="#inserirUsuario" prefHeight="27.0" prefWidth="176.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Usuário">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </JFXButton>
-                  <JFXButton fx:id="botaoExcluir21" alignment="CENTER" layoutX="1086.0" layoutY="206.0" onAction="#excluirUsuario" prefHeight="27.0" prefWidth="176.0" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Remover Usuário">
+                  <JFXButton fx:id="btnAtualizarUsuario" alignment="CENTER" disable="true" layoutX="891.0" layoutY="104.0" onAction="#atualizarUsuario" prefHeight="27.0" prefWidth="372.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Atualizar usuário">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -516,17 +520,11 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXButton>
-                  <JFXTextField fx:id="textoBanco11" focusColor="WHITE" labelFloat="true" layoutX="891.0" layoutY="54.0" prefHeight="25.0" prefWidth="371.0" promptText="CPF" unFocusColor="WHITE">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXPasswordField focusColor="WHITE" layoutX="891.0" layoutY="98.0" prefWidth="371.0" promptText="Senha" unFocusColor="WHITE">
+                  <JFXPasswordField fx:id="textoSenhaUsuario" focusColor="WHITE" layoutX="891.0" layoutY="56.0" prefWidth="371.0" promptText="Senha" unFocusColor="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXPasswordField>
-                  <JFXComboBox focusColor="WHITE" layoutX="891.0" layoutY="144.0" prefHeight="25.0" prefWidth="371.0" promptText="Grupo" unFocusColor="WHITE" />
                </children>
             </AnchorPane>
          </content>

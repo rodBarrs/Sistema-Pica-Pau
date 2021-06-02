@@ -1,8 +1,4 @@
-/**
- * @author Felipe Marques, Gabriel Ramos, Rafael Henrique e Adriano Vilhena 
- * 
- * Classe controladora das Janela de inserção de grupos de etiquetas dentro do banco
- */
+/*
 package com.mycompany.newmark;
 
 import com.jfoenix.controls.JFXButton;
@@ -183,4 +179,4 @@ public class Controller_BancosEdicao implements Initializable {
         textoSigla.setText(tabelaBancos.getSelectionModel().getSelectedItem().getSigla());
         textoBanco.setText(tabelaBancos.getSelectionModel().getSelectedItem().getNome());
     }
-}
+}*/

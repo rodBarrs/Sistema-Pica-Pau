@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.mycompany.newmark.Aviso;
 import com.mycompany.newmark.Banco;
@@ -15,12 +16,15 @@ import com.mycompany.newmark.Chaves_Banco;
 import com.mycompany.newmark.Chaves_Condicao;
 import com.mycompany.newmark.Chaves_GrupoEtiquetas;
 import com.mycompany.newmark.Controller_TagEdicaoCondicao;
+import com.mycompany.newmark.Controller_TagEdicaoEtiqueta;
 import com.mycompany.newmark.Controller_TagEdicaoMateria;
 import com.mycompany.newmark.DAO.BancosDAO;
 import com.mycompany.newmark.DAO.EtiquetaDAO;
 import com.mycompany.newmark.DAO.IdentificadorMateriaDAO;
 import com.mycompany.newmark.DAO.IdentificadorPeticaoInicialDAO;
 import com.mycompany.newmark.DAO.TipoMovimentacaoDAO;
+import com.mycompany.newmark.DAO.UsuarioLocalDAO;
+import com.mycompany.newmark.entities.UsuarioLocal;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,7 +48,10 @@ public class Administracao implements Initializable {
 	@FXML
 	private JFXTextField numeroEtiquetas, numeroTipoMovimentacao, numeroIdentificadorMateria, numeroPeticaoInicial,
 			pedido, complementoPedido, buscaIdentificadorMateriaID, buscaIdentificadorMateria,
-			identificadorPeticaoInicial, pesquisaIdentificador;
+			identificadorPeticaoInicial, pesquisaIdentificador, pesquisaEtiqueta, pesquisaEtiquetaId, palavraChave,
+			complemento, etiqueta, buscaTipoMovimentacao, tipoMovimentacao, textoSigla, textoBanco, textoNomeUsuario;
+	@FXML
+	private JFXPasswordField textoSenhaUsuario;
 	@FXML
 	private JFXComboBox<String> comboBoxBancos, comboBoxNucleo;
 	@FXML
@@ -53,6 +60,10 @@ public class Administracao implements Initializable {
 	private TableView<Chaves_Banco> tabelaIdentificadorMateria, tabelaEtiquetas;
 	@FXML
 	private TableView<Chaves_Condicao> tabelaTipoMovimento, tabelaIdentificadorPeticao;
+	@FXML
+	private TableView<UsuarioLocal> tabelaUsuarios;
+	@FXML
+	private TableColumn<UsuarioLocal, String> nomeUsuario;
 	@FXML
 	private TableColumn<Chaves_Banco, String> identificadorMateriaID, identificadorMateriaPedido,
 			identificadorMateriaComplemento, identificadorMateriaSubnucleo, identificadorMateriaPeso, etiquetaID,
@@ -63,15 +74,17 @@ public class Administracao implements Initializable {
 	@FXML
 	private TableColumn<Chaves_GrupoEtiquetas, String> bancoSigla, bancoNome, bancoNumeroDeEtiquetas;
 	@FXML
-	private RadioButton identificadorMateriaP1, identificadorMateriaP2, identificadorMateriaP3, identificadorMateriaP4;
+	private RadioButton etiquetaP1, etiquetaP2, etiquetaP3, etiquetaP4, identificadorMateriaP1, identificadorMateriaP2,
+			identificadorMateriaP3, identificadorMateriaP4, documento, movimentacao;
 	@FXML
-	private JFXButton inserirIdentificadorMateria;
+	private JFXButton inserirIdentificadorMateria, btnAtualizarUsuario;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		inicializarMenuPeticaoInicial();
 		inicializarMenuTriagemPadrao();
 		inicializarBancoDeDados();
+		inicializarUsuarios();
 	}
 
 	/* Inicializações */
@@ -150,6 +163,13 @@ public class Administracao implements Initializable {
 		tabelaBancos.setItems(genericos);
 	}
 
+	public void inicializarUsuarios() {
+		List<UsuarioLocal> usuarios = new UsuarioLocalDAO().getTabelaUsuarios();
+		nomeUsuario.setCellValueFactory(new PropertyValueFactory<UsuarioLocal, String>("nome"));
+		ObservableList<UsuarioLocal> users = FXCollections.observableArrayList(usuarios);
+		tabelaUsuarios.setItems(users);
+	}
+
 	/* Global */
 	@FXML
 	public void retornaMenu(ActionEvent event) {
@@ -226,13 +246,8 @@ public class Administracao implements Initializable {
 	@FXML
 	public void excluirIdentificadorMateria() {
 		Integer idSelecionado = tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getID();
-		Boolean identificadorExcluido = new IdentificadorMateriaDAO().removerIdentificadorMateria(idSelecionado);
-		if (identificadorExcluido) {
-			new Aviso().aviso("Item excluído");
-			inicializarMenuPeticaoInicial();
-		} else {
-			new Aviso().aviso("Não foi possível excluir o item");
-		}
+		new IdentificadorMateriaDAO().removerIdentificadorMateria(idSelecionado);
+		inicializarMenuPeticaoInicial();
 	}
 
 	public void limparIdentificadorMateria() {
@@ -331,7 +346,7 @@ public class Administracao implements Initializable {
 	public void alterarIdentificadorPeticao() throws IOException {
 		Chaves_Condicao chave = new Chaves_Condicao();
 		chave.setTEXTO(tabelaIdentificadorPeticao.getSelectionModel().getSelectedItem().getTEXTO());
-		
+
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoConfiguracao.fxml"));
 		loader.setController(new Controller_TagEdicaoCondicao(chave));
 		Parent root = loader.load();
@@ -345,99 +360,271 @@ public class Administracao implements Initializable {
 	}
 
 	public void selecionarIdentificadorPeticao() {
-
+		identificadorPeticaoInicial
+				.setText(tabelaIdentificadorPeticao.getSelectionModel().getSelectedItem().getTEXTO());
 	}
 
 	/* Etiquetas */
 
 	public void selecionarBancoEtiqueta() {
+		String bancoSelecionado = comboBoxBancos.getSelectionModel().getSelectedItem().substring(0, 3);
 
+		List<Chaves_Banco> listaTabelaEtiquetas = new EtiquetaDAO().getTabelaEtiqueta(bancoSelecionado);
+
+		etiquetaID.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
+		etiquetaFraseChave.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
+		etiquetaComplemento.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
+		etiquetaEtiqueta.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+		etiquetaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
+		etiquetaTipo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("TIPO"));
+		ObservableList<Chaves_Banco> genericos = FXCollections.observableArrayList(listaTabelaEtiquetas);
+
+		tabelaEtiquetas.setItems(genericos);
+		numeroEtiquetas.setText(String.valueOf(tabelaEtiquetas.getItems().size()));
 	}
 
 	public void buscaEtiqueta() {
+		String textoEtiqueta = pesquisaEtiqueta.getText().toUpperCase();
+		if (textoEtiqueta.isEmpty()) {
+			inicializarMenuTriagemPadrao();
+		} else {
+			List<Chaves_Banco> etiquetas = new EtiquetaDAO().buscaEtiqueta(textoEtiqueta);
+			etiquetaID.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
+			etiquetaFraseChave.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
+			etiquetaComplemento.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
+			etiquetaEtiqueta.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+			etiquetaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
+			etiquetaTipo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("TIPO"));
+			ObservableList<Chaves_Banco> genericos = FXCollections.observableArrayList(etiquetas);
 
+			tabelaEtiquetas.setItems(genericos);
+			numeroEtiquetas.setText(String.valueOf(tabelaEtiquetas.getItems().size()));
+		}
 	}
 
 	public void buscaEtiquetaID() {
+		String id = pesquisaEtiquetaId.getText().toUpperCase();
+		if (id.isEmpty()) {
+			inicializarMenuTriagemPadrao();
+		} else {
+			List<Chaves_Banco> etiquetas = new EtiquetaDAO().buscaEtiquetaPorID(id);
+			etiquetaID.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
+			etiquetaFraseChave.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
+			etiquetaComplemento.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
+			etiquetaEtiqueta.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+			etiquetaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
+			etiquetaTipo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("TIPO"));
+			ObservableList<Chaves_Banco> genericos = FXCollections.observableArrayList(etiquetas);
 
+			tabelaEtiquetas.setItems(genericos);
+			numeroEtiquetas.setText(String.valueOf(tabelaEtiquetas.getItems().size()));
+		}
 	}
 
 	public void limparEtiqueta() {
-
+		palavraChave.clear();
+		complemento.clear();
+		etiqueta.clear();
 	}
 
 	public void atualizarTabelaEtiqueta() {
-
+		inicializarMenuTriagemPadrao();
 	}
 
 	public void inserirEtiqueta() {
+		String palavra = this.palavraChave.getText().toUpperCase();
+		String comp = this.complemento.getText().toUpperCase();
+		String etiq = this.etiqueta.getText().toUpperCase();
+		String banco = comboBoxBancos.getSelectionModel().getSelectedItem().substring(0, 3);
 
+		String tipo;
+		if (documento.isSelected()) {
+			tipo = "DOC";
+		} else {
+			tipo = "MOV";
+		}
+
+		String peso = "1";
+		if (etiquetaP1.isSelected())
+			peso = "1";
+		if (etiquetaP2.isSelected())
+			peso = "2";
+		if (etiquetaP3.isSelected())
+			peso = "3";
+		if (etiquetaP4.isSelected())
+			peso = "4";
+
+		if (palavra.isEmpty() || etiq.isEmpty()) {
+			new Aviso().aviso("Revise os campos");
+		} else {
+			new EtiquetaDAO().inserirEtiqueta(palavra, comp, etiq, tipo, peso, banco);
+			inicializarMenuTriagemPadrao();
+		}
 	}
 
 	public void excluirEtiqueta() {
-
+		Integer id = tabelaEtiquetas.getSelectionModel().getSelectedItem().getID();
+		new EtiquetaDAO().removerEtiqueta(id);
+		inicializarMenuTriagemPadrao();
 	}
 
 	public void selecionarEtiqueta() {
+		palavraChave.setText(tabelaEtiquetas.getSelectionModel().getSelectedItem().getPALAVRACHAVE());
+		complemento.setText(tabelaEtiquetas.getSelectionModel().getSelectedItem().getCOMPLEMENTO());
+		etiqueta.setText(tabelaEtiquetas.getSelectionModel().getSelectedItem().getETIQUETA());
+		String peso = tabelaEtiquetas.getSelectionModel().getSelectedItem().getPRIORIDADE();
+		String leitura = tabelaEtiquetas.getSelectionModel().getSelectedItem().getTIPO();
 
+		switch (peso) {
+		case "1":
+			etiquetaP1.setSelected(true);
+			break;
+		case "2":
+			etiquetaP2.setSelected(true);
+			break;
+		case "3":
+			etiquetaP3.setSelected(true);
+			break;
+		case "4":
+			etiquetaP4.setSelected(true);
+			break;
+		default:
+			break;
+		}
+
+		switch (leitura) {
+		case "MOV":
+			movimentacao.setSelected(true);
+			break;
+		case "DOC":
+			documento.setSelected(true);
+			break;
+		default:
+			break;
+		}
 	}
 
-	public void alterarEtiqueta() {
+	public void alterarEtiqueta() throws IOException {
+		Chaves_Banco chave = new Chaves_Banco();
+		String bancoSelecionado = comboBoxBancos.getSelectionModel().getSelectedItem().substring(0, 3);
+		chave.setID(tabelaEtiquetas.getSelectionModel().getSelectedItem().getID());
+		chave.setPALAVRACHAVE(tabelaEtiquetas.getSelectionModel().getSelectedItem().getPALAVRACHAVE().replace("'", "")
+				.replace("´", ""));
+		chave.setCOMPLEMENTO(tabelaEtiquetas.getSelectionModel().getSelectedItem().getCOMPLEMENTO().replace("'", "")
+				.replace("´", ""));
+		chave.setETIQUETA(
+				tabelaEtiquetas.getSelectionModel().getSelectedItem().getETIQUETA().replace("'", "").replace("´", ""));
+		chave.setTIPO(tabelaEtiquetas.getSelectionModel().getSelectedItem().getTIPO());
+		chave.setPRIORIDADE(tabelaEtiquetas.getSelectionModel().getSelectedItem().getPRIORIDADE());
+		chave.setBANCO(bancoSelecionado);
 
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoEtiqueta.fxml"));
+		loader.setController(new Controller_TagEdicaoEtiqueta(chave));
+		Parent root = loader.load();
+		Stage stage = new Stage();
+		stage.setTitle("Editar Etiqueta");
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initStyle(StageStyle.UNDECORATED);
+		stage.setScene(new Scene(root));
+		stage.show();
 	}
 
 	/* Tipos de Movimentação */
 
 	public void buscaTipoMovimentacao() {
-
+		String textoBusca = buscaTipoMovimentacao.getText().toUpperCase();
+		if (textoBusca.isEmpty()) {
+			inicializarMenuTriagemPadrao();
+		} else {
+			List<Chaves_Condicao> tipos = new TipoMovimentacaoDAO().buscarTipoMovimentacao(textoBusca);
+			colunaTipoMovimento.setCellValueFactory(new PropertyValueFactory<Chaves_Condicao, String>("TEXTO"));
+			ObservableList<Chaves_Condicao> tiposMovimentacao = FXCollections.observableArrayList(tipos);
+			tabelaTipoMovimento.setItems(tiposMovimentacao);
+			numeroTipoMovimentacao.setText(String.valueOf(tabelaTipoMovimento.getItems().size()));
+		}
 	}
 
 	public void excluirTipoMovimentacao() {
-
+		String texto = tabelaTipoMovimento.getSelectionModel().getSelectedItem().getTEXTO();
+		new TipoMovimentacaoDAO().removerTipoMovimentacao(texto);
+		inicializarMenuTriagemPadrao();
 	}
 
 	public void inserirTipoMovimentacao() {
-
+		String texto = tipoMovimentacao.getText().toUpperCase();
+		new TipoMovimentacaoDAO().inserirTipoMovimentacao(texto);
+		inicializarMenuTriagemPadrao();
 	}
 
 	public void selecionarTipoMovimentacao() {
-
+		tipoMovimentacao.setText(tabelaTipoMovimento.getSelectionModel().getSelectedItem().getTEXTO());
 	}
 
-	public void alterarTipoMovimentacao() {
+	public void alterarTipoMovimentacao() throws IOException {
+		Chaves_Condicao chave = new Chaves_Condicao();
+		chave.setTIPO("PRO");
+		chave.setTEXTO(
+				tabelaTipoMovimento.getSelectionModel().getSelectedItem().getTEXTO().replace("'", "").replace("´", ""));
 
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TagEdicaoConfiguracao.fxml"));
+		loader.setController(new Controller_TagEdicaoCondicao(chave));
+		Parent root = loader.load();
+		Stage stage = new Stage();
+
+		stage.setTitle("Editar Condição");
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initStyle(StageStyle.UNDECORATED);
+		stage.setScene(new Scene(root));
+		stage.show();
 	}
 
 	/* Bancos de Dados */
 
 	public void inserirBanco() {
-
+		String sigla = textoSigla.getText();
+		String banco = textoBanco.getText();
+		if (sigla.isEmpty() || banco.isEmpty()) {
+			new Aviso().aviso("Revise os campos!");
+		} else {
+			if (sigla.length() > 3) {
+				new Aviso().aviso("Sigla não pode conter mais que 3 caracteres");
+				return;
+			}
+			new BancosDAO().inserirBanco(sigla, banco);
+			inicializarBancoDeDados();
+		}
 	}
 
 	public void excluirBanco() {
-
-	}
-
-	public void atualizarTabelaBanco() {
-
+		String sigla = tabelaBancos.getSelectionModel().getSelectedItem().getSigla();
+		new BancosDAO().removerBanco(sigla);
+		inicializarBancoDeDados();
 	}
 
 	public void selecionarBanco() {
-
+		textoSigla.setText(tabelaBancos.getSelectionModel().getSelectedItem().getSigla());
+		textoBanco.setText(tabelaBancos.getSelectionModel().getSelectedItem().getNome());
 	}
 
 	/* Usuários */
 
-	public void inserirUsuario() {
+	public void atualizarUsuario() {
+		String antigoNome = tabelaUsuarios.getSelectionModel().getSelectedItem().getNome();
+		String nome = textoNomeUsuario.getText();
+		String senha = textoSenhaUsuario.getText();
 
+		if (antigoNome.isEmpty() || nome.isEmpty() || senha.isEmpty()) {
+			new Aviso().aviso("Selecione um usuário e não deixe nenhum campo vazio");
+		} else {
+			new UsuarioLocalDAO().atualizarUsuario(nome, senha, antigoNome);
+		}
+		inicializarUsuarios();
 	}
 
-	public void excluirUsuario() {
-
-	}
-
-	public void atualizarUsuarios() {
-
+	public void selecionarUsuario() {
+		btnAtualizarUsuario.setDisable(false);
+		textoNomeUsuario.setText(tabelaUsuarios.getSelectionModel().getSelectedItem().getNome());
+		textoSenhaUsuario.setText(tabelaUsuarios.getSelectionModel().getSelectedItem().getSenha());
 	}
 
 }

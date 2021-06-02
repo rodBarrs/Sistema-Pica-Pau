@@ -1,8 +1,4 @@
-/**
- * @author Felipe Marques, Gabriel Ramos, Rafael Henrique e Adriano Vilhena 
- * 
- * Classe controladora das Janela de inserção de palavras chaves dentro do banco
- */
+/*
 package com.mycompany.newmark;
 
 import com.jfoenix.controls.JFXButton;
@@ -364,4 +360,4 @@ public class ControllerEtiquetas implements Initializable {
 		}
 		return null;
 	}
-}
+}*/

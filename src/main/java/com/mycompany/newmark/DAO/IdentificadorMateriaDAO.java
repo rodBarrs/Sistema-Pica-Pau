@@ -19,22 +19,22 @@ public class IdentificadorMateriaDAO {
 
 	public List<Chaves_Banco> getTabelaIdentificadorMateria() {
 
-		final String SQL = "SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' ORDER BY ID";
+		final String SQL = "SELECT * FROM identificador_materia ORDER BY id";
 		List<Chaves_Banco> identificadoresMateria = new ArrayList<>();
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				Chaves_Banco key = new Chaves_Banco();
-				key.setID(resultSet.getInt("ID"));
-				key.setPALAVRACHAVE(resultSet.getString("PALAVRACHAVE"));
-				key.setCOMPLEMENTO(resultSet.getString("COMPLEMENTO"));
-				key.setETIQUETA(resultSet.getString("ETIQUETA"));
-				key.setPRIORIDADE(resultSet.getString("PRIORIDADE"));
+				key.setID(resultSet.getInt("id"));
+				key.setPALAVRACHAVE(resultSet.getString("palavrachave"));
+				key.setCOMPLEMENTO(resultSet.getString("complemento"));
+				key.setETIQUETA(resultSet.getString("etiqueta"));
+				key.setPRIORIDADE(resultSet.getString("prioridade"));
 				identificadoresMateria.add(key);
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			new Aviso().aviso(e.getMessage());
 		}
 
 		return identificadoresMateria;
@@ -43,16 +43,14 @@ public class IdentificadorMateriaDAO {
 	public void inserirIdentificadorMateria(String pedido, String complementoPedido, String subnucleo,
 			Integer pesoSelecionado) {
 
-		final String SQL = "INSERT INTO ETIQUETAS (PALAVRACHAVE, COMPLEMENTO, ETIQUETA, TIPO, PRIORIDADE, BANCO) VALUES (?, ?, ?, ?, ?, ?);";
+		final String SQL = "INSERT INTO identificador_materia (palavrachave, complemento, etiqueta, prioridade) VALUES (?, ?, ?, ?);";
 
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, pedido);
 			stmt.setString(2, complementoPedido);
 			stmt.setString(3, subnucleo);
-			stmt.setString(4, "PET");
-			stmt.setInt(5, pesoSelecionado);
-			stmt.setString(6, "JEF");
+			stmt.setInt(4, pesoSelecionado);
 
 			stmt.execute();
 
@@ -69,20 +67,16 @@ public class IdentificadorMateriaDAO {
 		}
 	}
 
-	public Boolean removerIdentificadorMateria(Integer idSelecionado) {
-		Boolean isSucesso = null;
-		final String SQL = "DELETE FROM ETIQUETAS WHERE ID = ?";
+	public void removerIdentificadorMateria(Integer idSelecionado) {
+		final String SQL = "DELETE FROM identificador_materia WHERE id = ?";
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setInt(1, idSelecionado);
 			stmt.executeUpdate();
-			isSucesso = true;
+			new Aviso().aviso("Item removido");
 		} catch (Exception e) {
-			e.printStackTrace();
-			isSucesso = false;
+			new Aviso().aviso("Item não removido\n" + e.getMessage());
 		}
-
-		return isSucesso;
 
 	}
 
@@ -90,7 +84,7 @@ public class IdentificadorMateriaDAO {
 
 		List<Chaves_Banco> chaves = new ArrayList<>();
 
-		final String SQL = "SELECT * FROM ETIQUETAS WHERE ID = ?";
+		final String SQL = "SELECT * FROM identificador_materia WHERE id = ?";
 
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
@@ -98,17 +92,15 @@ public class IdentificadorMateriaDAO {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Chaves_Banco chave = new Chaves_Banco();
-				chave.setID(Integer.valueOf(rs.getString("ID")));
-				chave.setPALAVRACHAVE(rs.getString("PALAVRACHAVE"));
-				chave.setCOMPLEMENTO(rs.getString("COMPLEMENTO"));
-				chave.setETIQUETA(rs.getString("ETIQUETA"));
-				chave.setTIPO(rs.getString("TIPO"));
-				chave.setPRIORIDADE(rs.getString("PRIORIDADE"));
-				chave.setBANCO(rs.getString("BANCO"));
+				chave.setID(Integer.valueOf(rs.getString("id")));
+				chave.setPALAVRACHAVE(rs.getString("palavrachave"));
+				chave.setCOMPLEMENTO(rs.getString("complemento"));
+				chave.setETIQUETA(rs.getString("etiqueta"));
+				chave.setPRIORIDADE(rs.getString("prioridade"));
 				chaves.add(chave);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			new Aviso().aviso(e.getMessage());
 		}
 
 		return chaves;
@@ -116,7 +108,7 @@ public class IdentificadorMateriaDAO {
 	}
 
 	public List<Chaves_Banco> buscaIdentificador(String textoBusca) {
-		final String SQL = "SELECT * FROM ETIQUETAS WHERE TIPO = 'PET' AND PALAVRACHAVE LIKE ? OR COMPLEMENTO LIKE ? OR ETIQUETA LIKE ?";
+		final String SQL = "SELECT * FROM identificador_materia WHERE palavrachave LIKE ? OR complemento LIKE ? OR etiqueta LIKE ?";
 		
 		List<Chaves_Banco> chaves = new ArrayList<>();
 		
@@ -128,17 +120,15 @@ public class IdentificadorMateriaDAO {
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
 				Chaves_Banco chave = new Chaves_Banco();
-				chave.setID(Integer.valueOf(rs.getString("ID")));
-				chave.setPALAVRACHAVE(rs.getString("PALAVRACHAVE"));
-				chave.setCOMPLEMENTO(rs.getString("COMPLEMENTO"));
-				chave.setETIQUETA(rs.getString("ETIQUETA"));
-				chave.setTIPO(rs.getString("TIPO"));
-				chave.setPRIORIDADE(rs.getString("PRIORIDADE"));
-				chave.setBANCO(rs.getString("BANCO"));
+				chave.setID(Integer.valueOf(rs.getString("id")));
+				chave.setPALAVRACHAVE(rs.getString("palavrachave"));
+				chave.setCOMPLEMENTO(rs.getString("complemento"));
+				chave.setETIQUETA(rs.getString("etiqueta"));
+				chave.setPRIORIDADE(rs.getString("prioridade"));
 				chaves.add(chave);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			new Aviso().aviso(e.getMessage());
 		}
 		
 		return chaves;
@@ -147,7 +137,7 @@ public class IdentificadorMateriaDAO {
 	
 	public void atualizarIndetificadorMateria(Integer id, String palavrachave, String complemento, String etiqueta, String prioridade) {
 		
-		final String SQL = "UPDATE ETIQUETAS SET PALAVRACHAVE = ?, COMPLEMENTO = ?, ETIQUETA = ?, PRIORIDADE = ? WHERE ID = ?";
+		final String SQL = "UPDATE identificador_materia SET palavrachave = ?, complemento = ?, etiqueta = ?, prioridade = ? WHERE id = ?";
 		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
@@ -158,8 +148,9 @@ public class IdentificadorMateriaDAO {
 			stmt.setString(4, prioridade);
 			stmt.setInt(5, id);
 			stmt.executeUpdate();
+			new Aviso().aviso("Item atualizado");
 		} catch (Exception e) {
-			e.printStackTrace();
+			new Aviso().aviso("Não foi possível atualizar o item\n" + e.getMessage());
 		}
 	}
 

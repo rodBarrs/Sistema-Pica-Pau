@@ -16,21 +16,19 @@ public class IdentificadorPeticaoInicialDAO {
 		
 		List<Chaves_Condicao> listaIdentificadoresPeticaoInicial = new ArrayList<>();
 		
-		final String SQL = "SELECT * FROM CONDICAO WHERE TIPO = 'PET' ORDER BY TEXTO";
+		final String SQL = "SELECT * FROM condicao WHERE tipo = 'PET' ORDER BY texto";
 		
 		try(Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
 				Chaves_Condicao chave = new Chaves_Condicao();
-				chave.setTEXTO(rs.getString("TEXTO"));
+				chave.setTEXTO(rs.getString("texto"));
 				listaIdentificadoresPeticaoInicial.add(chave);
 			}
 			
 		} catch (Exception e) {
-			Aviso aviso = new Aviso();
-			String textoAviso = "" + e.getMessage();
-			aviso.aviso(textoAviso);
+			new Aviso().aviso(e.getMessage());
 		}
 		
 		return listaIdentificadoresPeticaoInicial;
@@ -38,7 +36,7 @@ public class IdentificadorPeticaoInicialDAO {
 
 	public void inserirIdentificadorPeticaoInicial(String identificadorPeticao) {
 		
-		final String SQL = "INSERT INTO CONDICAO (TEXTO, TIPO) VALUES (?, ?)";
+		final String SQL = "INSERT INTO condicao (texto, tipo) VALUES (?, ?)";
 		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)){
@@ -47,15 +45,14 @@ public class IdentificadorPeticaoInicialDAO {
 			stmt.execute();
 			new Aviso().aviso("Item inserido");
 		} catch (Exception e) {
-			new Aviso().aviso("Item não inserido");
-			e.printStackTrace();
+			new Aviso().aviso("Item não inserido\n" + e.getMessage());
 		}
 		
 	}
 
 	public void removerIdentificadorPeticaoInicial(String texto) {
 		
-		final String SQL = "DELETE FROM CONDICAO WHERE TEXTO = ?";
+		final String SQL = "DELETE FROM condicao WHERE texto = ?";
 		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)){
@@ -63,8 +60,7 @@ public class IdentificadorPeticaoInicialDAO {
 			stmt.execute();
 			new Aviso().aviso("Item removido");
 		} catch (Exception e) {
-			new Aviso().aviso("Item removido");
-			e.printStackTrace();
+			new Aviso().aviso("Item não removido\n" + e.getMessage());
 		}
 		
 	}
@@ -73,20 +69,19 @@ public class IdentificadorPeticaoInicialDAO {
 		
 		List<Chaves_Condicao> chaves = new ArrayList<>();
 		
-		final String SQL = "SELECT * FROM CONDICAO WHERE TIPO = 'PET' AND TEXTO LIKE ?";
+		final String SQL = "SELECT * FROM condicao WHERE tipo = 'PET' AND texto LIKE ?";
 		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)){
 			stmt.setString(1, '%' + textoBusca + '%');
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				System.out.println(rs.getString("TEXTO"));
 				Chaves_Condicao chave = new Chaves_Condicao();
-				chave.setTEXTO(rs.getString("TEXTO"));
+				chave.setTEXTO(rs.getString("texto"));
 				chaves.add(chave);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			new Aviso().aviso(e.getMessage());
 		}
 		
 		return chaves;
@@ -95,15 +90,16 @@ public class IdentificadorPeticaoInicialDAO {
 
 	public void atualizarIdentificadorPeticao(String texto, String novoTexto) {
 		
-		final String SQL = "UPDATE CONDICAO SET TEXTO = ? WHERE TEXTO = ?";
+		final String SQL = "UPDATE condicao SET texto = ? WHERE texto = ?";
 		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, novoTexto);
 			stmt.setString(2, texto);
 			stmt.executeUpdate();
+			new Aviso().aviso("Item atualizado");
 		} catch (Exception e) {
-			// TODO: handle exception
+			new Aviso().aviso("Item não atualizado\n" + e.getMessage());
 		}
 		
 	}
