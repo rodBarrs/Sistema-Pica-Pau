@@ -26,6 +26,7 @@ import com.mycompany.newmark.DAO.TipoMovimentacaoDAO;
 import com.mycompany.newmark.DAO.UsuarioLocalDAO;
 import com.mycompany.newmark.entities.UsuarioLocal;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

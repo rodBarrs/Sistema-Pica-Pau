@@ -4,10 +4,7 @@
  */
 package com.mycompany.newmark;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -18,22 +15,18 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.mycompany.newmark.system.Sistema;
+
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchSessionException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  *
@@ -99,9 +92,9 @@ public class Processo_Triagem {
 
 					etiqueta.etiquetar(resultado.getDriver(), wait, resultado);
 					//Contadores
-					if (resultado.getLocal().contains("Mov")) {
+					if (resultado.getLocal().contains("MOV")) {
 						banco.contarMov();
-					} else if (resultado.getLocal().contains("Doc")) {
+					} else if (resultado.getLocal().contains("DOC")) {
 						banco.contarDoc();
 					} else {
 						banco.contarNao();
@@ -120,7 +113,8 @@ public class Processo_Triagem {
 					StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw);
 					ex.printStackTrace(pw);
-					String exceptionText = "Usuário: " + System.getProperty("user.name");
+					String versao = new Sistema().getVersao();
+					String exceptionText = "Versão: " + versao + "\nUsuário: " + System.getProperty("user.name");
 					exceptionText += "\n" + sw.toString();
 
 					Label label = new Label("The exception stacktrace was:");

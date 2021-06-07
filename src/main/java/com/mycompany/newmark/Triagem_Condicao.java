@@ -24,6 +24,7 @@ public class Triagem_Condicao {
         resultSet = stmt.executeQuery();
         while (resultSet.next()){
             String texto = resultSet.getString("texto");
+           
             if (processo.contains(texto)) {
                 connection.close();
                 return true;

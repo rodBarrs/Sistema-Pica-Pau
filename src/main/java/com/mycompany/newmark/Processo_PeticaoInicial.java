@@ -152,7 +152,7 @@ public class Processo_PeticaoInicial {
 				}
 
 				Boolean contemPeticaoInicial = cond.verificaCondicao(documentoPeticaoInicial, "PET");
-				if (!Boolean.FALSE.equals(contemPeticaoInicial)) {
+				if (Boolean.FALSE.equals(contemPeticaoInicial)) {
 
 					int proximaLinha = Integer
 							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText()) + 1;

@@ -5,14 +5,6 @@
  */
 package com.mycompany.newmark;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXProgressBar;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
-import com.mycompany.newmark.DAO.UsuarioLocalDAO;
-import com.mycompany.newmark.entities.UsuarioLocal;
-
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
@@ -26,6 +18,26 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+import com.mycompany.newmark.DAO.UsuarioLocalDAO;
+import com.mycompany.newmark.controllers.LoginLocal;
+import com.mycompany.newmark.entities.UsuarioLocal;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,14 +52,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Controller_Login implements Initializable {
 	private boolean triagemIniciada = false;
@@ -56,6 +62,8 @@ public class Controller_Login implements Initializable {
 	public WebDriverWait wait;
 	public Usuario usuario = new Usuario();
 
+	@FXML
+	private AnchorPane anchor;
 	@FXML
 	public Label labelDebug;
 	@FXML
@@ -231,9 +239,8 @@ public class Controller_Login implements Initializable {
 	}
 
 	@FXML
-	public void abrirJanelaAdministracao(ActionEvent event) {
-		if (logarUsuario()) {
-			UsuarioLocal.setEstaLogado(true);
+	public void abrirJanelaAdministracao(ActionEvent event) throws IOException {
+		if(Boolean.TRUE.equals(UsuarioLocal.getEstaLogado())) {
 			Node node = (Node) event.getSource();
 			Stage stage = (Stage) node.getScene().getWindow();
 			Parent root = null;
@@ -250,25 +257,13 @@ public class Controller_Login implements Initializable {
 			stage.setScene(scene);
 			stage.centerOnScreen();
 			stage.setResizable(false);
-			stage.setMinWidth(900);
-			stage.setMinHeight(500);
-			stage.setTitle("Sistema de Triagem Mark - Banco de Etiquetas");
+			stage.setTitle("Sistema de Triagem Mark - Administração");
 			stage.show();
 		} else {
-			new Aviso().aviso("Credenciais inválidas");
-		}
-
-	}
-
-	public Boolean logarUsuario() {
-		if (UsuarioLocal.getEstaLogado()) {
-			return true;
-		} else {
-			String usuario = JOptionPane.showInputDialog(null, "Insira o usuário");
-			String senha = JOptionPane.showInputDialog(null, "Insira a senha");
-			return new UsuarioLocalDAO().logarUsuario(usuario, senha);
+			new LoginLocal().abrirPopupLogin();
 		}
 	}
+
 
 	@FXML
 	public void editarBancos(ActionEvent event) {

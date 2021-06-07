@@ -109,7 +109,7 @@ public class Banco {
 			}
 			
 			if(teste == 0) {
-				comandoSql.execute("INSERT INTO usuarios (nome, senha) VALUES ('admin', 'admin')");
+				comandoSql.execute("INSERT INTO usuarios (nome, senha) VALUES ('admin-mark', 'tony123')");
 			}
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
