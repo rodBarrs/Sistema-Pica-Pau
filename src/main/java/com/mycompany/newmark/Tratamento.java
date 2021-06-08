@@ -4,6 +4,10 @@
  */
 package com.mycompany.newmark;
 
+import javax.swing.JOptionPane;
+
+import org.apache.commons.lang3.StringUtils;
+
 public class Tratamento {
 
     public String tratamento(String processo) {
@@ -16,9 +20,13 @@ public class Tratamento {
         //processo = processo.replaceAll(".", "");
         //processo = processo.replaceAll("\"", "");
         //processo = processo.replaceAll("'", "");
-        processo = processo.replaceAll(" ", "");
+        //processo = processo.replaceAll(" ", "");
+        processo = StringUtils.normalizeSpace(processo);
+        processo = StringUtils.normalizeSpace(processo);
+        processo = StringUtils.normalizeSpace(processo);
         //processo = processo.replaceAll("\n", "");
         //processo = processo.replaceAll("\r", "");
+
         return processo;
     }
 }

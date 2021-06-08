@@ -57,32 +57,32 @@ public class Banco {
 					+ "ContErro     INT                 NOT NULL    DEFAULT (0),        \n"
 					+ "PRIMARY KEY (id)                                                 \n" + ");");
 
-			comandoSql.execute("CREATE TABLE IF NOT EXISTS etiquetas (                  \n"
-					+ "id           INTEGER       PRIMARY KEY AUTOINCREMENT,            \n"
-					+ "palavrachave VARCHAR (45)        NOT NULL,                       \n"
-					+ "complemento  VARCHAR (100)       NOT NULL,                       \n"
-					+ "etiqueta     VARCHAR (100)       NOT NULL,                       \n"
-					+ "tipo         STRING              NOT NULL    DEFAULT ('MOV'),    \n"
-					+ "prioridade VARCHAR (100)       NOT NULL    DEFAULT (0),        \n"
-					+ "banco        VARCHAR (3)         NOT NULL,                       \n"
-					+ "PRIMARY KEY (id)                     \n" + ");");
+			comandoSql.execute("CREATE TABLE IF NOT EXISTS etiquetas (\n"
+					+ "    id           INTEGER       PRIMARY KEY AUTOINCREMENT,\n"
+					+ "    palavrachave VARCHAR (45)  NOT NULL,\n"
+					+ "    complemento  VARCHAR (100) NOT NULL,\n"
+					+ "    etiqueta     VARCHAR (100) NOT NULL,\n"
+					+ "    tipo         STRING        NOT NULL\n"
+					+ "                               DEFAULT ('MOV'),\n"
+					+ "    prioridade   VARCHAR (100) NOT NULL\n"
+					+ "                               DEFAULT (0),\n"
+					+ "    banco        VARCHAR (3)   NOT NULL\n"
+					+ ");\n"
+					+ "");
 			comandoSql.execute("CREATE TABLE IF NOT EXISTS identificador_materia (\n"
 					+ "    id           INTEGER       PRIMARY KEY AUTOINCREMENT\n"
 					+ "                               NOT NULL,\n"
 					+ "    palavrachave VARCHAR (255) NOT NULL,\n"
-					+ "    complemento  VARCHAR (255) NOT NULL,\n"
+					+ "    complemento  VARCHAR (255),\n"
 					+ "    etiqueta     VARCHAR (255) NOT NULL,\n"
 					+ "    prioridade   VARCHAR (1)   NOT NULL\n"
-					+ "                               DEFAULT [1]\n"
+					+ "                               DEFAULT ('1') \n"
 					+ ");\n"
 					+ "");
 			comandoSql.execute("CREATE TABLE IF NOT EXISTS usuarios (\n"
-					+ "    id    INTEGER       PRIMARY KEY AUTOINCREMENT\n"
-					+ "                        NOT NULL,\n"
-					+ "    nome  VARCHAR (100) NOT NULL\n"
-					+ "                        DEFAULT admin,\n"
-					+ "    senha VARCHAR (30)  NOT NULL\n"
-					+ "                        DEFAULT admin\n"
+					+ "    id    INTEGER       PRIMARY KEY AUTOINCREMENT,\n"
+					+ "    nome  VARCHAR (255),\n"
+					+ "    senha VARCHAR (255) \n"
 					+ ");\n"
 					+ "");
 
@@ -119,11 +119,12 @@ public class Banco {
 	}
 
 	//Insere etiquetas dentro do banco na tabela ETIQUETAS
-	public void inserirEtiquetas(Chaves_Banco chave) {
+	public void inserirEtiquetas(Chaves_Banco chave) throws SQLException {
 		Aviso aviso = new Aviso();
 		String textoAviso = "";
+		Connection connection = null;
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql
 					.execute("INSERT INTO etiquetas (palavrachave ,complemento,etiqueta,tipo,prioridade,banco) VALUES ("
@@ -135,6 +136,7 @@ public class Banco {
 			textoAviso = "Etiqueta inserida com sucesso!";
 			aviso.aviso(textoAviso);
 		} catch (SQLException erro) {
+			connection.close();
 			if (erro.getMessage().contains("UNIQUE constraint")) {
 				erro.printStackTrace();
 				textoAviso = "Não foi possível inserir o registro:\n" + "O registro já esta cadastrado!";

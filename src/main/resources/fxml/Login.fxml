@@ -49,7 +49,7 @@
                   <Font name="System Bold" size="12.0" />
                </font></JFXButton>
             <FontAwesomeIcon fill="#070606" iconName="SIGN_IN" layoutX="373.0" layoutY="433.0" size="15" wrappingWidth="17.28570556640625" />
-            <JFXButton fx:id="btAdministracao" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="319.0" onAction="#abrirJanelaAdministracao" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000017" style="-fx-background-color: #0D4373;" styleClass="botaoVerde" stylesheets="@../styles/botoes.css" text="Administração">
+            <JFXButton fx:id="btAdministracao" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="319.0" onAction="#abrirPopupLogin" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000017" style="-fx-background-color: #0D4373;" styleClass="botaoVerde" stylesheets="@../styles/botoes.css" text="Administração">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

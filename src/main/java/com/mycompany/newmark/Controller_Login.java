@@ -50,10 +50,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Controller_Login implements Initializable {
 	private boolean triagemIniciada = false;
@@ -63,7 +66,7 @@ public class Controller_Login implements Initializable {
 	public Usuario usuario = new Usuario();
 
 	@FXML
-	private AnchorPane anchor;
+	private static AnchorPane anchor;
 	@FXML
 	public Label labelDebug;
 	@FXML
@@ -237,31 +240,27 @@ public class Controller_Login implements Initializable {
 		stage.setTitle("Sistema de Triagem Mark - Informações");
 		stage.show();
 	}
-
+	
 	@FXML
-	public void abrirJanelaAdministracao(ActionEvent event) throws IOException {
-		if(Boolean.TRUE.equals(UsuarioLocal.getEstaLogado())) {
-			Node node = (Node) event.getSource();
-			Stage stage = (Stage) node.getScene().getWindow();
-			Parent root = null;
-			try {
-				root = FXMLLoader.load(getClass().getResource("/fxml/Administracao.fxml"));
-			} catch (Exception erro) {
-				Aviso aviso = new Aviso();
-				aviso.aviso(erro.getMessage());
-				erro.printStackTrace();
-				Logger.getLogger(Chaves_Configuracao.class.getName()).log(Level.SEVERE, null, erro);
-			}
-
-			Scene scene = new Scene(root);
-			stage.setScene(scene);
-			stage.centerOnScreen();
-			stage.setResizable(false);
-			stage.setTitle("Sistema de Triagem Mark - Administração");
-			stage.show();
+	public void abrirPopupLogin() throws IOException {
+		if(UsuarioLocal.getEstaLogado()) {
+			abrirJanelaAdministracao();
 		} else {
 			new LoginLocal().abrirPopupLogin();
 		}
+	}
+	
+	
+	@FXML
+	public void abrirJanelaAdministracao() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Administracao.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Sistema de Triagem Mark - Administração");
+        stage.setScene(new Scene(root));
+        stage.getIcons().add(new Image("/fxml/Imagens/iconeMark.png"));
+        stage.setResizable(false);
+        stage.show();
 	}
 
 

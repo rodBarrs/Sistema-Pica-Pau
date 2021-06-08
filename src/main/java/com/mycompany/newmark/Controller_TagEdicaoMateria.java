@@ -97,9 +97,6 @@ public class Controller_TagEdicaoMateria implements Initializable {
             //Armazena a qual banco de dados pertence a etiqueta alterada
         	new IdentificadorMateriaDAO().atualizarIndetificadorMateria(id, palavraChave, complemento, etiqueta, prioridade);
             
-            textoAviso = "Etiqueta Alterada!";
-            aviso.aviso(textoAviso);
-            
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
             Parent root = null; 

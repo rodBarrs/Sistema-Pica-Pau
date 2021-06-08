@@ -265,6 +265,7 @@ public class Processo_PeticaoInicial {
 	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco) {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		// Identifica a matéria e salva na variável resultado
+		System.out.println(processo);
 		Boolean identificadoDePeticao = true;
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL",
 				identificadoDePeticao);

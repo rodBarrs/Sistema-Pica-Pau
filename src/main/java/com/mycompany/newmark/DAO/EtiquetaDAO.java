@@ -3,6 +3,7 @@ package com.mycompany.newmark.DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,10 @@ public class EtiquetaDAO {
 		final String SQL = "SELECT * FROM etiquetas WHERE banco = '" + banco + "' ORDER BY id";
 
 		List<Chaves_Banco> chaves = new ArrayList<>();
-		
+
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
-			
+
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Chaves_Banco chave = new Chaves_Banco();
@@ -32,25 +33,25 @@ public class EtiquetaDAO {
 
 				chaves.add(chave);
 			}
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			new Aviso().aviso(e.getMessage());
 		}
 
 		return chaves;
-		
+
 	}
 
 	public List<Chaves_Banco> buscaEtiqueta(String textoEtiqueta) {
 		final String SQL = "SELECT * FROM etiquetas WHERE palavrachave LIKE ? OR complemento LIKE ? OR etiqueta LIKE ?";
 		List<Chaves_Banco> chaves = new ArrayList<>();
-		
+
 		try (Connection connection = new ConnectionFactory().obterConexao();
-				PreparedStatement stmt = connection.prepareStatement(SQL)){
+				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, '%' + textoEtiqueta + '%');
 			stmt.setString(2, '%' + textoEtiqueta + '%');
 			stmt.setString(3, '%' + textoEtiqueta + '%');
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				Chaves_Banco chave = new Chaves_Banco();
 				chave.setID(rs.getInt("id"));
 				chave.setPALAVRACHAVE(rs.getString("palavrachave"));
@@ -64,20 +65,20 @@ public class EtiquetaDAO {
 		} catch (Exception e) {
 			new Aviso().aviso(e.getMessage());
 		}
-		
+
 		return chaves;
-		
+
 	}
 
 	public List<Chaves_Banco> buscaEtiquetaPorID(String id) {
 		final String SQL = "SELECT * FROM etiquetas WHERE id = ?";
 		List<Chaves_Banco> chaves = new ArrayList<>();
-		
+
 		try (Connection connection = new ConnectionFactory().obterConexao();
-				PreparedStatement stmt = connection.prepareStatement(SQL)){
+				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, id);
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				Chaves_Banco chave = new Chaves_Banco();
 				chave.setID(rs.getInt("id"));
 				chave.setPALAVRACHAVE(rs.getString("palavrachave"));
@@ -91,26 +92,29 @@ public class EtiquetaDAO {
 		} catch (Exception e) {
 			new Aviso().aviso(e.getMessage());
 		}
-		
+
 		return chaves;
 	}
 
 	public void removerEtiqueta(Integer id) {
 		final String SQL = "DELETE FROM etiquetas WHERE id = ?";
-		try(Connection connection = new ConnectionFactory().obterConexao(); PreparedStatement stmt = connection.prepareStatement(SQL)){
+		try (Connection connection = new ConnectionFactory().obterConexao();
+				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
 			new Aviso().aviso("Item removido");
 		} catch (Exception e) {
 			new Aviso().aviso("Não foi possível remover o item\n" + e.getMessage());
 		}
-		
+
 	}
 
-	public void inserirEtiqueta(String palavraChave, String complemento, String etiqueta, String tipo, String peso, String banco) {
+	public void inserirEtiqueta(String palavraChave, String complemento, String etiqueta, String tipo, String peso,
+			String banco) {
 		final String SQL = "INSERT INTO etiquetas (palavrachave, complemento, etiqueta, tipo, prioridade, banco) VALUES (?, ?, ?, ?, ?, ?)";
-		
-		try (Connection connection = new ConnectionFactory().obterConexao(); PreparedStatement stmt = connection.prepareStatement(SQL)){
+
+		try (Connection connection = new ConnectionFactory().obterConexao();
+				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, palavraChave);
 			stmt.setString(2, complemento);
 			stmt.setString(3, etiqueta);
@@ -120,15 +124,20 @@ public class EtiquetaDAO {
 			stmt.execute();
 			new Aviso().aviso("Item inserido");
 		} catch (Exception e) {
-			new Aviso().aviso("Item não inserido" + e.getMessage());
+			if (e.getMessage().contains("UNIQUE")) {
+				new Aviso().aviso("Item já existente!");
+			} else {
+				new Aviso().aviso("Item não inserido" + e.getMessage());
+			}
 		}
-		
+
 	}
 
 	public void atualizarEtiqueta(Integer id, String palavraChave, String complemento, String etiqueta, String peso,
 			String tipo) {
 		final String SQL = "UPDATE etiquetas SET palavrachave = ?, complemento = ?, etiqueta = ?, prioridade = ?, tipo = ? WHERE id = ?";
-		try (Connection connection = new ConnectionFactory().obterConexao(); PreparedStatement stmt = connection.prepareStatement(SQL)){
+		try (Connection connection = new ConnectionFactory().obterConexao();
+				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, palavraChave);
 			stmt.setString(2, complemento);
 			stmt.setString(3, etiqueta);
@@ -140,7 +149,7 @@ public class EtiquetaDAO {
 		} catch (Exception e) {
 			new Aviso().aviso("Item não atualizado\n" + e.getMessage());
 		}
-		
+
 	}
 
 }

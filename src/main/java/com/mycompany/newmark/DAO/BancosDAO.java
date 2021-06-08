@@ -35,17 +35,17 @@ public class BancosDAO {
 			String textoAviso = "" + erro.getMessage();
 			aviso.aviso(textoAviso);
 		}
-		
+
 		return chaves;
 	}
-	
+
 	private Integer getNumeroEtiquetasBanco(String siglaBanco) {
 		final String SQL = "SELECT * FROM etiquetas WHERE banco = '" + siglaBanco + "'";
 		Integer numeroEtiquetas = 0;
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				numeroEtiquetas++;
 			}
 		} catch (Exception e) {
@@ -58,7 +58,7 @@ public class BancosDAO {
 
 	public void inserirBanco(String sigla, String banco) {
 		final String SQL = "INSERT INTO bancos (sigla, nome) VALUES (?, ?)";
-		
+
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, sigla);
@@ -66,15 +66,18 @@ public class BancosDAO {
 			stmt.execute();
 			new Aviso().aviso("Banco inserido");
 		} catch (Exception e) {
-			new Aviso().aviso("Não foi possível inserir o banco\n" + e.getMessage());
+			if (e.getMessage().contains("UNIQUE")) {
+				new Aviso().aviso("Banco já existente!");
+			} else {
+				new Aviso().aviso("Não foi possível inserir o banco\n" + e.getMessage());
+			}
 		}
-		
-		
+
 	}
 
 	public void removerBanco(String sigla) {
 		final String SQL = "DELETE FROM bancos WHERE sigla = ?";
-		
+
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
 			stmt.setString(1, sigla);
@@ -83,7 +86,6 @@ public class BancosDAO {
 		} catch (Exception e) {
 			new Aviso().aviso("Não foi possível remover o banco\n" + e.getMessage());
 		}
-		
-		
+
 	}
 }

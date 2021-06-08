@@ -176,19 +176,7 @@ public class Administracao implements Initializable {
 	public void retornaMenu(ActionEvent event) {
 		Node node = (Node) event.getSource();
 		Stage stage = (Stage) node.getScene().getWindow();
-		Parent root = null;
-		try {
-			root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
-		} catch (IOException erro) {
-			erro.getMessage();
-		}
-		Scene scene = new Scene(root);
-		stage.setMinWidth(900);
-		stage.setMinHeight(500);
-		stage.setScene(scene);
-		stage.centerOnScreen();
-		stage.show();
-		stage.setTitle("Sistema de Triagem Mark");
+		stage.close();
 	}
 
 	/* Identificador de Matéria */
@@ -252,6 +240,7 @@ public class Administracao implements Initializable {
 	}
 
 	public void limparIdentificadorMateria() {
+		buscaIdentificadorMateriaID.clear();
 		pedido.clear();
 		complementoPedido.clear();
 		comboBoxNucleo.getSelectionModel().clearSelection();
@@ -423,9 +412,11 @@ public class Administracao implements Initializable {
 	}
 
 	public void limparEtiqueta() {
+		pesquisaEtiquetaId.clear();
 		palavraChave.clear();
 		complemento.clear();
 		etiqueta.clear();
+		documento.setSelected(true);
 	}
 
 	public void atualizarTabelaEtiqueta() {
