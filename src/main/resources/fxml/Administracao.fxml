@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTabPane?>
@@ -505,12 +506,12 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXTextField>
-                  <JFXButton layoutX="891.0" layoutY="141.0" onAction="#inicializarUsuarios" prefHeight="27.0" prefWidth="372.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                  <JFXButton layoutX="891.0" layoutY="160.0" onAction="#inicializarUsuarios" prefHeight="27.0" prefWidth="372.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="btnAtualizarUsuario" alignment="CENTER" disable="true" layoutX="891.0" layoutY="104.0" onAction="#atualizarUsuario" prefHeight="27.0" prefWidth="372.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Atualizar usuário">
+                  <JFXButton fx:id="btnAtualizarUsuario" alignment="CENTER" disable="true" layoutX="891.0" layoutY="124.0" onAction="#atualizarUsuario" prefHeight="27.0" prefWidth="372.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Atualizar usuário">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -525,6 +526,8 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </JFXPasswordField>
+                  <JFXCheckBox fx:id="exibirSenha" checkedColor="#31dda1" layoutX="891.0" layoutY="94.0" onAction="#toggleSenha" text="Exibir Senha" textFill="WHITE" unCheckedColor="WHITE" />
+                  <JFXTextField fx:id="textoSenhaUsuarioVisivel" focusColor="WHITE" layoutX="891.0" layoutY="56.0" prefHeight="25.0" prefWidth="371.0" unFocusColor="WHITE" visible="false" />
                </children>
             </AnchorPane>
          </content>

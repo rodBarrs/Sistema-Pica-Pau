@@ -167,9 +167,11 @@ public class Processo_PeticaoInicial {
 								.presenceOfElementLocated(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")));
 						wait.until(ExpectedConditions
 								.elementToBeClickable(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")));
-
+						
+						
 						Thread.sleep(500);
 
+						wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"ext-gen1124\"]")));
 						// Clica para abrir o PDF
 						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div")).click();
 

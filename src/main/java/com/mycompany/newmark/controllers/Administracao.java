@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -50,7 +51,7 @@ public class Administracao implements Initializable {
 	private JFXTextField numeroEtiquetas, numeroTipoMovimentacao, numeroIdentificadorMateria, numeroPeticaoInicial,
 			pedido, complementoPedido, buscaIdentificadorMateriaID, buscaIdentificadorMateria,
 			identificadorPeticaoInicial, pesquisaIdentificador, pesquisaEtiqueta, pesquisaEtiquetaId, palavraChave,
-			complemento, etiqueta, buscaTipoMovimentacao, tipoMovimentacao, textoSigla, textoBanco, textoNomeUsuario;
+			complemento, etiqueta, buscaTipoMovimentacao, tipoMovimentacao, textoSigla, textoBanco, textoNomeUsuario, textoSenhaUsuarioVisivel;
 	@FXML
 	private JFXPasswordField textoSenhaUsuario;
 	@FXML
@@ -79,6 +80,9 @@ public class Administracao implements Initializable {
 			identificadorMateriaP3, identificadorMateriaP4, documento, movimentacao;
 	@FXML
 	private JFXButton inserirIdentificadorMateria, btnAtualizarUsuario;
+	@FXML
+	private JFXCheckBox exibirSenha;
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -129,8 +133,12 @@ public class Administracao implements Initializable {
 		}
 
 		/* Inicializa a tabela Etiquetas */
-		String bancoSelecionado = comboBoxBancos.getSelectionModel().getSelectedItem().substring(0, 3);
+		String bancoSelecionado = "";
+		try {
+			bancoSelecionado = comboBoxBancos.getSelectionModel().getSelectedItem().substring(0, 3);
+		} catch (Exception e) {
 
+		}
 		List<Chaves_Banco> listaTabelaEtiquetas = new EtiquetaDAO().getTabelaEtiqueta(bancoSelecionado);
 
 		etiquetaID.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
@@ -584,6 +592,8 @@ public class Administracao implements Initializable {
 			}
 			new BancosDAO().inserirBanco(sigla, banco);
 			inicializarBancoDeDados();
+			inicializarMenuTriagemPadrao();
+			inicializarMenuPeticaoInicial();
 		}
 	}
 
@@ -591,6 +601,8 @@ public class Administracao implements Initializable {
 		String sigla = tabelaBancos.getSelectionModel().getSelectedItem().getSigla();
 		new BancosDAO().removerBanco(sigla);
 		inicializarBancoDeDados();
+		inicializarMenuTriagemPadrao();
+		inicializarMenuPeticaoInicial();
 	}
 
 	public void selecionarBanco() {
@@ -603,7 +615,13 @@ public class Administracao implements Initializable {
 	public void atualizarUsuario() {
 		String antigoNome = tabelaUsuarios.getSelectionModel().getSelectedItem().getNome();
 		String nome = textoNomeUsuario.getText();
-		String senha = textoSenhaUsuario.getText();
+		String senha = "";
+		
+		if(exibirSenha.isSelected()) {
+			senha = textoSenhaUsuarioVisivel.getText();
+		} else {
+			senha = textoSenhaUsuario.getText();
+		}
 
 		if (antigoNome.isEmpty() || nome.isEmpty() || senha.isEmpty()) {
 			new Aviso().aviso("Selecione um usuário e não deixe nenhum campo vazio");
@@ -617,6 +635,18 @@ public class Administracao implements Initializable {
 		btnAtualizarUsuario.setDisable(false);
 		textoNomeUsuario.setText(tabelaUsuarios.getSelectionModel().getSelectedItem().getNome());
 		textoSenhaUsuario.setText(tabelaUsuarios.getSelectionModel().getSelectedItem().getSenha());
+	}
+	
+	public void toggleSenha() {
+		if(textoSenhaUsuario.isVisible()) {
+			textoSenhaUsuarioVisivel.setVisible(true);
+			textoSenhaUsuarioVisivel.setText(textoSenhaUsuario.getText());
+			textoSenhaUsuario.setVisible(false);
+		} else {
+			textoSenhaUsuarioVisivel.setVisible(false);
+			textoSenhaUsuario.setText(textoSenhaUsuarioVisivel.getText());
+			textoSenhaUsuario.setVisible(true);
+		}
 	}
 
 }

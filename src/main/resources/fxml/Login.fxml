@@ -117,7 +117,7 @@
             <CheckBox fx:id="exibirSenha" layoutX="345.0" layoutY="378.0" mnemonicParsing="false" onAction="#exibirSenha" text="Exibir Senha" />
             <CheckBox fx:id="salvarSenha" layoutX="462.0" layoutY="378.0" mnemonicParsing="false" text="Salvar Senha" />
             <JFXTextField fx:id="SenhaTxtMostar" focusColor="WHITE" labelFloat="true" layoutX="340.0" layoutY="339.0" onKeyPressed="#apertouEnter" prefHeight="25.0" prefWidth="220.0" promptText="Senha" unFocusColor="#fffffffe" />
-            <Label fx:id="labelDebug" layoutX="12.0" layoutY="463.0" prefHeight="27.0" prefWidth="436.0" text="EXIBINDO ALERTAS DE DEBUG PARA TRIAGEM NA PETIÇÃO INICIAL" textFill="WHITE" visible="false">
+            <Label fx:id="labelDebug" layoutX="36.0" layoutY="463.0" prefHeight="27.0" prefWidth="436.0" text="EXIBINDO ALERTAS DE DEBUG PARA TRIAGEM NA PETIÇÃO INICIAL" textFill="WHITE" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
