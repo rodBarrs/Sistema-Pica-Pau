@@ -6,11 +6,14 @@
 
 package com.mycompany.newmark;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
+import com.mycompany.newmark.DAO.EtiquetaDAO;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -80,10 +83,6 @@ public class Controller_TagEdicaoEtiqueta implements Initializable {
             textoAviso = "O campo \"Frase Chave\" não pode ser vazio!";
             aviso.aviso(textoAviso);
             return false;
-        } else if((complemento.equals(null)) || complemento.equals("") || complemento.equals(" ")){
-            textoAviso = "O campo \"Complemento\" não pode ser vazio!";
-            aviso.aviso(textoAviso);
-            return false;
         } else if((etiqueta.equals(null)) || etiqueta.equals("") || etiqueta.equals(" ")){
             textoAviso = "O campo \"Etiqueta\" não pode ser vazio!";
             aviso.aviso(textoAviso);
@@ -105,11 +104,8 @@ public class Controller_TagEdicaoEtiqueta implements Initializable {
             } 
             
             //Armazena a qual banco de dados pertence a etiqueta alterada
-            Banco banco = new Banco();
-            banco.alterarEtiquetas(chave, palavraChave, complemento, etiqueta, tipo, peso);
-            
-            textoAviso = "Etiqueta Alterada!";
-            aviso.aviso(textoAviso);
+            new EtiquetaDAO().atualizarEtiqueta(chave.getID(), palavraChave, complemento, etiqueta, peso, tipo);
+
             
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();

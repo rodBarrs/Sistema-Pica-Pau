@@ -7,59 +7,69 @@
 package com.mycompany.newmark;
 
 public class Chaves_Banco {
-    private String PALAVRACHAVE = null;
-    private String COMPLEMENTO = null;
-    private String ETIQUETA = null;
-    private String TIPO = null;
-    private String PRIORIDADE = null;
-    private String BANCO = null;
 
-    public String getPALAVRACHAVE() {
-        return PALAVRACHAVE;
-    }
+	private String PALAVRACHAVE = null;
+	private String COMPLEMENTO = null;
+	private String ETIQUETA = null;
+	private String TIPO = null;
+	private String PRIORIDADE = null;
+	private String BANCO = null;
+	private Integer ID;
 
-    public void setPALAVRACHAVE(String PALAVRACHAVE) {
-        this.PALAVRACHAVE = PALAVRACHAVE;
-    }
+	public Integer getID() {
+		return ID;
+	}
 
-    public String getCOMPLEMENTO() {
-        return COMPLEMENTO;
-    }
+	public void setID(Integer ID) {
+		this.ID = ID;
+	}
 
-    public void setCOMPLEMENTO(String COMPLEMENTO) {
-        this.COMPLEMENTO = COMPLEMENTO;
-    }
+	public String getPALAVRACHAVE() {
+		return PALAVRACHAVE;
+	}
 
-    public String getETIQUETA() {
-        return ETIQUETA;
-    }
+	public void setPALAVRACHAVE(String PALAVRACHAVE) {
+		this.PALAVRACHAVE = PALAVRACHAVE;
+	}
 
-    public void setETIQUETA(String ETIQUETA) {
-        this.ETIQUETA = ETIQUETA;
-    }
+	public String getCOMPLEMENTO() {
+		return COMPLEMENTO;
+	}
 
-    public String getTIPO() {
-        return TIPO;
-    }
+	public void setCOMPLEMENTO(String COMPLEMENTO) {
+		this.COMPLEMENTO = COMPLEMENTO;
+	}
 
-    public void setTIPO(String TIPO) {
-        this.TIPO = TIPO;
-    }
+	public String getETIQUETA() {
+		return ETIQUETA;
+	}
 
-    public String getPRIORIDADE() {
-        return PRIORIDADE;
-    }
+	public void setETIQUETA(String ETIQUETA) {
+		this.ETIQUETA = ETIQUETA;
+	}
 
-    public void setPRIORIDADE(String PRIORIDADE) {
-        this.PRIORIDADE = PRIORIDADE;
-    }
+	public String getTIPO() {
+		return TIPO;
+	}
 
-    public String getBANCO() {
-        return BANCO;
-    }
+	public void setTIPO(String TIPO) {
+		this.TIPO = TIPO;
+	}
 
-    public void setBANCO(String BANCO) {
-        this.BANCO = BANCO;
-    }
-      
+	public String getPRIORIDADE() {
+		return PRIORIDADE;
+	}
+
+	public void setPRIORIDADE(String PRIORIDADE) {
+		this.PRIORIDADE = PRIORIDADE;
+	}
+
+	public String getBANCO() {
+		return BANCO;
+	}
+
+	public void setBANCO(String BANCO) {
+		this.BANCO = BANCO;
+	}
+
 }

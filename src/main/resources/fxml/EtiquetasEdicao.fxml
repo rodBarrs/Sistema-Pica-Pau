@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1280.0" styleClass="fundo" stylesheets="@../styles/tema.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.newmark.Controller_EtiquetasEdicao">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1280.0" styleClass="fundo" stylesheets="@../styles/tema.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.newmark.ControllerEtiquetas">
     <children>
       <JFXButton fx:id="botaoVoltar" layoutX="975.0" layoutY="566.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="218.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Retornar para o menu anterior">
          <font>
@@ -29,11 +29,12 @@
       <FontAwesomeIcon fill="WHITE" iconName="REFRESH" layoutX="900.0" layoutY="132.0" text="" />
       <TableView fx:id="tabelaEtiquetas" layoutX="1.0" onMouseClicked="#selecionar" prefHeight="718.0" prefWidth="874.0" stylesheets="@../styles/tabela.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columns>
-            <TableColumn fx:id="colunaTipo" editable="false" prefWidth="50.0" resizable="false" text="Tipo" />
-            <TableColumn fx:id="colunaFraseChave" minWidth="95.0" prefWidth="170.0" text="Frase Chave" />
-            <TableColumn fx:id="colunaComplemento" minWidth="92.0" prefWidth="140.0" text="Complemento" />
-            <TableColumn fx:id="colunaEtiqueta" editable="false" minWidth="200.0" prefWidth="460.0" text="Etiqueta" />
-            <TableColumn fx:id="colunaPeso" prefWidth="53.0" text="Peso" />
+            <TableColumn fx:id="colunaId" prefWidth="51.0" text="ID" />
+            <TableColumn fx:id="colunaFraseChave" minWidth="95.0" prefWidth="213.0" text="Frase Chave" />
+            <TableColumn fx:id="colunaComplemento" minWidth="92.0" prefWidth="259.0" text="Complemento" />
+            <TableColumn fx:id="colunaEtiqueta" editable="false" minWidth="146.0" prefWidth="209.0" text="Etiqueta" />
+            <TableColumn fx:id="colunaPeso" text="Peso" />
+            <TableColumn fx:id="colunaTipo" editable="false" prefWidth="61.0" resizable="false" text="Tipo" />
         </columns>
          <contextMenu>
             <ContextMenu>
@@ -46,9 +47,9 @@
       <HBox spacing="20.0" />
       <VBox layoutX="880.0" layoutY="162.0" maxHeight="135.0" maxWidth="311.0" minHeight="135.0" minWidth="311.0" prefHeight="135.0" prefWidth="311.0" spacing="30.0" stylesheets="@../styles/dark_theme.css" AnchorPane.bottomAnchor="510.0" AnchorPane.leftAnchor="880.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="162.0">
          <children>
-            <JFXTextField fx:id="PalavraChave" focusColor="WHITE" labelFloat="true" promptText="FRASE CHAVE" unFocusColor="WHITE" />
+            <JFXTextField fx:id="PalavraChave" focusColor="WHITE" labelFloat="true" promptText="FRASE CHAVE *" unFocusColor="WHITE" />
             <JFXTextField fx:id="Complemento" focusColor="WHITE" labelFloat="true" promptText="COMPLEMENTO" unFocusColor="WHITE" />
-            <JFXTextField fx:id="Etiqueta" focusColor="WHITE" labelFloat="true" promptText="ETIQUETA" unFocusColor="WHITE" />
+            <JFXTextField fx:id="Etiqueta" focusColor="WHITE" labelFloat="true" promptText="ETIQUETA *" unFocusColor="WHITE" />
          </children>
       </VBox>
       <JFXButton fx:id="botaoInserir" alignment="CENTER_RIGHT" buttonType="RAISED" layoutX="930.0" layoutY="500.0" onAction="#inserir" prefHeight="27.0" prefWidth="132.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Registro">
@@ -73,9 +74,7 @@
             <Font name="System Bold" size="12.0" />
          </font></Label>
       <JFXButton fx:id="atualizar" buttonType="RAISED" layoutX="890.0" layoutY="115.0" onAction="#atualizar" prefHeight="25.0" prefWidth="132.0" ripplerFill="TRANSPARENT" text=" " textFill="TRANSPARENT" />
-      <JFXTextField fx:id="pesquisa" focusColor="WHITE" labelFloat="true" layoutX="897.0" layoutY="83.0" onKeyPressed="#busca" prefHeight="25.0" prefWidth="340.0" promptText="Pesquisar etiqueta" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
-      <FontAwesomeIcon fill="WHITE" iconName="SEARCH" layoutX="1240.0" layoutY="100.0" onMouseClicked="#busca" />
-      <JFXButton fx:id="botaoBusca" buttonType="RAISED" layoutX="1230.0" layoutY="85.0" onAction="#busca" prefHeight="25.0" prefWidth="28.0" ripplerFill="TRANSPARENT" textFill="TRANSPARENT" />
+      <JFXTextField fx:id="pesquisa" focusColor="WHITE" labelFloat="true" layoutX="897.0" layoutY="83.0" onKeyReleased="#busca" prefHeight="25.0" prefWidth="302.0" promptText="Pesquisar etiqueta" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
       <RadioButton fx:id="LerMov" layoutX="937.0" layoutY="377.0" mnemonicParsing="false" selected="false" text="Ler Movimentação">
          <font>
             <Font name="System Bold" size="12.0" />
@@ -135,5 +134,7 @@
             <Image url="@Imagens/LogoMarkBranco.png" />
          </image>
       </ImageView>
+      <Label layoutX="883.0" layoutY="309.0" prefHeight="27.0" prefWidth="151.0" text="* Campos obrigatórios" textFill="#575757" />
+      <JFXTextField fx:id="pesquisaId" focusColor="WHITE" layoutX="1203.0" layoutY="83.0" onKeyReleased="#buscaId" prefHeight="25.0" prefWidth="65.0" promptText="ID" unFocusColor="WHITE" />
    </children>
 </AnchorPane>

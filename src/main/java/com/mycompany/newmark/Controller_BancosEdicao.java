@@ -1,8 +1,4 @@
-/**
- * @author Felipe Marques, Gabriel Ramos, Rafael Henrique e Adriano Vilhena 
- * 
- * Classe controladora das Janela de inserção de grupos de etiquetas dentro do banco
- */
+/*
 package com.mycompany.newmark;
 
 import com.jfoenix.controls.JFXButton;
@@ -47,7 +43,6 @@ public class Controller_BancosEdicao implements Initializable {
     public String bancoSelecionado = "";
 
     @Override
-    @SuppressWarnings("ConvertToTryWithResources")
     public void initialize(URL location, ResourceBundle resources){
         try {
             atualizar();
@@ -80,7 +75,6 @@ public class Controller_BancosEdicao implements Initializable {
     }
 
     @FXML
-    @SuppressWarnings("ConvertToTryWithResources")
     private boolean inserir() throws SQLException {
         String textoAviso = "";
         Aviso aviso = new Aviso();
@@ -111,7 +105,6 @@ public class Controller_BancosEdicao implements Initializable {
     }
 
     @FXML
-    @SuppressWarnings("ConvertToTryWithResources")
     public void excluir() throws SQLException, IOException {
         if(textoSigla.getText().equals("") || textoBanco.getText().equals("")){
             //Não faz nada
@@ -126,14 +119,12 @@ public class Controller_BancosEdicao implements Initializable {
         }
     }
 
-    @SuppressWarnings({"ConvertToTryWithResources", "empty-statement"})
     public void atualizar() throws SQLException {
         try {
             List<Chaves_GrupoEtiquetas> chaves = new ArrayList<>();
             Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BANCOS ORDER BY NOME");
             ResultSet resultSet = stmt.executeQuery();
-            int i = 0;
             while (resultSet.next()) {
                 Chaves_GrupoEtiquetas key = new Chaves_GrupoEtiquetas();
                 key.setSigla(resultSet.getString("SIGLA"));
@@ -153,7 +144,7 @@ public class Controller_BancosEdicao implements Initializable {
             aviso.aviso(textoAviso);
         }
     }
-
+    
     public int contarEtiquetas(String sigla) {
         int i = 0;
         try {
@@ -188,4 +179,4 @@ public class Controller_BancosEdicao implements Initializable {
         textoSigla.setText(tabelaBancos.getSelectionModel().getSelectedItem().getSigla());
         textoBanco.setText(tabelaBancos.getSelectionModel().getSelectedItem().getNome());
     }
-}
+}*/

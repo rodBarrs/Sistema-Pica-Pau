@@ -6,31 +6,37 @@ package com.mycompany.newmark;
 
 import org.openqa.selenium.WebDriver;
 
-public class Chaves_Resultado
-{
+public class Chaves_Resultado {
+	private static String seqPeticao;
+	private static String palavraChavePeticao;
     private String PalavraChave = "";
-    private String Complemento = "";
     private String Etiqueta = "";
     private String Local = "";
-    private String Petição = "";
-    private String OrgaoJulgador = "";
     private WebDriver driver;
     private boolean grid;
+    
+    public static String getSeqPeticao() {
+		return seqPeticao;
+	}
 
-    public String getPalavraChave() {
+	public static void setSeqPeticao(String seqPeticao) {
+		Chaves_Resultado.seqPeticao = seqPeticao;
+	}
+
+	public static String getPalavraChavePeticao() {
+		return palavraChavePeticao;
+	}
+
+	public static void setPalavraChavePeticao(String palavraChavePeticao) {
+		Chaves_Resultado.palavraChavePeticao = palavraChavePeticao;
+	}
+
+	public String getPalavraChave() {
         return PalavraChave;
     }
 
     public void setPalavraChave(String PalavraChave) {
         this.PalavraChave = PalavraChave;
-    }
-
-    public String getComplemento() {
-        return Complemento;
-    }
-
-    public void setComplemento(String Complemento) {
-        this.Complemento = Complemento;
     }
 
     public String getEtiqueta() {
@@ -65,20 +71,5 @@ public class Chaves_Resultado
         this.grid = grid;
     }
 
-	public String getPetição() {
-		return Petição;
-	}
-
-	public void setPetição(String localArquivo) {
-		Petição = localArquivo;
-	}
-
-	public String getOrgaoJulgador() {
-		return OrgaoJulgador;
-	}
-
-	public void setOrgaoJulgador(String orgaoJulgador) {
-		OrgaoJulgador = orgaoJulgador;
-	}
     
 }

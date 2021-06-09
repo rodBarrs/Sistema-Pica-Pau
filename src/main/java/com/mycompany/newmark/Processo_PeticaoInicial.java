@@ -4,7 +4,6 @@
  */
 package com.mycompany.newmark;
 
-import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -13,7 +12,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -27,117 +28,105 @@ public class Processo_PeticaoInicial {
 	private Chaves_Configuracao debugPi;
 
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config,
-			String bancos, Chaves_Configuracao debugPi) throws Exception {
+			String banco, Chaves_Configuracao debugPi) throws Exception {
 		Tratamento tratamento = new Tratamento();
 		Triagem_Condicao cond = new Triagem_Condicao();
-		String localArquivo = "";
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		LeituraPDF pdf = new LeituraPDF();
-		VerificarData verificarData = new VerificarData();
 		Actions action = new Actions(driver);
-		boolean citacao = false;
-		boolean intimacao = false;
-		boolean laudoRecente = false;
+		String documentoPeticaoInicial = "";
 		this.debugPi = debugPi;
-		String orgaoJulgador = "";
-		// String linhaMovimentacao = "";
+		
+		//Limpa conteúdo estáticos da Chaves_Resultado
+		Chaves_Resultado.setSeqPeticao("");
+		Chaves_Resultado.setPalavraChavePeticao("");
+		
+		// Aguarda até que tabela com as movimentações (treeview) esteja carregada
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
 
-		WebElement TabelaTref = null;
-		boolean teste = false;
-		try {
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
-			TabelaTref = driver.findElement(By.id("treeview-1015"));
-		} catch (Exception e) {
-			for (int j = 0; j < 2; j++) {
-				for (int k = 0; k < 2; k++) {
-					// Thread.sleep(2000);
-					try {
-						wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
-						TabelaTref = driver.findElement(By.id("treeview-1015"));
-						teste = true;
-						break;
-					} catch (Exception erro) {
-					}
-				}
-				if (teste = true) {
-					break;
-				} else {
-					driver.navigate().refresh();
-				}
-			}
-		}
+		// Armazena todas as movimentações num ArrayList
+		WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
+		List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
 
-		TabelaTref = driver.findElement(By.id("treeview-1015"));
-		// Identifica as linhas da tabela de movimentação processual <rr>
-		List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
-
+		// Aguarda até que o iframe esteja carregado e então envia o Driver para o
+		// iframe (para que possa interagir com o interior do iframe)
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 		WebElement capa = driver.findElement(By.id("iframe-myiframe"));
 		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
+		do {
+			try {
+				wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+				driver.findElement(By.tagName("html")).click();
+				break;
+			} catch (Exception e) {
+				//
+			}
+		} while (true);
+		// Aguarda até que o campo "órgão julgador" esteja carregado e então salva seu
+		// conteúdo
+		String orgaoJulgador = "";
 		try {
-			while(true) {
-				orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
-				if(orgaoJulgador.length() > 0) {
-					break;
-				}
-			}
-		} catch (Exception ex) {
-			//ex.printStackTrace();
+			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
+		} catch (Exception e) {
+			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[5]/table/tbody/tr[3]/td[2]")).getText();
 		}
+		// Devolve o driver para a página
 		driver.switchTo().defaultContent();
-		resultado.setOrgaoJulgador(orgaoJulgador);
-		// Verifica nas providências jurídicas se existem Citações,Intimações e Laudo
-		// Recente
-		for (int i = listaMovimentacao.size() - 1; i >= 0; i--) {
-			if (listaMovimentacao.get(i).getText().toUpperCase().contains("CITAÇÃO")) {
-				citacao = true;
-				break;
-			} else if (listaMovimentacao.get(i).getText().toUpperCase().contains("INTIMAÇÃO")) {
-				intimacao = true;
-				break;
-			} else if (listaMovimentacao.get(i).getText().toUpperCase().contains("LAUDO PERICIAL")) {
-				if (config.isTriarAntigo() == true) {
-					laudoRecente = true;
-				} else {
-					if (verificarData.Verificar(listaMovimentacao.get(i).getText())) {
-						laudoRecente = true;
-					}
-				}
-			}
-		}
 
+		// Seta previamente a etiqueta com erro
 		resultado.setLocal("PETIÇÃO INICIAL");
 		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR PASTA DE PETIÇÃO INICIAL");
 		resultado.setPalavraChave("");
-		resultado.setComplemento("");
 
-		// JOptionPane.showMessageDialog(null, listaMovimentacao.size());
-		// FOR - Enquantou houve elementos na tabela, do primeiro ao último
-		for (int i = 1; i < listaMovimentacao.size(); i++) {
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td[2]/div/span")));
-			//JOptionPane.showMessageDialog(null, driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText());
-			// IF - Busca pelas expressões descritas, dentro das <tr> da movimentação
-			//JOptionPane.showMessageDialog(null,
-			//		driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).getAttribute("class"));
-			if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText().toUpperCase()
-					.contains("PETIÇÃO INICIAL")
-					|| (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).getAttribute("class")
-							.contains("x-tree-expander")) && i == 2) {
-				String BuscaPeticaoInicial = "";
-				String BuscaPeticaoInicialSemTratamento = "";
+		// Verifica a existência de uma pasta na posição 1 do sapiens (isso significaria
+		// que existe uma possível petição inicial com nome diferente)
+		Boolean existePasta = driver.findElement(By.xpath("//tr[2]/td[2]/div/img[1]")).getAttribute("class")
+				.contains("x-tree-expander");
+		// Itera a lista de movimentação procurando por "Petição Inicial" ou uma pasta
+		// no index 1
+		for (int i = 2; i < listaMovimentacao.size(); i++) {
+
+			// Providência Jurídica é o título da movimentação
+			Boolean existePeticaoInicial = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+					.toUpperCase().contains("PETIÇÃO INICIAL");
+			if (existePeticaoInicial || existePasta) {
+
 				resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL");
-				// Clica no <tr> identificado
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
-				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td/div")));
-				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
-				pdf.apagarPDF();
-				driver.findElement(By.xpath("//tr[" + i + "]/td/div/span/span[2]")).click();
-				if (driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]")).getText().contains("HTML")) {
 
+				// Clica na div da Providência Jurídica
+
+				wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("ext-gen1020")));
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[\" + i + \"]/td/div/span/span[1]")));
+				driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+
+				// Verifica se a movimentação é do tipo PDF
+				Boolean movimentacaoTemPDF = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[2]"))
+						.getText().toUpperCase().contains("PDF");
+
+				// CAPA
+				if (movimentacaoTemPDF) {
+					pdf.apagarPDF();
+
+					for (int a = 0; a < 2; a++) {
+						if (pdf.PDFBaixado()) {
+							documentoPeticaoInicial = pdf.lerPDF();
+							documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
+							break;
+						} else {
+							driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
+
+						}
+					}
+
+				} else {
 					wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 					WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
 					wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
 
+					// Laço para garantir que o clique seja feito no HTML dentro do iframe
+					// Isso garante que o conteúdo do iframe que contém o documento da movimentação
+					// clicada já carregou
 					boolean flag = true;
 					do {
 						try {
@@ -148,8 +137,8 @@ public class Processo_PeticaoInicial {
 						} catch (Exception e) {
 							//
 						}
-
 					} while (flag);
+
 					driver.switchTo().defaultContent();
 
 					Thread.sleep(500);
@@ -158,80 +147,60 @@ public class Processo_PeticaoInicial {
 					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 					DataFlavor flavor = DataFlavor.stringFlavor;
 					Thread.sleep(500);
-					BuscaPeticaoInicialSemTratamento = clipboard.getData(flavor).toString().toUpperCase();
-					BuscaPeticaoInicial = BuscaPeticaoInicialSemTratamento;
-					BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
-				} else {
-					if (pdf.verificarExistenciaPDF() == "PdfEncontrado") {
-						BuscaPeticaoInicial = pdf.lerPDF().toUpperCase();
-						BuscaPeticaoInicialSemTratamento = BuscaPeticaoInicial.toUpperCase();
-						BuscaPeticaoInicial = tratamento.tratamento(BuscaPeticaoInicial);
-					}
+					documentoPeticaoInicial = clipboard.getData(flavor).toString().toUpperCase();
+					documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
 				}
-				// If - Verifica se existe o termo "Petição" na variável BuscaPeticaoInicial
-				// para seguir a triagem especifica
-				if (cond.verificaCondicao(BuscaPeticaoInicialSemTratamento, "PET") == false) {
-					//&& (BuscaPeticaoInicial.contains("PETIÇÃO") || BuscaPeticaoInicial.contains("INICIAL")
-					//|| BuscaPeticaoInicial.contains("ANEXO") || BuscaPeticaoInicial.contains("PDF"))) 
 
-					// CADASTRAR POSSIVEIS VERIFICAÇÕES
-					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td/div")));
-					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + (i + 1) + "]/td/div")));
-					int LinhaAtual = Integer.parseInt(driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText()); // Armazena a linha do Front em que está a movimentação
-					int LinhaProxima = Integer
-							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText()); // Armazena o valor da proxima linha do front
+				Boolean contemPeticaoInicial = cond.verificaCondicao(documentoPeticaoInicial, "PET");
+				if (Boolean.FALSE.equals(contemPeticaoInicial)) {
 
-					wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")));
+					int proximaLinha = Integer
+							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText()) + 1;
+			
+					// Clica na seta para expandir a pasta
 					driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).click();
-					// Laço para iterar dentro da lista aberta pela pasta "Petição Inicial"
-					// 'J' recebe a posição atual do Driver mais 1, o que seria o documento seguinte
-					// LinhaProxima refere-se ao valor final da lista aberta
-					for (int j = i + 1; j <= LinhaProxima; j++) {
-						wait.until(ExpectedConditions
-								.presenceOfElementLocated(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")));
-						wait.until(ExpectedConditions
-								.elementToBeClickable(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")));
+
+					// Itera pela pasta
+					for (int j = i + 1; j < proximaLinha; j++) {
 						pdf.apagarPDF();
+						wait.until(ExpectedConditions
+								.presenceOfElementLocated(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")));
+						wait.until(ExpectedConditions
+								.elementToBeClickable(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")));
+						
+						
 						Thread.sleep(500);
-						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
 
-						if (driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]")).getText()
-								.contains("PDF")) {
-							boolean flag2 = true;
+						wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"ext-gen1124\"]")));
+						// Clica para abrir o PDF
+						driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div")).click();
 
-							do {
-								String resultadoPDF = pdf.verificarExistenciaPDF();
-								//System.out.println("resultadoPDF: " + resultadoPDF);
+						Boolean movimentacaoPastaContemPDF = driver
+								.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]")).getText()
+								.contains("PDF");
 
-								switch (resultadoPDF) {
-								case "NenhumPdfEncontrado":
-									//System.out.println("ZERO");
-									flag2 = false;
-									throw new Exception("PDF Não encontrado");
+						if (movimentacaoPastaContemPDF) {
+							Boolean pdfBaixado = pdf.PDFBaixado();
 
-								case "MaisDeUmPdfEncontrado":
-									//System.out.println("DOIS");
-									pdf.apagarPDF();
-									driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[2]/span")).click();
-									break;
-
-								case "PdfEncontrado":
-									//System.out.println("UM");
-									flag2 = false;
-									String processo = "";
-									processo = pdf.lerPDF().toUpperCase();
-									localArquivo = driver
-											.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")).getText();
-									resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
-											config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
-									if (resultado
-											.getEtiqueta() != "NÃO FOI POSSÍVEL LOCALIZAR ARQUIVO DE PETIÇÃO INICIAL") {
-										resultado.setPetição(localArquivo);
+							for (int a = 0; a < 2; a++) {
+								if (pdfBaixado) {
+									String processo = pdf.lerPDF().toUpperCase();
+									if (cond.verificaCondicao(processo, "PET")) {
+										String posicaoDaPeticao = String.valueOf(j - 1);
+										Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
+										resultado = verificarNucleo(processo, orgaoJulgador, banco);
+										String nucleo = resultado.getEtiqueta();
+										resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
+										resultado.setDriver(driver);
 										return resultado;
 									}
+								} else {
+									driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div")).click();
 								}
-							} while (flag2);
+							}
+
 						} else {
+							wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
 							WebElement iframe = driver.findElement(By.id("iframe-myiframe"));
 							wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
 
@@ -247,6 +216,7 @@ public class Processo_PeticaoInicial {
 								}
 
 							} while (flag);
+
 							driver.switchTo().defaultContent();
 
 							Thread.sleep(500);
@@ -256,217 +226,127 @@ public class Processo_PeticaoInicial {
 							DataFlavor flavor = DataFlavor.stringFlavor;
 							Thread.sleep(500);
 							String processo = clipboard.getData(flavor).toString().toUpperCase();
-							if (cond.verificaCondicao(processo, "PET")) {
-								localArquivo = driver.findElement(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]"))
-										.getText();
-								resultado = verificarConteudoPeticao(processo, orgaoJulgador, bancos, driver, wait,
-										config, i, tratamento, resultado, citacao, intimacao, laudoRecente, true);
+							processo = tratamento.tratamento(processo);
+
+							contemPeticaoInicial = cond.verificaCondicao(processo, "PET");
+							if (contemPeticaoInicial) {
+								String posicaoDaPeticao = String.valueOf(j - 1);
+								Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
+								resultado = verificarNucleo(processo, orgaoJulgador, banco);
+								String nucleo = resultado.getEtiqueta();
+								resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 								resultado.setDriver(driver);
-								resultado.setPetição(localArquivo);
 								return resultado;
 							}
 						}
 					}
-
-				} else {
-					localArquivo = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[1]")).getText();
-					resultado = verificarConteudoPeticao(BuscaPeticaoInicialSemTratamento, orgaoJulgador, bancos,
-							driver, wait, config, i, tratamento, resultado, citacao, intimacao, laudoRecente, false);
+					
+					Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
+					resultado = triagemPadrao(driver, wait, config, banco, i, true, "");	
 					resultado.setDriver(driver);
-					resultado.setPetição(localArquivo);
+					return resultado; 
+					
+				} else {
+					String posicaoDaPeticao = String.valueOf(i - 1);
+					Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
+					resultado = verificarNucleo(documentoPeticaoInicial, orgaoJulgador, banco);
+					resultado = triagemPadrao(driver, wait, config, banco, i, false, resultado.getEtiqueta());
+					resultado.setDriver(driver);
 					return resultado;
 				}
 
 			}
 		}
+		Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
+		resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");	
 		resultado.setDriver(driver);
 		return resultado;
 
 	}
 
-	private Chaves_Resultado verificarConteudoPeticao(String processo, String orgaoJulgador, String bancos,
-			WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, int indexPeticao, Tratamento tratamento,
-			Chaves_Resultado resultado, boolean citacao, boolean intimacao, boolean laudoRecente, boolean dentroDaPasta)
-			throws HeadlessException, SQLException, InterruptedException, UnsupportedFlavorException, IOException {
-		StringBuilder stringBuilder;
+	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco) {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
-		Triagem_Condicao condicao = new Triagem_Condicao();
-		if (condicao.verificaCondicao(processo, "PET")) {
-			processo = tratamento.tratamento(processo);
-			resultado = triagem.triarBanco(processo, bancos, localTriagem, "PETIÇÃO INICIAL");
-			String subnucleo = resultado.getEtiqueta();
-			if (debugPi.isDebugpi()) {
-				JOptionPane.showMessageDialog(null, "Condição Válida", "Petição Inicial Identificada", 1);
-				JOptionPane.showMessageDialog(null, "Núcleo Identificado: " + subnucleo, "Identificador de Núcleo", 1);
-				JOptionPane.showMessageDialog(null, "Palavra Chave: " + resultado.getPalavraChave() + "\nComplemento: "
-						+ resultado.getComplemento(), "Combinação de Chaves Identificadas", 1);
-				JOptionPane.showMessageDialog(null,
-						"Citação: " + citacao + "\nIntimação: " + intimacao + "\nLaudo Recente: " + laudoRecente, "Condicionais", 1);
-				JOptionPane.showMessageDialog(null, "Órgão Julgador Identificado: " + orgaoJulgador, "Órgão Julgador", 1);
-			}
-			if (subnucleo.contains("SSEAS")
-					&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL"))) {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Iniciando Tratamento para o núcleo SSEAS", "Tratamento", 1);
-				}
-				if (citacao) {
-					//stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					//stringBuilder.insert(0, "EATE/");
-					resultado.setEtiqueta("EATE/SSEAS:CITAÇÃO");
-				} else if (intimacao) {
-					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					stringBuilder.insert(0, "GEAC/SSEAS:");
-					resultado.setEtiqueta(stringBuilder.toString());
-				} else {
-					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "EATE/SSEAS:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "GEAC/SSEAS:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "SSEAS:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					}
-				}
+		// Identifica a matéria e salva na variável resultado
+		System.out.println(processo);
+		Boolean identificadoDePeticao = true;
+		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL",
+				identificadoDePeticao);
+		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
+		String nucleo = resultado.getEtiqueta();
 
-			} else if (subnucleo.contains("SBI") && orgaoJulgador.contains("JUIZADO ESPECIAL")) {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Iniciando Tratamento para o núcleo SBI", "Tratamento", 1);
-				}
-				if (laudoRecente) {
-					//stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					//stringBuilder.insert(0, "EATE/");
-					resultado.setEtiqueta("EATE/SBI:LAUDO");
-				} else if (citacao) {
-					resultado.setEtiqueta("EATE/SBI:CITAÇÃO");
-				} else if (intimacao) {
-					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					stringBuilder.insert(0, "GEAC/SBI:");
-					resultado.setEtiqueta(stringBuilder.toString());
-				} else {
-					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "EATE/SBI:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "GEAC/SBI:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "SBI:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					}
-				}
-			} else if (subnucleo.contains("NÃO FOI POSSÍVEL")) {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Não foi possível identificar o núcleo");
-				}
-				resultado.setEtiqueta("NÃO FOI POSSÍVEL IDENTIFICAR A MATÉRIA");
-				resultado.setDriver(driver);
-				return resultado;
-			} else {
-				if (debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Iniciando Tratamento para o núcleo SCC", "Tratamento", 1);
-				}
-				if (citacao) {
-					resultado.setEtiqueta("EATE/SCC:CITAÇÃO");
-				} else if (intimacao) {
-					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					stringBuilder = new StringBuilder(resultado.getEtiqueta());
-					stringBuilder.insert(0, "GEAC/SCC:");
-					resultado.setEtiqueta(stringBuilder.toString());
-				} else {
-					resultado = invocarTriagemPadrao(driver, wait, config, bancos, indexPeticao, dentroDaPasta);
-					if (resultado.getEtiqueta().toUpperCase().contains("CITAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "EATE/SCC:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else if (resultado.getEtiqueta().toUpperCase().contains("INTIMAÇÃO")) {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "GEAC/SCC:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					} else {
-						stringBuilder = new StringBuilder(resultado.getEtiqueta());
-						stringBuilder.insert(0, "SCC:");
-						resultado.setEtiqueta(stringBuilder.toString());
-					}
-				}
-			}
-			if(debugPi.isDebugpi()) {
-				JOptionPane.showMessageDialog(null, "Etiqueta Final: " + resultado.getEtiqueta(), "Etiqueta Final", 1);
-			}
-			String verificarPJE = resultado.getEtiqueta().toUpperCase().replaceAll(" ", "");
-			if (verificarPJE.contains("PJE-FEDERAL")
-					|| verificarPJE.contains("PJE-ESTADUAL")) {
-				String etiquetaComposta[] = resultado.getEtiqueta().split(":");
-				try {
-					resultado.setEtiqueta(etiquetaComposta[1]);
-				} catch (Exception e) {
-					//
-				}
-				if(debugPi.isDebugpi()) {
-					JOptionPane.showMessageDialog(null, "Etiqueta editada (FEDERAL/ESTADUAL identificado): " + resultado.getEtiqueta(), "Etiqueta Final", 1);
-				}
-			}
+		if (debugPi.isDebugpi()) {
+			JOptionPane.showMessageDialog(null, "CONDIÇÃO VÁLIDA");
+			JOptionPane.showMessageDialog(null, "NÚCLEO IDENTIFICADO: " + nucleo);
+			JOptionPane.showMessageDialog(null, "PALAVRA CHAVE NÚCLEO: " + resultado.getPalavraChave());
 		}
-		resultado.setDriver(driver);
+
+		Boolean SSEASValido = nucleo.contains("SSEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL")
+				|| orgaoJulgador.contains("VARA FEDERAL") || orgaoJulgador.contains("JEF"));
+		Boolean naoFoiPossivel = nucleo.contains("NÃO FOI POSSÍVEL");
+		Boolean SBIValido = nucleo.contains("SBI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
+
+		if (SSEASValido)
+			return resultado;
+		if (SBIValido)
+			return resultado;
+
+		if (naoFoiPossivel) {
+			resultado.setEtiqueta("");
+			return resultado;
+		}
+
+		resultado.setEtiqueta("SCC");
 		return resultado;
 	}
 
-	private Chaves_Resultado invocarTriagemPadrao(WebDriver driver, WebDriverWait wait, Chaves_Configuracao configs,
-			String bancos, int indexPeticao, boolean dentroDaPasta)
+	private Chaves_Resultado triagemPadrao(WebDriver driver, WebDriverWait wait, Chaves_Configuracao configs,
+			String banco, int indexPeticao, boolean dentroDaPasta, String nucleo)
 			throws InterruptedException, SQLException, UnsupportedFlavorException, IOException {
-		Processo_Movimentacao pm = new Processo_Movimentacao();
-		Processo_Documento pd = new Processo_Documento();
+
 		Chaves_Resultado resultado = new Chaves_Resultado();
 
-		if (dentroDaPasta == true) {
+		if (dentroDaPasta) {
 			try {
-				driver.findElement(By.xpath("//tr[" + indexPeticao + "]/td/div/img"));
 				driver.findElement(By.xpath("//tr[" + indexPeticao + "]/td/div/img")).click();
 			} catch (Exception e) {
 				//
 			}
 		}
 
+		// Clica na capa
 		driver.findElement(By.xpath("//tr[1]/td/div/img")).click();
 
 		switch (configs.getTipoTriagem()) {
 		case "MOV":
-			//System.out.println("chamando movimentação 400");
-			resultado = pm.movimentacao(driver, wait, configs, bancos);
+			// System.out.println("chamando movimentação 400");
+			resultado = new Processo_Movimentacao().movimentacao(driver, wait, configs, banco);
 			break;
 		case "DOC":
-			//System.out.println("chamando documento 403");
-			resultado = pd.documento(driver, wait, configs, bancos);
+			// System.out.println("chamando documento 403");
+			resultado = new Processo_Documento().documento(driver, wait, configs, banco);
 			break;
 		case "COM":
-			//System.out.println("chamando movimentação 406");
-			resultado = pm.movimentacao(driver, wait, configs, bancos);
+			// System.out.println("chamando movimentação 406");
+			resultado = new Processo_Movimentacao().movimentacao(driver, wait, configs, banco);
 			if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
-				//System.out.println("chamando documento 409");
-				resultado = pd.documento(driver, wait, configs, bancos);
+				// System.out.println("chamando documento 409");
+				resultado = new Processo_Documento().documento(driver, wait, configs, banco);
 			}
 			break;
 		}
+
+		String etiqueta = resultado.getEtiqueta().toUpperCase().replaceAll("-", "").replaceAll(" ", "");
+
+		if (etiqueta.contains("PJEFEDERAL") || etiqueta.contains("PJEPAR") || etiqueta.contains("PJEESTADUAL")) {
+			resultado.setDriver(driver);
+			return resultado;
+		}
+
+		String etiquetaFinal = nucleo + "/" + resultado.getEtiqueta();
+
+		resultado.setEtiqueta(etiquetaFinal);
 		resultado.setDriver(driver);
 		return resultado;
-		//System.out.println("Chamando Movimentação");
-		//resultado = pm.movimentacao(driver, wait, configs, bancos);
-		//if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
-		//System.out.println("Chamando Documento");
-		//resultado = pd.documento(resultado.getDriver(), wait, configs, bancos);
-		//}
-		//resultado.setDriver(driver);
-		//return resultado;
+
 	}
 }

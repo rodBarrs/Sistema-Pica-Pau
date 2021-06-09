@@ -7,19 +7,19 @@
 package com.mycompany.newmark;
 
 public class Chaves_Configuracao {
-    private boolean TriarAntigo; 
+    private Integer intervaloDias; 
     private String TipoTriagem = "";     //Varchar de 3 - COM (completa) - MOV (movimentação) - DOC (documento)
     private boolean JuntManual;
     private boolean LaudoPericial;
     private boolean PeticaoInicial;
     private boolean debugpi = false;
         
-    public boolean isTriarAntigo() {
-        return TriarAntigo;
+    public Integer getIntervaloDias() {
+        return intervaloDias;
     }
 
-    public void setTriarAntigo(boolean TriarAntigo) {
-        this.TriarAntigo = TriarAntigo;
+    public void setIntervaloDias(Integer TriarAntigo) {
+        this.intervaloDias = TriarAntigo;
     }
 
     public String getTipoTriagem() {
@@ -59,7 +59,7 @@ public class Chaves_Configuracao {
     @Override
     public String toString() {
         return "Configuracao:"
-                + "\nTriarAntigo: " + TriarAntigo
+                + "\nTriarAntigo: " + intervaloDias
                 + "\nTipoTriagem: " + TipoTriagem
                 + "\nJuntManual: " + JuntManual
                 + "\nLaudoPericial: " + LaudoPericial

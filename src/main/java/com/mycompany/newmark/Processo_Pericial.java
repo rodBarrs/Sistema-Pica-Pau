@@ -60,7 +60,6 @@ public class Processo_Pericial {
         resultado.setLocal("LAUDO PERICIAL");
         resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR LAUDO PERICIAL");
         resultado.setPalavraChave("");
-        resultado.setComplemento("");
 
         //FOR - Enquantou houve elementos na tabela, do último para o primeiro
         for (int i = listaMovimentacao.size(); i > 0; i--) {
@@ -203,7 +202,8 @@ public class Processo_Pericial {
                                     String processo = "";
                                     processo = clipboard1.getData(flavor1).toString();
                                     processo = tratamento.tratamento(processo);
-                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, "PERICIAL");
+                                    Boolean identificadoDePeticao = false;
+                                    resultado = triagem.triarBanco(processo, bancos, localTriagem, "PERICIAL", identificadoDePeticao);
                                     linhaMovimentacao = driver.findElement(By.xpath("//tr[" + aqui + "]/td/div")).getText();
                                     resultado.setLocal("Documento (" + linhaMovimentacao + ")");
                                     resultado.setDriver(driver);

@@ -56,20 +56,21 @@ public class Processo_Movimentacao {
         }
         
         TabelaTref = driver.findElement(By.id("treeview-1015"));
-        List<WebElement> listaMovimentacao = new ArrayList(TabelaTref.findElements(By.cssSelector("tr")));
+        List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
 
         int limite = 10;
         WebElement movimentacaoAtual;
         for (int i = listaMovimentacao.size(); i>0 && limite>0; i--) {
             movimentacaoAtual = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div"));
-            if (verificarData.Verificar(movimentacaoAtual.getText()) || config.isTriarAntigo()) {
+            if (verificarData.verificar(movimentacaoAtual.getText(), config.getIntervaloDias()) /*|| config.isTriarAntigo()*/) {
                 if (condicao.verificaCondicao(movimentacaoAtual.getText(),condicaoProv)){
                     limite--;
-                    resultado = triagem.triarBanco(movimentacaoAtual.getText(), bancos, localTriagem, config.getTipoTriagem());
+                    Boolean identificadoDePeticao = false;
+                    resultado = triagem.triarBanco(movimentacaoAtual.getText(), bancos, localTriagem, config.getTipoTriagem(), identificadoDePeticao);
                     if (!resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")
                             && !resultado.getEtiqueta().contains("ERRO EM TRIAGEM: PDF NÃO PESQUISÁVEL")) {
                         linhaMovimentacao = driver.findElement(By.xpath("//tr[" + i + "]/td/div")).getText();
-                        resultado.setLocal("Movimentação (" + linhaMovimentacao + ")");
+                        resultado.setLocal("MOV " +  linhaMovimentacao);
                         resultado.setDriver(driver);
                         return resultado;
                     }

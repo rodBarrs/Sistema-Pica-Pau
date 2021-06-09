@@ -5,11 +5,6 @@
  */
 package com.mycompany.newmark;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXProgressBar;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
@@ -23,6 +18,26 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+import com.mycompany.newmark.DAO.UsuarioLocalDAO;
+import com.mycompany.newmark.controllers.LoginLocal;
+import com.mycompany.newmark.entities.UsuarioLocal;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,16 +50,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import javafx.stage.StageStyle;
 
 public class Controller_Login implements Initializable {
 	private boolean triagemIniciada = false;
@@ -54,11 +66,13 @@ public class Controller_Login implements Initializable {
 	public Usuario usuario = new Usuario();
 
 	@FXML
+	private static AnchorPane anchor;
+	@FXML
 	public Label labelDebug;
 	@FXML
 	public MenuItem popupDebug;
 	@FXML
-	public JFXButton btInformacao, btEditarEtiquetas, btConfigurar, btLogin, btTriar, btParar, btEditarBancos;
+	public JFXButton btInformacao, btAdministracao, btLogin, btTriar, btParar;
 	@FXML
 	public JFXTextField LoginTxt, SenhaTxtMostar;
 	@FXML
@@ -93,7 +107,7 @@ public class Controller_Login implements Initializable {
 
 	@FXML
 	public void exibirDebugPI() {
-		if(debugPi.isDebugpi()) {
+		if (debugPi.isDebugpi()) {
 			debugPi.setDebugpi(false);
 			popupDebug.setText("Exibir Debug de Petição Inicial");
 			labelDebug.setVisible(false);
@@ -103,17 +117,17 @@ public class Controller_Login implements Initializable {
 			labelDebug.setVisible(true);
 		}
 	}
-	
+
 	public void saida() {
 		try {
 			Chaves_Configuracao configuracao = new Chaves_Configuracao();
 			Banco banco = new Banco();
 			configuracao = banco.pegarConfiguracao(configuracao);
 			Saida.setText("CONFIGURAÇÕES:");
-			if (configuracao.isTriarAntigo() == false) {
-				Saida.setText(Saida.getText() + "\nTriar Antigo: Desativado");
+			if (configuracao.getIntervaloDias() == -1) {
+				Saida.setText(Saida.getText() + "\nConfiguração de Data: Ignorar datas");
 			} else {
-				Saida.setText(Saida.getText() + "\nTriar Antigo: Ativado");
+				Saida.setText(Saida.getText() + "\\nConfiguração de Data: Considerando datas");
 			}
 			switch (configuracao.getTipoTriagem()) {
 			case "COM":
@@ -138,12 +152,11 @@ public class Controller_Login implements Initializable {
 			}
 
 			if (configuracao.isPeticaoInicial() == true) {
-				Saida.setText("Triando: PETIÇÃO INICIAL"
-						+ "\nO Sistema está triando as petições iniciais.");
-				if (configuracao.isTriarAntigo() == false) {
-					Saida.setText(Saida.getText() + "\nTriar Antigo: Desativado");
+				Saida.setText("Triando: PETIÇÃO INICIAL" + "\nO Sistema está triando as petições iniciais.");
+				if (configuracao.getIntervaloDias() == -1) {
+					Saida.setText(Saida.getText() + "\nConfiguração de Data: Ignorar datas");
 				} else {
-					Saida.setText(Saida.getText() + "\nTriar Antigo: Ativado");
+					Saida.setText(Saida.getText() + "\nConfiguração de Data: Considerando datas");
 				}
 				switch (configuracao.getTipoTriagem()) {
 				case "COM":
@@ -182,7 +195,7 @@ public class Controller_Login implements Initializable {
 	public void pegarSenha() {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CONFIGURACAO WHERE ID = 1997");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM configuracao WHERE id = 1997");
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {
 				LoginTxt.setText(resultadoBanco.getString("Login"));
@@ -227,30 +240,29 @@ public class Controller_Login implements Initializable {
 		stage.setTitle("Sistema de Triagem Mark - Informações");
 		stage.show();
 	}
-
+	
 	@FXML
-	public void editarEtiquetas(ActionEvent event) {
-		Node node = (Node) event.getSource();
-		Stage stage = (Stage) node.getScene().getWindow();
-		Parent root = null;
-		try {
-			root = FXMLLoader.load(getClass().getResource("/fxml/EtiquetasEdicao.fxml"));
-		} catch (Exception erro) {
-			Aviso aviso = new Aviso();
-			aviso.aviso(erro.getMessage());
-			erro.printStackTrace();
-			Logger.getLogger(Chaves_Configuracao.class.getName()).log(Level.SEVERE, null, erro);
+	public void abrirPopupLogin() throws IOException {
+		if(UsuarioLocal.getEstaLogado()) {
+			abrirJanelaAdministracao();
+		} else {
+			new LoginLocal().abrirPopupLogin();
 		}
-
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
-		stage.centerOnScreen();
-		stage.setResizable(false);
-		stage.setMinWidth(900);
-		stage.setMinHeight(500);
-		stage.setTitle("Sistema de Triagem Mark - Banco de Etiquetas");
-		stage.show();
 	}
+	
+	
+	@FXML
+	public void abrirJanelaAdministracao() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Administracao.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Sistema de Triagem Mark - Administração");
+        stage.setScene(new Scene(root));
+        stage.getIcons().add(new Image("/fxml/Imagens/iconeMark.png"));
+        stage.setResizable(false);
+        stage.show();
+	}
+
 
 	@FXML
 	public void editarBancos(ActionEvent event) {
@@ -332,7 +344,8 @@ public class Controller_Login implements Initializable {
 						SaidaTriagem.setText("- Triagem Iniciada!");
 						BarraDeProgresso.setVisible(true);
 						Processo_Triagem triagem = new Processo_Triagem(driver, bancoSelecionado);
-						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada, debugPi);
+						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada,
+								debugPi);
 						if (triar == false) {
 							som();
 							SaidaTriagem.setText("- Erro de comunicação com plataforma Sapiens!");

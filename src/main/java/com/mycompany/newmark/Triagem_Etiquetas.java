@@ -16,48 +16,51 @@ import javax.swing.JOptionPane;
 
 public class Triagem_Etiquetas {
 
-	public Chaves_Resultado triarBanco(String processo, String bancos, String localtriagem, String tipoTriagem) {
+	public Chaves_Resultado triarBanco(String processo, String banco, String localtriagem, String tipoTriagem,
+			Boolean identificadorDePeticao) {
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		Tratamento tratamento = new Tratamento();
 		processo = tratamento.tratamento(processo);
-		boolean banco = false;
-		while (banco == false) {
+		boolean bancoBool = false;
+		while (bancoBool == false) {
 			try {
 				Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 				PreparedStatement stmt;
 				ResultSet resultSet;
-				if (bancos.contains("TODOS OS BANCOS")) {
-					stmt = connection.prepareStatement(
-							"SELECT * FROM ETIQUETAS WHERE TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+				if (identificadorDePeticao) {
+					stmt = connection.prepareStatement("SELECT * FROM identificador_materia ORDER BY prioridade DESC");
 				} else {
-					stmt = connection.prepareStatement("SELECT * FROM ETIQUETAS WHERE BANCO = '" + bancos
-							+ "' AND TIPO = '" + localtriagem + "' ORDER BY PRIORIDADE DESC");
+					if (banco.contains("TODOS OS BANCOS")) {
+						stmt = connection.prepareStatement(
+								"SELECT * FROM etiquetas WHERE tipo = '" + localtriagem + "' ORDER BY prioridade DESC");
+					} else {
+						stmt = connection.prepareStatement("SELECT * FROM etiquetas WHERE banco = '" + banco
+								+ "' AND tipo = '" + localtriagem + "' ORDER BY prioridade DESC");
+					}
 				}
 				resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
-					String PALAVRACHAVE = resultSet.getString("PALAVRACHAVE");
-					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);
-					String COMPLEMENTO = resultSet.getString("COMPLEMENTO");
+					String PALAVRACHAVE = resultSet.getString("palavrachave");
+					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);				
+					String COMPLEMENTO = resultSet.getString("complemento");
 					COMPLEMENTO = tratamento.tratamento(COMPLEMENTO);
-
+					
 					if (processo.contains(PALAVRACHAVE) && processo.contains(COMPLEMENTO)) {
-						resultado.setPalavraChave(resultSet.getString("PALAVRACHAVE"));
-						resultado.setComplemento(resultSet.getString("COMPLEMENTO"));
-						resultado.setEtiqueta(resultSet.getString("ETIQUETA"));
+						resultado.setPalavraChave(resultSet.getString("id"));
+						resultado.setEtiqueta(resultSet.getString("etiqueta"));
 						connection.close();
 						return resultado;
 					}
 
 				}
 				connection.close();
-				banco = true;
+				bancoBool = true;
 			} catch (SQLException ex) {
-				banco = false;
+				bancoBool = false;
 				Logger.getLogger(Triagem_Etiquetas.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		resultado
-				.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA (" + bancos + ", " + tipoTriagem + ")");
+		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA (" + banco + ", " + tipoTriagem + ")");
 		return resultado;
 	}
 }
