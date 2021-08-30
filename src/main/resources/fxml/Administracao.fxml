@@ -43,10 +43,11 @@
                                     <TableView fx:id="tabelaIdentificadorMateria" editable="true" maxHeight="591.0" maxWidth="874.0" minHeight="591.0" minWidth="874.0" onMouseClicked="#selecionarIdentificadorMateria" prefHeight="591.0" prefWidth="874.0" stylesheets="@../styles/tabela.css">
                                        <columns>
                                           <TableColumn fx:id="identificadorMateriaID" prefWidth="48.0" text="ID" />
-                                          <TableColumn fx:id="identificadorMateriaPedido" maxWidth="530.0" minWidth="50.0" prefWidth="292.0" text="Pedido" />
-                                          <TableColumn fx:id="identificadorMateriaComplemento" prefWidth="312.0" text="Complemento de Pedido" />
-                                          <TableColumn fx:id="identificadorMateriaSubnucleo" prefWidth="161.0" text="Subnúcleo" />
-                                          <TableColumn fx:id="identificadorMateriaPeso" prefWidth="60.0" text="Peso" />
+                                          <TableColumn fx:id="identificadorMateriaPedido" maxWidth="530.0" minWidth="50.0" prefWidth="117.0" text="Pedido" />
+                                          <TableColumn fx:id="identificadorMateriaComplemento" prefWidth="231.0" text="Complemento de Pedido" />
+                                          <TableColumn fx:id="identificadorMateriaSubnucleo" prefWidth="156.0" text="Subnúcleo" />
+                                          <TableColumn fx:id="identificadorMateriaEtiqueta" prefWidth="204.0" text="Etiqueta" />
+                                          <TableColumn fx:id="identificadorMateriaPeso" prefWidth="114.0" text="Peso" />
                                        </columns>
                                        <contextMenu>
                                           <ContextMenu>
@@ -58,20 +59,21 @@
                                     </TableView>
                                     <JFXTextField fx:id="buscaIdentificadorMateria" focusColor="WHITE" layoutX="887.0" layoutY="6.0" onKeyReleased="#buscaIdentificadorMateria" prefHeight="25.0" prefWidth="311.0" promptText="Pesquisar pedido" stylesheets="@../styles/dark_theme.css" unFocusColor="WHITE" />
                                     <JFXTextField fx:id="buscaIdentificadorMateriaID" focusColor="WHITE" layoutX="1201.0" layoutY="6.0" onKeyReleased="#buscaIDIdentificadorMateria" prefHeight="25.0" prefWidth="65.0" promptText="ID" unFocusColor="WHITE" />
-                                    <VBox layoutX="887.0" layoutY="51.0" maxHeight="370.0" maxWidth="370.0" minHeight="135.0" minWidth="380.0" prefHeight="152.0" prefWidth="370.0" spacing="30.0" stylesheets="@../styles/dark_theme.css">
+                                    <VBox layoutX="887.0" layoutY="51.0" maxHeight="370.0" maxWidth="380.0" minHeight="135.0" minWidth="380.0" prefHeight="209.0" prefWidth="380.0" spacing="30.0" stylesheets="@../styles/dark_theme.css">
                                        <children>
                                           <JFXTextField fx:id="pedido" focusColor="WHITE" labelFloat="true" promptText="PEDIDO *" unFocusColor="WHITE" />
                                           <JFXTextField fx:id="complementoPedido" focusColor="WHITE" labelFloat="true" promptText="COMPLEMENTO" unFocusColor="WHITE" />
+                                          <JFXTextField fx:id="identificadorEtiqueta" focusColor="WHITE" promptText="ETIQUETA *" unFocusColor="WHITE" />
                                           <JFXComboBox fx:id="comboBoxNucleo" focusColor="#bdff53" prefHeight="25.0" prefWidth="397.0" promptText="SELECIONE O SUBNÚCLEO *" unFocusColor="WHITE" />
                                        </children>
                                     </VBox>
-                                    <Label layoutX="887.0" layoutY="199.0" prefHeight="27.0" prefWidth="151.0" text="* Campos obrigatórios" textFill="#575757" />
-                                    <JFXButton fx:id="limparIdentificadorMateria" layoutX="887.0" layoutY="237.0" onAction="#limparIdentificadorMateria" prefHeight="27.0" prefWidth="181.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Limpar Campos">
+                                    <Label layoutX="887.0" layoutY="265.0" prefHeight="27.0" prefWidth="151.0" text="* Campos obrigatórios" textFill="#575757" />
+                                    <JFXButton fx:id="limparIdentificadorMateria" layoutX="887.0" layoutY="301.0" onAction="#limparIdentificadorMateria" prefHeight="27.0" prefWidth="181.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Limpar Campos">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXTextField editable="false" focusColor="#c6ffd9" focusTraversable="false" layoutX="887.0" layoutY="306.0" prefHeight="25.0" prefWidth="380.0" text="Peso" unFocusColor="WHITE">
+                                    <JFXTextField editable="false" focusColor="#c6ffd9" focusTraversable="false" layoutX="887.0" layoutY="349.0" prefHeight="25.0" prefWidth="380.0" text="Peso" unFocusColor="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -79,7 +81,7 @@
                                           <Cursor fx:constant="DEFAULT" />
                                        </cursor>
                                     </JFXTextField>
-                                    <HBox alignment="CENTER_LEFT" layoutX="1047.0" layoutY="307.0" prefHeight="27.0" prefWidth="222.0" spacing="25.0">
+                                    <HBox alignment="CENTER_LEFT" layoutX="1047.0" layoutY="350.0" prefHeight="27.0" prefWidth="222.0" spacing="25.0">
                                        <children>
                                           <RadioButton fx:id="identificadorMateriaP1" mnemonicParsing="false" prefHeight="27.0" prefWidth="34.0" selected="true" text="1">
                                              <font>
@@ -106,17 +108,17 @@
                                           </RadioButton>
                                        </children>
                                     </HBox>
-                                    <JFXButton fx:id="inserirIdentificadorMateria" alignment="CENTER" contentDisplay="CENTER" layoutX="887.0" layoutY="363.0" onAction="#inserirIdentificadorMateria" prefHeight="27.0" prefWidth="185.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Registro">
+                                    <JFXButton fx:id="inserirIdentificadorMateria" alignment="CENTER" contentDisplay="CENTER" layoutX="887.0" layoutY="406.0" onAction="#inserirIdentificadorMateria" prefHeight="27.0" prefWidth="185.0" styleClass="botaoAzul" stylesheets="@../styles/botoes.css" text="Inserir Registro">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXButton fx:id="excluirIdentificadorMateria" alignment="CENTER" contentDisplay="CENTER" layoutX="1081.0" layoutY="363.0" onAction="#excluirIdentificadorMateria" prefHeight="27.0" prefWidth="185.0" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Excluir Registro">
+                                    <JFXButton fx:id="excluirIdentificadorMateria" alignment="CENTER" contentDisplay="CENTER" layoutX="1081.0" layoutY="407.0" onAction="#excluirIdentificadorMateria" prefHeight="27.0" prefWidth="185.0" styleClass="botaoVermelho" stylesheets="@../styles/botoes.css" text="Excluir Registro">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <JFXButton layoutX="1135.0" layoutY="431.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="132.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
+                                    <JFXButton layoutX="1135.0" layoutY="474.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="132.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -131,13 +133,13 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXTextField>
-                                    <JFXButton fx:id="atualizarIdentificadorMateria" layoutX="1081.0" layoutY="237.0" onAction="#inicializarMenuPeticaoInicial" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
+                                    <JFXButton fx:id="atualizarIdentificadorMateria" layoutX="1081.0" layoutY="301.0" onAction="#inicializarMenuPeticaoInicial" prefHeight="27.0" prefWidth="185.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Atualizar Tabela">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </JFXButton>
-                                    <Separator layoutX="887.0" layoutY="278.0" prefHeight="19.0" prefWidth="380.0" />
-                                    <Separator layoutX="887.0" layoutY="406.0" prefHeight="19.0" prefWidth="380.0" />
+                                    <Separator layoutX="887.0" layoutY="334.0" prefHeight="19.0" prefWidth="380.0" />
+                                    <Separator layoutX="887.0" layoutY="449.0" prefHeight="19.0" prefWidth="380.0" />
                                  </children>
                               </AnchorPane>
                           </content>

@@ -11,6 +11,7 @@ public class Chaves_Resultado {
 	private static String palavraChavePeticao;
     private String PalavraChave = "";
     private String Etiqueta = "";
+    private String subnucleo = "";
     private String Local = "";
     private WebDriver driver;
     private boolean grid;
@@ -70,6 +71,14 @@ public class Chaves_Resultado {
     public void setGrid(boolean grid) {
         this.grid = grid;
     }
+
+	public String getSubnucleo() {
+		return subnucleo;
+	}
+
+	public void setSubnucleo(String subnucleo) {
+		this.subnucleo = subnucleo;
+	}
 
     
 }

@@ -24,7 +24,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 public class Controller_TagEdicaoEtiqueta implements Initializable {
-	
     private Chaves_Banco chave;
 
     public Controller_TagEdicaoEtiqueta(Chaves_Banco chave)

@@ -48,7 +48,7 @@ import javafx.stage.StageStyle;
 public class Administracao implements Initializable {
 
 	@FXML
-	private JFXTextField numeroEtiquetas, numeroTipoMovimentacao, numeroIdentificadorMateria, numeroPeticaoInicial,
+	private JFXTextField identificadorEtiqueta, numeroEtiquetas, numeroTipoMovimentacao, numeroIdentificadorMateria, numeroPeticaoInicial,
 			pedido, complementoPedido, buscaIdentificadorMateriaID, buscaIdentificadorMateria,
 			identificadorPeticaoInicial, pesquisaIdentificador, pesquisaEtiqueta, pesquisaEtiquetaId, palavraChave,
 			complemento, etiqueta, buscaTipoMovimentacao, tipoMovimentacao, textoSigla, textoBanco, textoNomeUsuario, textoSenhaUsuarioVisivel;
@@ -66,10 +66,11 @@ public class Administracao implements Initializable {
 	private TableView<UsuarioLocal> tabelaUsuarios;
 	@FXML
 	private TableColumn<UsuarioLocal, String> nomeUsuario;
+
 	@FXML
 	private TableColumn<Chaves_Banco, String> identificadorMateriaID, identificadorMateriaPedido,
 			identificadorMateriaComplemento, identificadorMateriaSubnucleo, identificadorMateriaPeso, etiquetaID,
-			etiquetaFraseChave, etiquetaComplemento, etiquetaEtiqueta, etiquetaPeso, etiquetaTipo;
+			etiquetaFraseChave, etiquetaComplemento, etiquetaEtiqueta, etiquetaPeso, etiquetaTipo, identificadorMateriaEtiqueta;
 	@FXML
 	private TableColumn<Chaves_Condicao, String> colunaTipoMovimento, colunaIdentificadorPeticao,
 			colunaIdentificadorPeticaoInicial;
@@ -96,7 +97,7 @@ public class Administracao implements Initializable {
 
 	public void inicializarMenuPeticaoInicial() {
 		/* Inicializa a tabela Identificador de Matérias */
-		ObservableList<String> subnucleos = FXCollections.observableArrayList("SSEAS", "SBI", "SCC");
+		ObservableList<String> subnucleos = FXCollections.observableArrayList("ER-SEAS", "ER-BI", "TRU");
 		comboBoxNucleo.setItems(subnucleos);
 
 		List<Chaves_Banco> listaIdentificadoresMateria = new IdentificadorMateriaDAO().getTabelaIdentificadorMateria();
@@ -105,10 +106,10 @@ public class Administracao implements Initializable {
 		identificadorMateriaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		identificadorMateriaComplemento
 				.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
-		identificadorMateriaSubnucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+		identificadorMateriaSubnucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("subnucleo"));
 		identificadorMateriaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
-		ObservableList<Chaves_Banco> identificadoresDeMateria = FXCollections
-				.observableArrayList(listaIdentificadoresMateria);
+		identificadorMateriaEtiqueta.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
+		ObservableList<Chaves_Banco> identificadoresDeMateria = FXCollections.observableArrayList(listaIdentificadoresMateria);
 		tabelaIdentificadorMateria.setItems(identificadoresDeMateria);
 		numeroIdentificadorMateria.setText(String.valueOf(tabelaIdentificadorMateria.getItems().size()));
 
@@ -193,6 +194,7 @@ public class Administracao implements Initializable {
 	public void inserirIdentificadorMateria() {
 		Boolean pedidoNaoEstaVazio = !pedido.getText().trim().isEmpty() || pedido != null;
 		Boolean subnucleoFoiSelecionado = !comboBoxNucleo.getSelectionModel().isEmpty();
+		Boolean etiquetaNaoEstaVazia = !identificadorEtiqueta.getText().isEmpty();
 		Integer pesoSelecionado;
 
 		if (identificadorMateriaP1.isSelected()) {
@@ -205,12 +207,13 @@ public class Administracao implements Initializable {
 			pesoSelecionado = 4;
 		}
 
-		if (pedidoNaoEstaVazio && subnucleoFoiSelecionado) {
+		if (pedidoNaoEstaVazio && subnucleoFoiSelecionado && etiquetaNaoEstaVazia) {
 			new IdentificadorMateriaDAO().inserirIdentificadorMateria(pedido.getText(), complementoPedido.getText(),
-					comboBoxNucleo.getSelectionModel().getSelectedItem(), pesoSelecionado);
+					comboBoxNucleo.getSelectionModel().getSelectedItem(), pesoSelecionado, 
+					identificadorEtiqueta.getText());
 			inicializarMenuPeticaoInicial();
 		} else {
-			new Aviso().aviso("Reviso os campos preenchidos");
+			new Aviso().aviso("Revise os campos preenchidos");
 		}
 
 		inicializarMenuTriagemPadrao();
@@ -257,8 +260,7 @@ public class Administracao implements Initializable {
 	public void selecionarIdentificadorMateria() {
 		pedido.setText(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getPALAVRACHAVE());
 		complementoPedido.setText(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getCOMPLEMENTO());
-		comboBoxNucleo.getSelectionModel()
-				.select(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getETIQUETA());
+		comboBoxNucleo.getSelectionModel().select(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getSubnucleo());
 	}
 
 	public void buscaIDIdentificadorMateria() {

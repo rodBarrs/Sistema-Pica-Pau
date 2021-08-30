@@ -12,10 +12,19 @@ public class Chaves_Banco {
 	private String COMPLEMENTO = null;
 	private String ETIQUETA = null;
 	private String TIPO = null;
+	private String subnucleo = null;
 	private String PRIORIDADE = null;
 	private String BANCO = null;
 	private Integer ID;
 
+	public String getSubnucleo() {
+		return this.subnucleo;
+	}
+	
+	public void  setSubnucleo(String subnucleo) {
+		this.subnucleo = subnucleo;
+	}
+	
 	public Integer getID() {
 		return ID;
 	}

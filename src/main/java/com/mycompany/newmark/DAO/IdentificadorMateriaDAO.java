@@ -18,7 +18,7 @@ import com.mycompany.newmark.connectionFactory.ConnectionFactory;
 public class IdentificadorMateriaDAO {
 
 	public List<Chaves_Banco> getTabelaIdentificadorMateria() {
-
+		
 		final String SQL = "SELECT * FROM identificador_materia ORDER BY id";
 		List<Chaves_Banco> identificadoresMateria = new ArrayList<>();
 		try (Connection connection = new ConnectionFactory().obterConexao();
@@ -29,21 +29,23 @@ public class IdentificadorMateriaDAO {
 				key.setID(resultSet.getInt("id"));
 				key.setPALAVRACHAVE(resultSet.getString("palavrachave"));
 				key.setCOMPLEMENTO(resultSet.getString("complemento"));
+				key.setSubnucleo(resultSet.getString("subnucleo"));
 				key.setETIQUETA(resultSet.getString("etiqueta"));
 				key.setPRIORIDADE(resultSet.getString("prioridade"));
 				identificadoresMateria.add(key);
 			}
 		} catch (Exception e) {
-			new Aviso().aviso(e.getMessage());
-		}
+			new Aviso().aviso(e.getMessage() + "aaaaaa");
+		} 
 
+		
 		return identificadoresMateria;
 	}
 
 	public void inserirIdentificadorMateria(String pedido, String complementoPedido, String subnucleo,
-			Integer pesoSelecionado) {
+			Integer pesoSelecionado, String etiqueta) {
 
-		final String SQL = "INSERT INTO identificador_materia (palavrachave, complemento, etiqueta, prioridade) VALUES (?, ?, ?, ?);";
+		final String SQL = "INSERT INTO identificador_materia (palavrachave, complemento, subnucleo, prioridade, etiqueta) VALUES (?, ?, ?, ?, ?);";
 
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
@@ -51,6 +53,7 @@ public class IdentificadorMateriaDAO {
 			stmt.setString(2, complementoPedido);
 			stmt.setString(3, subnucleo);
 			stmt.setInt(4, pesoSelecionado);
+			stmt.setString(5, etiqueta);
 
 			stmt.execute();
 
