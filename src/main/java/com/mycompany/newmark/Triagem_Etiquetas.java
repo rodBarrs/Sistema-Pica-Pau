@@ -41,14 +41,20 @@ public class Triagem_Etiquetas {
 				resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
 					String PALAVRACHAVE = resultSet.getString("palavrachave");
-					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);				
+					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);
 					String COMPLEMENTO = resultSet.getString("complemento");
 					COMPLEMENTO = tratamento.tratamento(COMPLEMENTO);
-					
+
 					if (processo.contains(PALAVRACHAVE) && processo.contains(COMPLEMENTO)) {
 						resultado.setPalavraChave(resultSet.getString("palavrachave"));
-						resultado.setEtiqueta(resultSet.getString("etiqueta"));
 						resultado.setSubnucleo(resultSet.getString("subnucleo"));
+
+						resultSet.getString("etiqueta");
+						if (resultSet.wasNull()) {
+							resultado.setEtiqueta(resultSet.getString("subnucleo"));
+						} else {							
+							resultado.setEtiqueta(resultSet.getString("subnucleo") + "/" + resultSet.getString("etiqueta"));
+						}
 						connection.close();
 						return resultado;
 					}

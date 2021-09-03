@@ -267,24 +267,22 @@ public class Processo_PeticaoInicial {
 			JOptionPane.showMessageDialog(null, "PALAVRA CHAVE NÚCLEO: " + resultado.getPalavraChave());
 		}
 
-		Boolean SSEASValido = nucleo.contains("ER-SEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL")
+		// Valida Subnúcleo
+		Boolean SSEASValido = resultado.getSubnucleo().contains("ER-SEAS") && (orgaoJulgador.contains("JUIZADO ESPECIAL")
 				|| orgaoJulgador.contains("VARA FEDERAL") || orgaoJulgador.contains("JEF"));
-		Boolean naoFoiPossivel = nucleo.contains("NÃO FOI POSSÍVEL");
-		Boolean SBIValido = nucleo.contains("ER-SBI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
-
-		if (SSEASValido)
-			//TODO concatenar o subnucleo antes do valor da etiqueta
-			return resultado;
-		if (SBIValido)
-			//TODO concatenar o subnucleo antes do valor da etiqueta
-			return resultado;
-
-		if (naoFoiPossivel) {
-			return resultado;
-		}
+		Boolean SBIValido = resultado.getSubnucleo().contains("ER-SBI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
+		Boolean TRUValido = resultado.getSubnucleo().contains("FEDERAL");
+		Boolean naoFoiPossivel = resultado.getSubnucleo().contains("NÃO FOI POSSÍVEL");
 		
-		//TODO concatenar o subnucleo antes do valor da etiqueta
-		resultado.setSubnucleo("TRU");
+		if (SSEASValido || SBIValido || naoFoiPossivel) {
+			// TODO concatenar o subnucleo antes do valor da etiqueta
+			return resultado;
+		} else if (TRUValido) {
+			// TODO concatenar o subnucleo antes do valor da etiqueta
+			resultado.setSubnucleo("TRU");
+			return resultado;
+		} 
+		resultado.setSubnucleo("PREV/LOCAL");
 		return resultado;
 	}
 	
