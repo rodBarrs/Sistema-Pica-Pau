@@ -338,8 +338,7 @@ public class Controller_Login implements Initializable {
 					SaidaTriagem.setText("- Selecione um banco para a triagem!");
 				} else {
 					Banco banco = new Banco();
-					String bancoSelecionado = "";
-					bancoSelecionado = banco.selecionarBanco(Bancos.getSelectionModel().getSelectedItem());
+					String bancoSelecionado = banco.selecionarBanco(Bancos.getSelectionModel().getSelectedItem());
 					if (!bancoSelecionado.equals("")) {
 						SaidaTriagem.setText("- Triagem Iniciada!");
 						BarraDeProgresso.setVisible(true);

@@ -47,14 +47,21 @@ public class Processo_PeticaoInicial {
 		// Armazena todas as movimentações num ArrayList
 		WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
 		List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-
+		
+		// Interação com a capa
 		// Aguarda até que o iframe esteja carregado e então envia o Driver para o
 		// iframe (para que possa interagir com o interior do iframe)
 		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("iframe-myiframe")));
-
+		
+		//
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("html")));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
 		// Aguarda até que o campo "órgão julgador" esteja carregado e então salva seu
 		// conteúdo
 		String orgaoJulgador = "";
+		
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")));
+		
 		try {
 			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr[3]/td[2]")).getText();
 		} catch (Exception e) {
@@ -95,7 +102,6 @@ public class Processo_PeticaoInicial {
 
 				// CAPA
 				if (movimentacaoTemPDF) {
-					//pdf.apagarPDF();
 
 					for (int a = 0; a < 2; a++) {
 						if (pdf.PDFBaixado()) {

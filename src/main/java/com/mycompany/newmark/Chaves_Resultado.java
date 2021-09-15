@@ -13,6 +13,7 @@ public class Chaves_Resultado {
     private String Etiqueta = "";
     private String subnucleo = "";
     private String Local = "";
+    private Integer id;
     private WebDriver driver;
     private boolean grid;
     
@@ -78,6 +79,14 @@ public class Chaves_Resultado {
 
 	public void setSubnucleo(String subnucleo) {
 		this.subnucleo = subnucleo;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
     

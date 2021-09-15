@@ -2,14 +2,6 @@ package com.mycompany.newmark.system;
 
 public class Sistema {
 	
-	private String versao = "3.2.1";
+	public static final String VERSAO = "3.2.2";
 
-	public String getVersao() {
-		return versao;
-	}
-
-	public void setVersao(String versao) {
-		this.versao = versao;
-	}
-		
 }
