@@ -194,7 +194,7 @@ public class Administracao implements Initializable {
 	public void inserirIdentificadorMateria() {
 		Boolean pedidoNaoEstaVazio = !pedido.getText().trim().isEmpty() || pedido != null;
 		Boolean subnucleoFoiSelecionado = !comboBoxNucleo.getSelectionModel().isEmpty();
-		Boolean etiquetaNaoEstaVazia = !identificadorEtiqueta.getText().isEmpty();
+		//Boolean etiquetaNaoEstaVazia = !identificadorEtiqueta.getText().isEmpty();
 		Integer pesoSelecionado;
 
 		if (identificadorMateriaP1.isSelected()) {
@@ -207,7 +207,7 @@ public class Administracao implements Initializable {
 			pesoSelecionado = 4;
 		}
 
-		if (pedidoNaoEstaVazio && subnucleoFoiSelecionado && etiquetaNaoEstaVazia) {
+		if (pedidoNaoEstaVazio && subnucleoFoiSelecionado) {
 			new IdentificadorMateriaDAO().inserirIdentificadorMateria(pedido.getText(), complementoPedido.getText(),
 					comboBoxNucleo.getSelectionModel().getSelectedItem(), pesoSelecionado, 
 					identificadorEtiqueta.getText());

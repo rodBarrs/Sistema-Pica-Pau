@@ -20,6 +20,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import net.sourceforge.htmlunit.corejs.javascript.ast.ThrowStatement;
+
 public class Processo_PeticaoInicial {
 	private String localTriagem = "PET";
 	private Chaves_Configuracao debugPi;
@@ -66,15 +68,15 @@ public class Processo_PeticaoInicial {
 //						}
 //		}
 
+		int x = 4;
 		try {
 			wait.until(ExpectedConditions
-					.presenceOfElementLocated(By.xpath("/html/body/div/div[5]/table/tbody/tr[3]/td[2]")));
-			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[5]/table/tbody/tr[3]/td[2]")).getText();
+					.presenceOfElementLocated(By.xpath("/html/body/div/div[" + x + "]/table/tbody/tr[3]/td[2]")));
+			orgaoJulgador = metodoRodCadu(driver, x);	
 		} catch (Exception e) {
-			wait.until(ExpectedConditions
-					.presenceOfElementLocated(By.xpath("/html/body/div/div[5]/table/tbody/tr[3]/td[2]")));
-			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[5]/table/tbody/tr[3]/td[2]")).getText();
+			orgaoJulgador = metodoRodCadu(driver, x+1);	
 		}
+
 
 		// Devolve o driver para a página
 		driver.switchTo().defaultContent();
@@ -270,11 +272,27 @@ public class Processo_PeticaoInicial {
 
 	}
 
+	private String metodoRodCadu(WebDriver driver, int x) throws Exception {
+		String orgaoJulgador = null;
+		try {
+			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[" + x + "]/table/tbody/tr[3]/td[2]"))
+					.getText();
+			return orgaoJulgador;
+		} catch (Exception e) {
+			x++;
+			if (x < 15) {
+				 return orgaoJulgador = metodoRodCadu(driver, x);
+			} else {
+				throw new Exception("Não achou o órgão julgador");
+			}
+		}
+	}
+
 	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco) {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		// Identifica a matéria e salva na variável resultado
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL", true);
-		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
+		Chaves_Resultado.setPalavraChavePeticao(resultado.getId().toString());
 		String nucleo = resultado.getSubnucleo();
 
 		if (debugPi.isDebugpi()) {

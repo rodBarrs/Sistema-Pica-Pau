@@ -30,23 +30,23 @@ public class Processo_Etiquetar {
 
 		System.out.println("OLHA AQUI: " + preEtiqueta);
 
-//		if (preEtiqueta.contains("CIT")) {
-//			preEtiqueta = "PJE CITAÇÃO - ";
-//		} else if (preEtiqueta.contains("INT")) {
-//			preEtiqueta = "PJE INTIMAÇÃO - ";
-//		} else {
-//			preEtiqueta = "";
-//		}
-//		resultado.setEtiqueta(preEtiqueta + resultado.getEtiqueta());
-
 		if (preEtiqueta.contains("CIT")) {
-			preEtiqueta = "rodcadu PJE CITAÇÃO - ";
+			preEtiqueta = "PJE CITAÇÃO - ";
 		} else if (preEtiqueta.contains("INT")) {
-			preEtiqueta = "rodcadu PJE INTIMAÇÃO - ";
+			preEtiqueta = "PJE INTIMAÇÃO - ";
 		} else {
-			preEtiqueta = "rodcadu -";
+			preEtiqueta = "";
 		}
 		resultado.setEtiqueta(preEtiqueta + resultado.getEtiqueta());
+//
+//		if (preEtiqueta.contains("CIT")) {
+//			preEtiqueta = "rodcadu PJE CITAÇÃO - ";
+//		} else if (preEtiqueta.contains("INT")) {
+//			preEtiqueta = "rodcadu PJE INTIMAÇÃO - ";
+//		} else {
+//			preEtiqueta = "rodcadu -";
+//		}
+//		resultado.setEtiqueta(preEtiqueta + resultado.getEtiqueta());
 
 		///////////////////////
 		
@@ -57,8 +57,13 @@ public class Processo_Etiquetar {
 		driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")).clear();
 		driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea"))
 				.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ PETIÇÃO INICIAL: " + Chaves_Resultado.getSeqPeticao()
-						+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao() + "\nSEQ: "
-						+ resultado.getLocal() + "\nFRASE CHAVE: " + resultado.getPalavraChave());
+						+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao());
+		
+// CASO HAJA TRIAGEM PADRÃO
+//		driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea"))
+//		.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ PETIÇÃO INICIAL: " + Chaves_Resultado.getSeqPeticao()
+//		+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao() + "\nSEQ: "
+//		+ resultado.getLocal() + "\nFRASE CHAVE: " + resultado.getPalavraChave());
 
 		action.sendKeys(Keys.TAB).build().perform();
 		action.sendKeys(Keys.TAB).build().perform();
