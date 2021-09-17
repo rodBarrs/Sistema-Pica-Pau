@@ -30,12 +30,21 @@ public class Processo_Etiquetar {
 
 		System.out.println("OLHA AQUI: " + preEtiqueta);
 
+//		if (preEtiqueta.contains("CIT")) {
+//			preEtiqueta = "PJE CITAÇÃO - ";
+//		} else if (preEtiqueta.contains("INT")) {
+//			preEtiqueta = "PJE INTIMAÇÃO - ";
+//		} else {
+//			preEtiqueta = "";
+//		}
+//		resultado.setEtiqueta(preEtiqueta + resultado.getEtiqueta());
+
 		if (preEtiqueta.contains("CIT")) {
-			preEtiqueta = "PJE CITAÇÃO - ";
+			preEtiqueta = "rodcadu PJE CITAÇÃO - ";
 		} else if (preEtiqueta.contains("INT")) {
-			preEtiqueta = "PJE INTIMAÇÃO - ";
+			preEtiqueta = "rodcadu PJE INTIMAÇÃO - ";
 		} else {
-			preEtiqueta = "";
+			preEtiqueta = "rodcadu -";
 		}
 		resultado.setEtiqueta(preEtiqueta + resultado.getEtiqueta());
 
