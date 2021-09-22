@@ -76,8 +76,8 @@ public class Processo_PeticaoInicial {
 		} catch (Exception e) {
 			orgaoJulgador = metodoRodCadu(driver, x+1);	
 		}
-
-
+		
+		
 		// Devolve o driver para a página
 		driver.switchTo().defaultContent();
 
@@ -159,7 +159,7 @@ public class Processo_PeticaoInicial {
 				}
 
 				Boolean contemPeticaoInicial = cond.verificaCondicao(documentoPeticaoInicial, "PET");
-				if (!contemPeticaoInicial) {
+				if (Boolean.FALSE.equals(contemPeticaoInicial)) {
 
 					int proximaLinha = Integer
 							.parseInt(driver.findElement(By.xpath("//tr[" + (i + 1) + "]/td/div")).getText()) + 1;
@@ -195,7 +195,7 @@ public class Processo_PeticaoInicial {
 									if (cond.verificaCondicao(processo, "PET")) {
 										String posicaoDaPeticao = String.valueOf(j - 1);
 										Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
-										resultado = verificarNucleo(processo, orgaoJulgador, banco);
+										resultado = verificarNucleo(processo, orgaoJulgador, banco);									
 										String nucleo = resultado.getEtiqueta();
 										// resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 										resultado.setDriver(driver);
@@ -291,8 +291,13 @@ public class Processo_PeticaoInicial {
 	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco) {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		// Identifica a matéria e salva na variável resultado
+		
+		System.out.println(localTriagem);
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL", true);
-		Chaves_Resultado.setPalavraChavePeticao(resultado.getId().toString());
+		
+		System.out.println("Resultado ID = " + resultado.getId());
+		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
+		
 		String nucleo = resultado.getSubnucleo();
 
 		if (debugPi.isDebugpi()) {
