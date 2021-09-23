@@ -41,10 +41,10 @@ public class Triagem_Etiquetas {
 				resultSet = stmt.executeQuery();
 				while (resultSet.next()) {
 					String PALAVRACHAVE = resultSet.getString("palavrachave");
-					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);
+					PALAVRACHAVE = tratamento.tratamento(PALAVRACHAVE);				
 					String COMPLEMENTO = resultSet.getString("complemento");
 					COMPLEMENTO = tratamento.tratamento(COMPLEMENTO);
-
+					
 					if (processo.contains(PALAVRACHAVE) && processo.contains(COMPLEMENTO)) {
 						//resultado.setId(resultSet.getInt("id"));
 						resultado.setPalavraChave(resultSet.getString("id"));

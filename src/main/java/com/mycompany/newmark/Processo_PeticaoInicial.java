@@ -47,37 +47,34 @@ public class Processo_PeticaoInicial {
 		WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
 		List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
 
-		// Interação com a capa
 		// Aguarda até que o iframe esteja carregado e então envia o Driver para o
 		// iframe (para que possa interagir com o interior do iframe)
-		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("iframe-myiframe")));
-
-		//
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("html")));
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
+		WebElement capa = driver.findElement(By.id("iframe-myiframe"));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
+		do {
+			try {
+				wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+				driver.findElement(By.tagName("html")).click();
+				break;
+			} catch (Exception e) {
+				//
+			}
+		} while (true);
 		// Aguarda até que o campo "órgão julgador" esteja carregado e então salva seu
 		// conteúdo
+
 		String orgaoJulgador = "";
-
-//		for (int i=4; i <5 ; i++) {
-//			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[3]/td[2]")));
-//						orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[3]/td[2]")).getText();
-//						if (!orgaoJulgador.isEmpty())
-//						{
-//							break;
-//						}
-//		}
-
 		int x = 4;
 		try {
 			wait.until(ExpectedConditions
 					.presenceOfElementLocated(By.xpath("/html/body/div/div[" + x + "]/table/tbody/tr[3]/td[2]")));
-			orgaoJulgador = metodoRodCadu(driver, x);	
+			orgaoJulgador = metodoRodCadu(driver, x);
 		} catch (Exception e) {
-			orgaoJulgador = metodoRodCadu(driver, x+1);	
+			orgaoJulgador = metodoRodCadu(driver, x + 1);
 		}
-		
-		
+
 		// Devolve o driver para a página
 		driver.switchTo().defaultContent();
 
@@ -114,13 +111,15 @@ public class Processo_PeticaoInicial {
 				// CAPA
 				if (movimentacaoTemPDF) {
 
+					pdf.apagarPDF();
+
 					for (int a = 0; a < 2; a++) {
 						if (pdf.PDFBaixado()) {
 							documentoPeticaoInicial = pdf.lerPDF();
 							documentoPeticaoInicial = tratamento.tratamento(documentoPeticaoInicial);
 							break;
 						} else {
-							pdf.apagarPDF();
+
 							driver.findElement(By.xpath("//tr[" + i + "]/td/div")).click();
 
 						}
@@ -195,7 +194,7 @@ public class Processo_PeticaoInicial {
 									if (cond.verificaCondicao(processo, "PET")) {
 										String posicaoDaPeticao = String.valueOf(j - 1);
 										Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
-										resultado = verificarNucleo(processo, orgaoJulgador, banco);									
+										resultado = verificarNucleo(processo, orgaoJulgador, banco);
 										String nucleo = resultado.getEtiqueta();
 										// resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 										resultado.setDriver(driver);
@@ -281,7 +280,7 @@ public class Processo_PeticaoInicial {
 		} catch (Exception e) {
 			x++;
 			if (x < 15) {
-				 return orgaoJulgador = metodoRodCadu(driver, x);
+				return orgaoJulgador = metodoRodCadu(driver, x);
 			} else {
 				throw new Exception("Não achou o órgão julgador");
 			}
@@ -291,13 +290,13 @@ public class Processo_PeticaoInicial {
 	private Chaves_Resultado verificarNucleo(String processo, String orgaoJulgador, String banco) {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		// Identifica a matéria e salva na variável resultado
-		
+
 		System.out.println(localTriagem);
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL", true);
-		
+
 		System.out.println("Resultado ID = " + resultado.getId());
 		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
-		
+
 		String nucleo = resultado.getSubnucleo();
 
 		if (debugPi.isDebugpi()) {
