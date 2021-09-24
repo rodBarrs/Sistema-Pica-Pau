@@ -70,9 +70,9 @@ public class Processo_PeticaoInicial {
 		try {
 			wait.until(ExpectedConditions
 					.presenceOfElementLocated(By.xpath("/html/body/div/div[" + x + "]/table/tbody/tr[3]/td[2]")));
-			orgaoJulgador = metodoRodCadu(driver, x);
+			orgaoJulgador = orgaoNaDiv(x, driver);
 		} catch (Exception e) {
-			orgaoJulgador = metodoRodCadu(driver, x + 1);
+			orgaoJulgador = orgaoNaDiv(x + 1, driver);
 		}
 
 		// Devolve o driver para a página
@@ -271,7 +271,7 @@ public class Processo_PeticaoInicial {
 
 	}
 
-	private String metodoRodCadu(WebDriver driver, int x) throws Exception {
+	private String orgaoNaDiv(int x, WebDriver driver) throws Exception {
 		String orgaoJulgador = null;
 		try {
 			orgaoJulgador = driver.findElement(By.xpath("/html/body/div/div[" + x + "]/table/tbody/tr[3]/td[2]"))
@@ -280,7 +280,7 @@ public class Processo_PeticaoInicial {
 		} catch (Exception e) {
 			x++;
 			if (x < 15) {
-				return orgaoJulgador = metodoRodCadu(driver, x);
+				return orgaoJulgador = orgaoNaDiv(x, driver);
 			} else {
 				throw new Exception("Não achou o órgão julgador");
 			}
@@ -309,7 +309,7 @@ public class Processo_PeticaoInicial {
 		Boolean SSEASValido = resultado.getSubnucleo().contains("ER-SEAS")
 				&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL")
 						|| orgaoJulgador.contains("JEF"));
-		Boolean SBIValido = resultado.getSubnucleo().contains("ER-SBI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
+		Boolean SBIValido = resultado.getSubnucleo().contains("ETR-BI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
 		Boolean TRUValido = resultado.getSubnucleo().contains("FEDERAL");
 		Boolean naoFoiPossivel = resultado.getSubnucleo().contains("NÃO FOI POSSÍVEL");
 
