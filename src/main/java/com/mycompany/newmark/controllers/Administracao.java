@@ -97,7 +97,7 @@ public class Administracao implements Initializable {
 
 	public void inicializarMenuPeticaoInicial() {
 		/* Inicializa a tabela Identificador de Matérias */
-		ObservableList<String> subnucleos = FXCollections.observableArrayList("ER-SEAS", "ER-BI", "TRU");
+		ObservableList<String> subnucleos = FXCollections.observableArrayList("ER-SEAS", "ETR-BI", "ER-TRU");
 		comboBoxNucleo.setItems(subnucleos);
 
 		List<Chaves_Banco> listaIdentificadoresMateria = new IdentificadorMateriaDAO().getTabelaIdentificadorMateria();

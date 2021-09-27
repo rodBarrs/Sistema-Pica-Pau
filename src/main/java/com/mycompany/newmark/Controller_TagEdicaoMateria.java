@@ -123,9 +123,9 @@ public class Controller_TagEdicaoMateria implements Initializable {
     public ObservableList<String> itemComboBox() {
     	ObservableList<String> listinha = null;
 		List<String> lista = new ArrayList<>();
-		lista.add("SSEAS");
-		lista.add("SBI");
-		lista.add("SCC");
+		lista.add("ER-SEAS");
+		lista.add("ETR-BI");
+		lista.add("ER-TRU");
 		listinha = FXCollections.observableArrayList(lista);
 		return listinha;
     }

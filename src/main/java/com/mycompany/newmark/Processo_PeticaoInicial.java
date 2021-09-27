@@ -318,7 +318,7 @@ public class Processo_PeticaoInicial {
 			return resultado;
 		} else if (TRUValido) {
 			// TODO concatenar o subnucleo antes do valor da etiqueta
-			resultado.setSubnucleo("TRU");
+			resultado.setSubnucleo("ER-TRU");
 			return resultado;
 		}
 		resultado.setSubnucleo("PREV/LOCAL");
