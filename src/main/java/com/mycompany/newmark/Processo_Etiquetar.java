@@ -28,8 +28,6 @@ public class Processo_Etiquetar {
 		///////////////////////
 		String preEtiqueta = driver.findElement(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")).getAttribute("value");
 
-		System.out.println("OLHA AQUI: " + preEtiqueta);
-
 		if (preEtiqueta.contains("CIT")) {
 			preEtiqueta = "PJE CITAÇÃO - ";
 		} else if (preEtiqueta.contains("INT")) {

@@ -194,7 +194,21 @@ public class Processo_PeticaoInicial {
 									if (cond.verificaCondicao(processo, "PET")) {
 										String posicaoDaPeticao = String.valueOf(j - 1);
 										Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
+										
+										
+										
+										
+										
+										
 										resultado = verificarNucleo(processo, orgaoJulgador, banco);
+										System.out.println("Retorno 1 - "+resultado.getSubnucleo());
+										
+										
+										
+										
+										
+										
+										
 										String nucleo = resultado.getEtiqueta();
 										// resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 										resultado.setDriver(driver);
@@ -238,7 +252,20 @@ public class Processo_PeticaoInicial {
 							if (contemPeticaoInicial) {
 								String posicaoDaPeticao = String.valueOf(j - 1);
 								Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
+								
+								
+								
+								
+								
+								
 								resultado = verificarNucleo(processo, orgaoJulgador, banco);
+								System.out.println("Retorno 2 - "+resultado.getSubnucleo());
+								
+								
+								
+								
+								
+								
 								String nucleo = resultado.getEtiqueta();
 								// resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 								resultado.setDriver(driver);
@@ -255,7 +282,20 @@ public class Processo_PeticaoInicial {
 				} else {
 					String posicaoDaPeticao = String.valueOf(i - 1);
 					Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
+					
+					
+					
+					
+					
+					
 					resultado = verificarNucleo(documentoPeticaoInicial, orgaoJulgador, banco);
+					System.out.println("Retorno 3 - "+resultado.getSubnucleo());
+					
+					
+					
+					
+					
+					System.out.println("");
 					// resultado = triagemPadrao(driver, wait, config, banco, i, false,
 					// resultado.getEtiqueta());
 					resultado.setDriver(driver);
@@ -291,10 +331,7 @@ public class Processo_PeticaoInicial {
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		// Identifica a matéria e salva na variável resultado
 
-		System.out.println(localTriagem);
 		Chaves_Resultado resultado = triagem.triarBanco(processo, banco, localTriagem, "PETIÇÃO INCIAL", true);
-
-		System.out.println("Resultado ID = " + resultado.getId());
 		Chaves_Resultado.setPalavraChavePeticao(resultado.getPalavraChave());
 
 		String nucleo = resultado.getSubnucleo();
@@ -309,20 +346,46 @@ public class Processo_PeticaoInicial {
 		Boolean SSEASValido = resultado.getSubnucleo().contains("ER-SEAS")
 				&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL")
 						|| orgaoJulgador.contains("JEF"));
-		Boolean SBIValido = resultado.getSubnucleo().contains("ETR-BI") && (orgaoJulgador.contains("JUIZADO ESPECIAL"));
-		Boolean TRUValido = resultado.getSubnucleo().contains("FEDERAL");
-		Boolean naoFoiPossivel = resultado.getSubnucleo().contains("NÃO FOI POSSÍVEL");
+		Boolean SBIValido = resultado.getSubnucleo().toUpperCase().contains("ETR-BI") && (orgaoJulgador.toUpperCase().contains("JUIZADO ESPECIAL"));
+		Boolean TRUValido = orgaoJulgador.toUpperCase().contains("FEDERAL");
+		/// NÃO SE SABE SE O CORRETO É O ORGAO OU O SUBNUCLEO
+		Boolean naoFoiPossivel = resultado.getSubnucleo().toUpperCase().contains("NÃO FOI POSSÍVEL");
 
+		System.out.println("Subnúcleo - " + resultado.getSubnucleo());
+		System.out.println("Órgão Julgador - " + orgaoJulgador);
+		
+		System.out.println("-----------------------------------------");
+		
+		System.out.println("SSEASValido - "+SSEASValido);
+		System.out.println("SBISValido - "+SBIValido);
+		System.out.println("TRUValido - "+TRUValido);
+		System.out.println("Não foi possível - "+ naoFoiPossivel);
+		
+		System.out.println("-----------------------------------------");
+		
 		if (SSEASValido || SBIValido || naoFoiPossivel) {
-			// TODO concatenar o subnucleo antes do valor da etiqueta
+			System.out.println("Entrou na condição 1!");
+			System.out.println("Subnúcleo colocado - " + resultado.getSubnucleo());
 			return resultado;
 		} else if (TRUValido) {
-			// TODO concatenar o subnucleo antes do valor da etiqueta
+			System.out.println("Entrou na condição 2");
 			resultado.setSubnucleo("ER-TRU");
+			atualizarEtiqueta(resultado);
 			return resultado;
 		}
+		System.out.println("Entrou na condição 3");
 		resultado.setSubnucleo("PREV/LOCAL");
+		atualizarEtiqueta(resultado);
 		return resultado;
+	}
+
+	private void atualizarEtiqueta(Chaves_Resultado resultado) {
+		if (resultado.getEtiqueta().isEmpty()) {
+			resultado.setEtiqueta(resultado.getSubnucleo());
+		} else {
+			resultado.setEtiqueta(resultado.getSubnucleo() + "/" + resultado.getEtiqueta());
+		}
+		System.out.println("Subnúcleo colocado - " + resultado.getSubnucleo());
 	}
 
 	/*

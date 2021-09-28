@@ -99,6 +99,7 @@ public class IdentificadorMateriaDAO {
 				chave.setPALAVRACHAVE(rs.getString("palavrachave"));
 				chave.setCOMPLEMENTO(rs.getString("complemento"));
 				chave.setETIQUETA(rs.getString("etiqueta"));
+				chave.setSubnucleo(rs.getString("subnucleo"));
 				chave.setPRIORIDADE(rs.getString("prioridade"));
 				chaves.add(chave);
 			}
@@ -127,6 +128,7 @@ public class IdentificadorMateriaDAO {
 				chave.setPALAVRACHAVE(rs.getString("palavrachave"));
 				chave.setCOMPLEMENTO(rs.getString("complemento"));
 				chave.setETIQUETA(rs.getString("etiqueta"));
+				chave.setSubnucleo(rs.getString("subnucleo"));
 				chave.setPRIORIDADE(rs.getString("prioridade"));
 				chaves.add(chave);
 			}
@@ -138,9 +140,9 @@ public class IdentificadorMateriaDAO {
 		
 	}
 	
-	public void atualizarIndetificadorMateria(Integer id, String palavrachave, String complemento, String etiqueta, String prioridade) {
+	public void atualizarIndetificadorMateria(Integer id, String palavrachave, String complemento, String etiqueta, String subnucleo, String prioridade) {
 		
-		final String SQL = "UPDATE identificador_materia SET palavrachave = ?, complemento = ?, etiqueta = ?, prioridade = ? WHERE id = ?";
+		final String SQL = "UPDATE identificador_materia SET palavrachave = ?, complemento = ?, etiqueta = ?, subnucleo = ?, prioridade = ? WHERE id = ?";
 		
 		try (Connection connection = new ConnectionFactory().obterConexao();
 				PreparedStatement stmt = connection.prepareStatement(SQL)) {
@@ -148,8 +150,9 @@ public class IdentificadorMateriaDAO {
 			stmt.setString(1, palavrachave);
 			stmt.setString(2, complemento);
 			stmt.setString(3, etiqueta);
-			stmt.setString(4, prioridade);
-			stmt.setInt(5, id);
+			stmt.setString(4, subnucleo);
+			stmt.setString(5, prioridade);			
+			stmt.setInt(6, id);
 			stmt.executeUpdate();
 			new Aviso().aviso("Item atualizado");
 		} catch (Exception e) {

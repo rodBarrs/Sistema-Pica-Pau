@@ -32,7 +32,7 @@ public class Controller_TagEdicaoMateria implements Initializable {
     }
     
     @FXML
-    JFXTextField PalavraChave, Complemento;
+    JFXTextField PalavraChave, Complemento, Etiqueta;
     @FXML
     JFXComboBox<String> ComboBoxNucleo;
     @FXML
@@ -47,6 +47,7 @@ public class Controller_TagEdicaoMateria implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         PalavraChave.setText(chave.getPALAVRACHAVE());
         Complemento.setText(chave.getCOMPLEMENTO());
+        Etiqueta.setText(chave.getETIQUETA());
         
         switch (chave.getPRIORIDADE()) {
         case "1":
@@ -65,7 +66,7 @@ public class Controller_TagEdicaoMateria implements Initializable {
         
         ObservableList<String> items = FXCollections.observableArrayList(itemComboBox());
         ComboBoxNucleo.setItems(items);
-        ComboBoxNucleo.getSelectionModel().select(chave.getETIQUETA());
+        ComboBoxNucleo.getSelectionModel().select(chave.getSubnucleo());
     }
     
     @FXML
@@ -75,7 +76,8 @@ public class Controller_TagEdicaoMateria implements Initializable {
     	System.out.println(id);
         String palavraChave = PalavraChave.getText().toUpperCase().replace("'", "").replace("´", "");
         String complemento = Complemento.getText().toUpperCase().replace("'", "").replace("´", "");
-        String etiqueta = ComboBoxNucleo.getSelectionModel().getSelectedItem().toString();
+        String etiqueta = Etiqueta.getText().toUpperCase().replace("'", "").replace("´", "");
+        String subnucleo = ComboBoxNucleo.getSelectionModel().getSelectedItem().toString();
         String prioridade = "";
         
         if(P1.isSelected()) prioridade = "1"; 
@@ -89,13 +91,13 @@ public class Controller_TagEdicaoMateria implements Initializable {
             textoAviso = "O campo \"Frase Chave\" não pode ser vazio!";
             aviso.aviso(textoAviso);
             return false;
-        } else if((etiqueta.equals(null)) || etiqueta.equals("") || etiqueta.equals(" ")){
+        } else if((subnucleo.equals(null)) || subnucleo.equals("") || subnucleo.equals(" ")){
             textoAviso = "O campo \"Etiqueta\" não pode ser vazio!";
             aviso.aviso(textoAviso);
             return false;
         } else {         
             //Armazena a qual banco de dados pertence a etiqueta alterada
-        	new IdentificadorMateriaDAO().atualizarIndetificadorMateria(id, palavraChave, complemento, etiqueta, prioridade);
+        	new IdentificadorMateriaDAO().atualizarIndetificadorMateria(id, palavraChave, complemento, etiqueta, subnucleo, prioridade);
             
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();

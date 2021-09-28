@@ -49,13 +49,15 @@ public class Triagem_Etiquetas {
 						//resultado.setId(resultSet.getInt("id"));
 						resultado.setPalavraChave(resultSet.getString("id"));
 						resultado.setSubnucleo(resultSet.getString("subnucleo"));
+						resultado.setEtiqueta(resultSet.getString("etiqueta"));
 
-						resultSet.getString("etiqueta");
-						if (resultSet.wasNull()) {
-							resultado.setEtiqueta(resultSet.getString("subnucleo"));
-						} else {							
-							resultado.setEtiqueta(resultSet.getString("subnucleo") + "/" + resultSet.getString("etiqueta"));
-						}
+//						resultSet.getString("etiqueta");
+//						if (resultSet.wasNull()) {
+//							resultado.setEtiqueta(resultSet.getString("subnucleo"));
+//						} else {							
+//							resultado.setEtiqueta(resultSet.getString("subnucleo") + "/" + resultSet.getString("etiqueta"));
+//						}
+						
 						connection.close();
 						return resultado;
 					}

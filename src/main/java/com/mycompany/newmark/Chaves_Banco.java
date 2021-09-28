@@ -12,17 +12,17 @@ public class Chaves_Banco {
 	private String COMPLEMENTO = null;
 	private String ETIQUETA = null;
 	private String TIPO = null;
-	private String subnucleo = null;
+	private String SUBNUCLEO= null;
 	private String PRIORIDADE = null;
 	private String BANCO = null;
 	private Integer ID;
 
 	public String getSubnucleo() {
-		return this.subnucleo;
+		return this.SUBNUCLEO;
 	}
 	
 	public void  setSubnucleo(String subnucleo) {
-		this.subnucleo = subnucleo;
+		this.SUBNUCLEO = subnucleo;
 	}
 	
 	public Integer getID() {

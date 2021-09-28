@@ -48,10 +48,11 @@ import javafx.stage.StageStyle;
 public class Administracao implements Initializable {
 
 	@FXML
-	private JFXTextField identificadorEtiqueta, numeroEtiquetas, numeroTipoMovimentacao, numeroIdentificadorMateria, numeroPeticaoInicial,
-			pedido, complementoPedido, buscaIdentificadorMateriaID, buscaIdentificadorMateria,
+	private JFXTextField identificadorEtiqueta, numeroEtiquetas, numeroTipoMovimentacao, numeroIdentificadorMateria,
+			numeroPeticaoInicial, pedido, complementoPedido, buscaIdentificadorMateriaID, buscaIdentificadorMateria,
 			identificadorPeticaoInicial, pesquisaIdentificador, pesquisaEtiqueta, pesquisaEtiquetaId, palavraChave,
-			complemento, etiqueta, buscaTipoMovimentacao, tipoMovimentacao, textoSigla, textoBanco, textoNomeUsuario, textoSenhaUsuarioVisivel;
+			complemento, etiqueta, buscaTipoMovimentacao, tipoMovimentacao, textoSigla, textoBanco, textoNomeUsuario,
+			textoSenhaUsuarioVisivel;
 	@FXML
 	private JFXPasswordField textoSenhaUsuario;
 	@FXML
@@ -70,7 +71,8 @@ public class Administracao implements Initializable {
 	@FXML
 	private TableColumn<Chaves_Banco, String> identificadorMateriaID, identificadorMateriaPedido,
 			identificadorMateriaComplemento, identificadorMateriaSubnucleo, identificadorMateriaPeso, etiquetaID,
-			etiquetaFraseChave, etiquetaComplemento, etiquetaEtiqueta, etiquetaPeso, etiquetaTipo, identificadorMateriaEtiqueta;
+			etiquetaFraseChave, etiquetaComplemento, etiquetaEtiqueta, etiquetaPeso, etiquetaTipo,
+			identificadorMateriaEtiqueta;
 	@FXML
 	private TableColumn<Chaves_Condicao, String> colunaTipoMovimento, colunaIdentificadorPeticao,
 			colunaIdentificadorPeticaoInicial;
@@ -83,7 +85,6 @@ public class Administracao implements Initializable {
 	private JFXButton inserirIdentificadorMateria, btnAtualizarUsuario;
 	@FXML
 	private JFXCheckBox exibirSenha;
-	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -106,10 +107,11 @@ public class Administracao implements Initializable {
 		identificadorMateriaPedido.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 		identificadorMateriaComplemento
 				.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
-		identificadorMateriaSubnucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("subnucleo"));
 		identificadorMateriaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
+		identificadorMateriaSubnucleo.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("subnucleo"));
 		identificadorMateriaEtiqueta.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
-		ObservableList<Chaves_Banco> identificadoresDeMateria = FXCollections.observableArrayList(listaIdentificadoresMateria);
+		ObservableList<Chaves_Banco> identificadoresDeMateria = FXCollections
+				.observableArrayList(listaIdentificadoresMateria);
 		tabelaIdentificadorMateria.setItems(identificadoresDeMateria);
 		numeroIdentificadorMateria.setText(String.valueOf(tabelaIdentificadorMateria.getItems().size()));
 
@@ -194,7 +196,7 @@ public class Administracao implements Initializable {
 	public void inserirIdentificadorMateria() {
 		Boolean pedidoNaoEstaVazio = !pedido.getText().trim().isEmpty() || pedido != null;
 		Boolean subnucleoFoiSelecionado = !comboBoxNucleo.getSelectionModel().isEmpty();
-		//Boolean etiquetaNaoEstaVazia = !identificadorEtiqueta.getText().isEmpty();
+		// Boolean etiquetaNaoEstaVazia = !identificadorEtiqueta.getText().isEmpty();
 		Integer pesoSelecionado;
 
 		if (identificadorMateriaP1.isSelected()) {
@@ -207,10 +209,11 @@ public class Administracao implements Initializable {
 			pesoSelecionado = 4;
 		}
 
+
 		if (pedidoNaoEstaVazio && subnucleoFoiSelecionado) {
-			new IdentificadorMateriaDAO().inserirIdentificadorMateria(pedido.getText(), complementoPedido.getText(),
-					comboBoxNucleo.getSelectionModel().getSelectedItem(), pesoSelecionado, 
-					identificadorEtiqueta.getText());
+			new IdentificadorMateriaDAO().inserirIdentificadorMateria(pedido.getText().toUpperCase().replace("'", "").replace("´", ""), complementoPedido.getText().toUpperCase().replace("'", "").replace("´", ""),
+					comboBoxNucleo.getSelectionModel().getSelectedItem(), pesoSelecionado,
+					identificadorEtiqueta.getText().toUpperCase().replace("'", "").replace("´", ""));
 			inicializarMenuPeticaoInicial();
 		} else {
 			new Aviso().aviso("Revise os campos preenchidos");
@@ -260,7 +263,8 @@ public class Administracao implements Initializable {
 	public void selecionarIdentificadorMateria() {
 		pedido.setText(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getPALAVRACHAVE());
 		complementoPedido.setText(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getCOMPLEMENTO());
-		comboBoxNucleo.getSelectionModel().select(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getSubnucleo());
+		comboBoxNucleo.getSelectionModel()
+				.select(tabelaIdentificadorMateria.getSelectionModel().getSelectedItem().getSubnucleo());
 	}
 
 	public void buscaIDIdentificadorMateria() {
@@ -275,6 +279,8 @@ public class Administracao implements Initializable {
 			identificadorMateriaComplemento
 					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
 			identificadorMateriaSubnucleo
+					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("subnucleo"));
+			identificadorMateriaEtiqueta
 					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
 			identificadorMateriaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
 			ObservableList<Chaves_Banco> identificadoresDeMateria = FXCollections
@@ -291,14 +297,17 @@ public class Administracao implements Initializable {
 		} else {
 			List<Chaves_Banco> listaIdentificadoresMateria = new IdentificadorMateriaDAO()
 					.buscaIdentificador(textoBusca);
+
 			identificadorMateriaID.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ID"));
 			identificadorMateriaPedido
 					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PALAVRACHAVE"));
 			identificadorMateriaComplemento
 					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("COMPLEMENTO"));
-			identificadorMateriaSubnucleo
-					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
 			identificadorMateriaPeso.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("PRIORIDADE"));
+			identificadorMateriaSubnucleo
+					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("subnucleo"));
+			identificadorMateriaEtiqueta
+					.setCellValueFactory(new PropertyValueFactory<Chaves_Banco, String>("ETIQUETA"));
 			ObservableList<Chaves_Banco> identificadoresDeMateria = FXCollections
 					.observableArrayList(listaIdentificadoresMateria);
 			tabelaIdentificadorMateria.setItems(identificadoresDeMateria);
@@ -618,8 +627,8 @@ public class Administracao implements Initializable {
 		String antigoNome = tabelaUsuarios.getSelectionModel().getSelectedItem().getNome();
 		String nome = textoNomeUsuario.getText();
 		String senha = "";
-		
-		if(exibirSenha.isSelected()) {
+
+		if (exibirSenha.isSelected()) {
 			senha = textoSenhaUsuarioVisivel.getText();
 		} else {
 			senha = textoSenhaUsuario.getText();
@@ -638,9 +647,9 @@ public class Administracao implements Initializable {
 		textoNomeUsuario.setText(tabelaUsuarios.getSelectionModel().getSelectedItem().getNome());
 		textoSenhaUsuario.setText(tabelaUsuarios.getSelectionModel().getSelectedItem().getSenha());
 	}
-	
+
 	public void toggleSenha() {
-		if(textoSenhaUsuario.isVisible()) {
+		if (textoSenhaUsuario.isVisible()) {
 			textoSenhaUsuarioVisivel.setVisible(true);
 			textoSenhaUsuarioVisivel.setText(textoSenhaUsuario.getText());
 			textoSenhaUsuario.setVisible(false);
