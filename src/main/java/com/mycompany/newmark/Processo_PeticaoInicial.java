@@ -366,6 +366,7 @@ public class Processo_PeticaoInicial {
 		if (SSEASValido || SBIValido || naoFoiPossivel) {
 			System.out.println("Entrou na condição 1!");
 			System.out.println("Subnúcleo colocado - " + resultado.getSubnucleo());
+			atualizarEtiqueta(resultado);
 			return resultado;
 		} else if (TRUValido) {
 			System.out.println("Entrou na condição 2");

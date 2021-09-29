@@ -2,7 +2,7 @@ package com.mycompany.newmark.system;
 
 public class Sistema {
 
-	public static final String VERSAO = "3.3.1";
+	public static final String VERSAO = "3.3.3";
 	
 	/* 3.3.2
 	 * 
@@ -23,6 +23,14 @@ public class Sistema {
 	 * triarBanco |Processo_PetiçãoInicial - verificarNucleo
 	 * 
 	 */
+	
+	/* 3.3.3 
+	 * 
+	 * Correção da exibição da concatenação da etiqueta com o subnúcleo.
+	 * |Processo_PetiçãoInicial - verificarNucleo
+	 * 
+	 */
 
+	
 
 }
