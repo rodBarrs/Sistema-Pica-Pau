@@ -2,9 +2,10 @@ package com.mycompany.newmark.system;
 
 public class Sistema {
 
-	public static final String VERSAO = "3.3.3";
-	
-	/* 3.3.2
+	public static final String VERSAO = "3.3.3.2";
+
+	/*
+	 * 3.3.2
 	 * 
 	 * Correção da pesquisa do pedido que exibia a informação do campo "Etiqueta" na
 	 * coluna "Subnúcleo". |Administracao - BuscaID |Chaves_Banco String SUBNUCLEO
@@ -23,14 +24,17 @@ public class Sistema {
 	 * triarBanco |Processo_PetiçãoInicial - verificarNucleo
 	 * 
 	 */
-	
-	/* 3.3.3 
+
+	/*
+	 * 3.3.3
 	 * 
 	 * Correção da exibição da concatenação da etiqueta com o subnúcleo.
 	 * |Processo_PetiçãoInicial - verificarNucleo
 	 * 
+	 * .2
+	 * Remoção da exibição da concatenação do subnúcleo quando não se é possível
+	 * localizar a palavra chave
+	 * 
 	 */
-
-	
 
 }
