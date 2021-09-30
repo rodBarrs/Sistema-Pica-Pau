@@ -349,7 +349,7 @@ public class Processo_PeticaoInicial {
 		Boolean SBIValido = resultado.getSubnucleo().toUpperCase().contains("ETR-BI") && (orgaoJulgador.toUpperCase().contains("JUIZADO ESPECIAL"));
 		Boolean TRUValido = orgaoJulgador.toUpperCase().contains("FEDERAL");
 		/// NÃO SE SABE SE O CORRETO É O ORGAO OU O SUBNUCLEO
-		Boolean naoFoiPossivel = resultado.getSubnucleo().toUpperCase().contains("NÃO FOI POSSÍVEL");
+		Boolean naoFoiPossivel = resultado.getEtiqueta().toUpperCase().contains("NÃO FOI POSSÍVEL");
 
 		System.out.println("Subnúcleo - " + resultado.getSubnucleo());
 		System.out.println("Órgão Julgador - " + orgaoJulgador);
