@@ -19,11 +19,8 @@ public class Processo_Etiquetar {
 	public void etiquetar(WebDriver driver, WebDriverWait wait, Chaves_Resultado resultado)
 			throws InterruptedException {
 		Actions action = new Actions(driver);
-		action.doubleClick(driver.findElement(By.xpath("//td[5]/div"))).build().perform();
-		wait.until(ExpectedConditions
-				.elementToBeClickable(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")));
-		wait.until(
-				ExpectedConditions.elementToBeClickable(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")));
+		int i = 4;
+		cliqueTabela(driver, wait, action, i);
 
 		///////////////////////
 		String preEtiqueta = driver.findElement(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")).getAttribute("value");
@@ -66,5 +63,17 @@ public class Processo_Etiquetar {
 		action.sendKeys(Keys.TAB).build().perform();
 		action.sendKeys(Keys.TAB).build().perform();
 		action.sendKeys(Keys.ENTER).build().perform();
+	}
+
+	public void cliqueTabela(WebDriver driver, WebDriverWait wait, Actions action, int i) {
+		try {
+			action.doubleClick(driver.findElement(By.xpath("//td["+i+"]/div"))).build().perform();
+			wait.until(ExpectedConditions
+					.elementToBeClickable(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")));
+		} catch (Exception e) {
+			i++;
+			cliqueTabela(driver, wait, action, i);
+		}
+
 	}
 }
