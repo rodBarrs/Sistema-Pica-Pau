@@ -89,7 +89,7 @@ public class Processo_PeticaoInicial {
 				.contains("x-tree-expander");
 		// Itera a lista de movimentação procurando por "Petição Inicial" ou uma pasta
 		// no index 1
-		for (int i = 2; i < listaMovimentacao.size(); i++) {
+		for (int i = listaMovimentacao.size(); i > 2 ; i--) {
 
 			// Providência Jurídica é o título da movimentação
 			Boolean existePeticaoInicial = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
