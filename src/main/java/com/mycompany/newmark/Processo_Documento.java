@@ -29,7 +29,7 @@ public class Processo_Documento {
 			throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
 		LeituraPDF pdf = new LeituraPDF();
 		Chaves_Resultado resultado = new Chaves_Resultado();
-		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
+		//resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
 		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
 		VerificarData verificarData = new VerificarData();
 		Triagem_Condicao condicao = new Triagem_Condicao();

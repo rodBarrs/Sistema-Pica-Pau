@@ -1,12 +1,14 @@
 /**
  * @author Felipe Marques, Gabriel Ramos, Rafael Henrique e Adriano Vilhena
- *
  */
 package com.mycompany.newmark;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class Processo_PeticaoInicial {
 	private Chaves_Configuracao debugPi;
 
 	public Chaves_Resultado peticaoInicial(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config,
-			String banco, Chaves_Configuracao debugPi) throws Exception {
+										   String banco, Chaves_Configuracao debugPi) throws Exception {
 		Tratamento tratamento = new Tratamento();
 		Triagem_Condicao cond = new Triagem_Condicao();
 		Chaves_Resultado resultado = new Chaves_Resultado();
@@ -89,7 +91,7 @@ public class Processo_PeticaoInicial {
 				.contains("x-tree-expander");
 		// Itera a lista de movimentação procurando por "Petição Inicial" ou uma pasta
 		// no index 1
-		for (int i = listaMovimentacao.size(); i > 2 ; i--) {
+		for (int i = listaMovimentacao.size() - 1; i > 2; i--) {
 
 			// Providência Jurídica é o título da movimentação
 			Boolean existePeticaoInicial = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
@@ -167,7 +169,7 @@ public class Processo_PeticaoInicial {
 					driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).click();
 
 					// Itera pela pasta
-					for (int j = i + 1; j < proximaLinha; j++) {
+					for (int j = i + 1; j < proximaLinha; j--) {
 						pdf.apagarPDF();
 						wait.until(ExpectedConditions
 								.presenceOfElementLocated(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")));
@@ -194,23 +196,14 @@ public class Processo_PeticaoInicial {
 									if (cond.verificaCondicao(processo, "PET")) {
 										String posicaoDaPeticao = String.valueOf(j - 1);
 										Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
-										
-										
-										
-										
-										
-										
+
+
 										resultado = verificarNucleo(processo, orgaoJulgador, banco);
-										System.out.println("Retorno 1 - "+resultado.getSubnucleo());
-										
-										
-										
-										
-										
-										
-										
+										System.out.println("Retorno 1 - " + resultado.getSubnucleo());
+
+
 										String nucleo = resultado.getEtiqueta();
-										// resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
+										 resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 										resultado.setDriver(driver);
 										return resultado;
 									}
@@ -252,22 +245,14 @@ public class Processo_PeticaoInicial {
 							if (contemPeticaoInicial) {
 								String posicaoDaPeticao = String.valueOf(j - 1);
 								Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
-								
-								
-								
-								
-								
-								
+
+
 								resultado = verificarNucleo(processo, orgaoJulgador, banco);
-								System.out.println("Retorno 2 - "+resultado.getSubnucleo());
-								
-								
-								
-								
-								
-								
+								System.out.println("Retorno 2 - " + resultado.getSubnucleo());
+
+
 								String nucleo = resultado.getEtiqueta();
-								// resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
+								 resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 								resultado.setDriver(driver);
 								return resultado;
 							}
@@ -275,29 +260,22 @@ public class Processo_PeticaoInicial {
 					}
 
 					Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
-					// resultado = triagemPadrao(driver, wait, config, banco, i, true, "");
+					 resultado = triagemPadrao(driver, wait, config, banco, i, true, "");
 					resultado.setDriver(driver);
 					return resultado;
 
 				} else {
 					String posicaoDaPeticao = String.valueOf(i - 1);
 					Chaves_Resultado.setSeqPeticao("(" + posicaoDaPeticao + ")");
-					
-					
-					
-					
-					
-					
+
+
 					resultado = verificarNucleo(documentoPeticaoInicial, orgaoJulgador, banco);
-					System.out.println("Retorno 3 - "+resultado.getSubnucleo());
-					
-					
-					
-					
-					
+					System.out.println("Retorno 3 - " + resultado.getSubnucleo());
+
+
 					System.out.println("");
-					// resultado = triagemPadrao(driver, wait, config, banco, i, false,
-					// resultado.getEtiqueta());
+					 resultado = triagemPadrao(driver, wait, config, banco, i, false,
+					 resultado.getEtiqueta());
 					resultado.setDriver(driver);
 					return resultado;
 				}
@@ -305,7 +283,7 @@ public class Processo_PeticaoInicial {
 			}
 		}
 		Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
-		// resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");
+		resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");
 		resultado.setDriver(driver);
 		return resultado;
 
@@ -345,7 +323,7 @@ public class Processo_PeticaoInicial {
 		// Valida Subnúcleo
 		Boolean SSEASValido = resultado.getSubnucleo().contains("ER-SEAS")
 				&& (orgaoJulgador.contains("JUIZADO ESPECIAL") || orgaoJulgador.contains("VARA FEDERAL")
-						|| orgaoJulgador.contains("JEF"));
+				|| orgaoJulgador.contains("JEF"));
 		Boolean SBIValido = resultado.getSubnucleo().toUpperCase().contains("ETR-BI") && (orgaoJulgador.toUpperCase().contains("JUIZADO ESPECIAL"));
 		Boolean TRUValido = orgaoJulgador.toUpperCase().contains("FEDERAL");
 		/// NÃO SE SABE SE O CORRETO É O ORGAO OU O SUBNUCLEO
@@ -353,21 +331,20 @@ public class Processo_PeticaoInicial {
 
 		System.out.println("Subnúcleo - " + resultado.getSubnucleo());
 		System.out.println("Órgão Julgador - " + orgaoJulgador);
-		
+
 		System.out.println("-----------------------------------------");
-		
-		System.out.println("SSEASValido - "+SSEASValido);
-		System.out.println("SBISValido - "+SBIValido);
-		System.out.println("TRUValido - "+TRUValido);
-		System.out.println("Não foi possível - "+ naoFoiPossivel);
-		
+
+		System.out.println("SSEASValido - " + SSEASValido);
+		System.out.println("SBISValido - " + SBIValido);
+		System.out.println("TRUValido - " + TRUValido);
+		System.out.println("Não foi possível - " + naoFoiPossivel);
+
 		System.out.println("-----------------------------------------");
-		
+
 		if (naoFoiPossivel) {
 			System.out.println("Entrou na condição 0!");
 			return resultado;
-		}
-		else if (SSEASValido || SBIValido) {
+		} else if (SSEASValido || SBIValido) {
 			System.out.println("Entrou na condição 1!");
 			System.out.println("Subnúcleo colocado - " + resultado.getSubnucleo());
 			atualizarEtiqueta(resultado);
@@ -393,43 +370,71 @@ public class Processo_PeticaoInicial {
 		System.out.println("Subnúcleo colocado - " + resultado.getSubnucleo());
 	}
 
-	/*
-	 * @Deprecated private Chaves_Resultado triagemPadrao(WebDriver driver,
-	 * WebDriverWait wait, Chaves_Configuracao configs, String banco, int
-	 * indexPeticao, boolean dentroDaPasta, String nucleo) throws
-	 * InterruptedException, SQLException, UnsupportedFlavorException, IOException {
-	 * 
-	 * Chaves_Resultado resultado = new Chaves_Resultado();
-	 * 
-	 * if (dentroDaPasta) { try { driver.findElement(By.xpath("//tr[" + indexPeticao
-	 * + "]/td/div/img")).click(); } catch (Exception e) { // } }
-	 * 
-	 * // Clica na capa driver.findElement(By.xpath("//tr[1]/td/div/img")).click();
-	 * 
-	 * switch (configs.getTipoTriagem()) { case "MOV": //
-	 * System.out.println("chamando movimentação 400"); resultado = new
-	 * Processo_Movimentacao().movimentacao(driver, wait, configs, banco); break;
-	 * case "DOC": // System.out.println("chamando documento 403"); resultado = new
-	 * Processo_Documento().documento(driver, wait, configs, banco); break; case
-	 * "COM": // System.out.println("chamando movimentação 406"); resultado = new
-	 * Processo_Movimentacao().movimentacao(driver, wait, configs, banco); if
-	 * (resultado.getEtiqueta().
-	 * contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) { //
-	 * System.out.println("chamando documento 409"); resultado = new
-	 * Processo_Documento().documento(driver, wait, configs, banco); } break; }
-	 * 
-	 * String etiqueta = resultado.getEtiqueta().toUpperCase().replaceAll("-",
-	 * "").replaceAll(" ", "");
-	 * 
-	 * if (etiqueta.contains("PJEFEDERAL") || etiqueta.contains("PJEPAR") ||
-	 * etiqueta.contains("PJEESTADUAL")) { resultado.setDriver(driver); return
-	 * resultado; }
-	 * 
-	 * String etiquetaFinal = nucleo + "/" + resultado.getEtiqueta();
-	 * 
-	 * resultado.setEtiqueta(etiquetaFinal); resultado.setDriver(driver); return
-	 * resultado;
-	 * 
-	 * }
-	 */
-}
+	public Chaves_Resultado triagemPadrao(WebDriver driver,
+										  WebDriverWait wait, Chaves_Configuracao configs, String banco, int
+												  indexPeticao, boolean dentroDaPasta, String nucleo) throws
+			InterruptedException, SQLException, UnsupportedFlavorException, IOException {
+
+
+		System.out.println("-------------------------------------------------");
+		System.out.println("INICIO");
+		Chaves_Resultado resultado = new Chaves_Resultado();
+
+		if (dentroDaPasta) {
+			System.out.println("AVISANDO DENTRO DA PASTA");
+			try {
+				System.out.println("TRY DENTRO DA PASTA");
+				driver.findElement(By.xpath("//tr[" + indexPeticao + "]/td/div/img")).click();
+			} catch (Exception e) {
+				System.out.println("CATCH DENTRO DA PASTA");
+				//
+			}
+		}
+
+		// Clica na capa
+
+		driver.findElement(By.xpath("//tr[1]/td/div/img")).click();
+		System.out.println("CLICOU NA PASTA");
+
+		switch (configs.getTipoTriagem()) {
+			case "MOV":
+				System.out.println("chamando movimentação");
+				resultado = new Processo_Movimentacao().movimentacao(driver, wait, configs, banco);
+				break;
+			case "DOC":
+				System.out.println("chamando documento ");
+				resultado = new Processo_Documento().documento(driver, wait, configs, banco);
+				break;
+			case "COM":
+				System.out.println("chamando COM ");
+				resultado = new Processo_Movimentacao().movimentacao(driver, wait, configs, banco);
+				if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
+					// System.out.println("chamando documento 409");
+					resultado = new Processo_Documento().documento(driver, wait, configs, banco);
+				}
+				break;
+		}
+
+
+		String etiqueta = resultado.getEtiqueta().toUpperCase().replaceAll("-", "").replaceAll(" ", "");
+
+		if (etiqueta.contains("PJEFEDERAL") || etiqueta.contains("PJEPAR") || etiqueta.contains("PJEESTADUAL")) {
+			resultado.setDriver(driver);
+			resultado.setEtiqueta(resultado.getEtiqueta());
+			return resultado;
+		}
+
+		String etiquetaFinal = resultado.getEtiqueta();
+		System.out.println("etiqueta Final " + etiquetaFinal);
+		resultado.setEtiqueta(etiquetaFinal);
+		resultado.setDriver(driver);
+
+		resultado.setEtiqueta(resultado.getEtiqueta());
+		return resultado;
+
+	}
+		}
+
+
+
+

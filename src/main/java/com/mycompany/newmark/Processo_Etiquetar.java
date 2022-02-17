@@ -54,11 +54,11 @@ public class Processo_Etiquetar {
 				.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ PETIÇÃO INICIAL: " + Chaves_Resultado.getSeqPeticao()
 						+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao());
 		
-// CASO HAJA TRIAGEM PADRÃO
-//		driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea"))
-//		.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ PETIÇÃO INICIAL: " + Chaves_Resultado.getSeqPeticao()
-//		+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao() + "\nSEQ: "
-//		+ resultado.getLocal() + "\nFRASE CHAVE: " + resultado.getPalavraChave());
+ //CASO HAJA TRIAGEM PADRÃO
+		driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea"))
+		.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ PETIÇÃO INICIAL: " + Chaves_Resultado.getSeqPeticao()
+		+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao() + "\nSEQ: "
+		+ resultado.getLocal() + "\nFRASE CHAVE: " + resultado.getPalavraChave());
 
 		action.sendKeys(Keys.TAB).build().perform();
 		action.sendKeys(Keys.TAB).build().perform();
@@ -67,9 +67,12 @@ public class Processo_Etiquetar {
 
 	public void cliqueTabela(WebDriver driver, WebDriverWait wait, Actions action, int i) {
 		try {
+			wait.until(ExpectedConditions
+					.elementToBeClickable(By.xpath("//td["+i+"]/div")));
 			action.doubleClick(driver.findElement(By.xpath("//td["+i+"]/div"))).build().perform();
 			wait.until(ExpectedConditions
 					.elementToBeClickable(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")));
+			System.out.println("Td: " + i);
 		} catch (Exception e) {
 			i++;
 			cliqueTabela(driver, wait, action, i);
