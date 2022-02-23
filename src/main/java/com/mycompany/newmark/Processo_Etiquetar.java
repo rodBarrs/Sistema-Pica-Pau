@@ -44,7 +44,7 @@ public class Processo_Etiquetar {
 //		resultado.setEtiqueta(preEtiqueta + resultado.getEtiqueta());
 
 		///////////////////////
-		
+		//if(identi)
 		driver.findElement(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input")).clear();
 
 		driver.findElement(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input"))

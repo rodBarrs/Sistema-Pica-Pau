@@ -29,6 +29,7 @@ public class Triagem_Etiquetas {
 				ResultSet resultSet;
 				if (identificadorDePeticao) {
 					stmt = connection.prepareStatement("SELECT * FROM identificador_materia ORDER BY prioridade DESC");
+					//public boolean peticaoTrue = true;
 				} else {
 					if (banco.contains("TODOS OS BANCOS")) {
 						stmt = connection.prepareStatement(
@@ -48,7 +49,9 @@ public class Triagem_Etiquetas {
 					if (processo.contains(PALAVRACHAVE) && processo.contains(COMPLEMENTO)) {
 						//resultado.setId(resultSet.getInt("id"));
 						resultado.setPalavraChave(resultSet.getString("id"));
-						//resultado.setSubnucleo(resultSet.getString("subnucleo"));
+						if (identificadorDePeticao){
+							resultado.setSubnucleo(resultSet.getString("subnucleo"));
+						}
 						resultado.setEtiqueta(resultSet.getString("etiqueta"));
 
 //						resultSet.getString("etiqueta");

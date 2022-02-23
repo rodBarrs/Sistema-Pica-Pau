@@ -91,7 +91,7 @@ public class Processo_PeticaoInicial {
 				.contains("x-tree-expander");
 		// Itera a lista de movimentação procurando por "Petição Inicial" ou uma pasta
 		// no index 1
-		for (int i = listaMovimentacao.size() - 1; i > 2; i--) {
+		for (int i = 2; i < listaMovimentacao.size(); i++) {
 
 			// Providência Jurídica é o título da movimentação
 			Boolean existePeticaoInicial = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
@@ -169,7 +169,7 @@ public class Processo_PeticaoInicial {
 					driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/img[1]")).click();
 
 					// Itera pela pasta
-					for (int j = i + 1; j < proximaLinha; j--) {
+					for (int j = i + 1; j < proximaLinha; j++) {
 						pdf.apagarPDF();
 						wait.until(ExpectedConditions
 								.presenceOfElementLocated(By.xpath("//tr[" + j + "]/td[2]/div/span/span[1]")));
@@ -203,7 +203,7 @@ public class Processo_PeticaoInicial {
 
 
 										String nucleo = resultado.getEtiqueta();
-										 resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
+						//				 resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 										resultado.setDriver(driver);
 										return resultado;
 									}
@@ -252,7 +252,7 @@ public class Processo_PeticaoInicial {
 
 
 								String nucleo = resultado.getEtiqueta();
-								 resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
+						//		 resultado = triagemPadrao(driver, wait, config, banco, i, true, nucleo);
 								resultado.setDriver(driver);
 								return resultado;
 							}
@@ -260,7 +260,7 @@ public class Processo_PeticaoInicial {
 					}
 
 					Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
-					 resultado = triagemPadrao(driver, wait, config, banco, i, true, "");
+					// resultado = triagemPadrao(driver, wait, config, banco, i, true, "");
 					resultado.setDriver(driver);
 					return resultado;
 
@@ -274,8 +274,8 @@ public class Processo_PeticaoInicial {
 
 
 					System.out.println("");
-					 resultado = triagemPadrao(driver, wait, config, banco, i, false,
-					 resultado.getEtiqueta());
+					// resultado = triagemPadrao(driver, wait, config, banco, i, false,
+					// resultado.getEtiqueta());
 					resultado.setDriver(driver);
 					return resultado;
 				}
@@ -283,7 +283,7 @@ public class Processo_PeticaoInicial {
 			}
 		}
 		Chaves_Resultado.setSeqPeticao("PETIÇÃO NÃO ENCONTRADA");
-		resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");
+		//resultado = triagemPadrao(driver, wait, config, banco, 0, false, "");
 		resultado.setDriver(driver);
 		return resultado;
 
@@ -365,7 +365,7 @@ public class Processo_PeticaoInicial {
 		if (resultado.getEtiqueta().isEmpty()) {
 			resultado.setEtiqueta(resultado.getSubnucleo());
 		} else {
-			resultado.setEtiqueta(resultado.getSubnucleo() + "/" + resultado.getEtiqueta());
+			resultado.setEtiqueta(resultado.getSubnucleo() + "/ " + resultado.getEtiqueta());
 		}
 		System.out.println("Subnúcleo colocado - " + resultado.getSubnucleo());
 	}
@@ -379,7 +379,7 @@ public class Processo_PeticaoInicial {
 		System.out.println("-------------------------------------------------");
 		System.out.println("INICIO");
 		Chaves_Resultado resultado = new Chaves_Resultado();
-
+		resultado.setSubnucleo("");
 		if (dentroDaPasta) {
 			System.out.println("AVISANDO DENTRO DA PASTA");
 			try {
