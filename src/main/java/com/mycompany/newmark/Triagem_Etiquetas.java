@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 
 public class Triagem_Etiquetas {
 
+
 	public Chaves_Resultado triarBanco(String processo, String banco, String localtriagem, String tipoTriagem,
 			Boolean identificadorDePeticao) {
 		Chaves_Resultado resultado = new Chaves_Resultado();
@@ -28,9 +29,11 @@ public class Triagem_Etiquetas {
 				PreparedStatement stmt;
 				ResultSet resultSet;
 				if (identificadorDePeticao) {
+
 					stmt = connection.prepareStatement("SELECT * FROM identificador_materia ORDER BY prioridade DESC");
 					//public boolean peticaoTrue = true;
 				} else {
+
 					if (banco.contains("TODOS OS BANCOS")) {
 						stmt = connection.prepareStatement(
 								"SELECT * FROM etiquetas WHERE tipo = '" + localtriagem + "' ORDER BY prioridade DESC");
@@ -51,6 +54,7 @@ public class Triagem_Etiquetas {
 						resultado.setPalavraChave(resultSet.getString("id"));
 						if (identificadorDePeticao){
 							resultado.setSubnucleo(resultSet.getString("subnucleo"));
+
 						}
 						resultado.setEtiqueta(resultSet.getString("etiqueta"));
 

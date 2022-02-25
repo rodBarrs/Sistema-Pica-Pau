@@ -130,15 +130,15 @@ public class Controller_Login implements Initializable {
 				Saida.setText(Saida.getText() + "\\nConfiguração de Data: Considerando datas");
 			}
 			switch (configuracao.getTipoTriagem()) {
-			case "COM":
-				Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO e DOCUMENTO");
-				break;
-			case "MOV":
-				Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO");
-				break;
-			case "DOC":
-				Saida.setText(Saida.getText() + "\nTriando: DOCUMENTO");
-				break;
+				case "COM":
+					Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO e DOCUMENTO");
+					break;
+				case "MOV":
+					Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO");
+					break;
+				case "DOC":
+					Saida.setText(Saida.getText() + "\nTriando: DOCUMENTO");
+					break;
 			}
 			if (configuracao.isJuntManual() == false) {
 				Saida.setText(Saida.getText() + "\nConsiderando movimentações: HTML");
@@ -159,15 +159,15 @@ public class Controller_Login implements Initializable {
 					Saida.setText(Saida.getText() + "\nConfiguração de Data: Considerando datas");
 				}
 				switch (configuracao.getTipoTriagem()) {
-				case "COM":
-					Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO e DOCUMENTO");
-					break;
-				case "MOV":
-					Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO");
-					break;
-				case "DOC":
-					Saida.setText(Saida.getText() + "\nTriando: DOCUMENTO");
-					break;
+					case "COM":
+						Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO e DOCUMENTO");
+						break;
+					case "MOV":
+						Saida.setText(Saida.getText() + "\nTriando: MOVIMENTAÇÃO");
+						break;
+					case "DOC":
+						Saida.setText(Saida.getText() + "\nTriando: DOCUMENTO");
+						break;
 				}
 			}
 
@@ -240,7 +240,7 @@ public class Controller_Login implements Initializable {
 		stage.setTitle("Sistema de Triagem Mark - Informações");
 		stage.show();
 	}
-	
+
 	@FXML
 	public void abrirPopupLogin() throws IOException {
 		if(UsuarioLocal.getEstaLogado()) {
@@ -249,18 +249,18 @@ public class Controller_Login implements Initializable {
 			new LoginLocal().abrirPopupLogin();
 		}
 	}
-	
-	
+
+
 	@FXML
 	public void abrirJanelaAdministracao() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Administracao.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
-        stage.setTitle("Sistema de Triagem Mark - Administração");
-        stage.setScene(new Scene(root));
-        stage.getIcons().add(new Image("/fxml/Imagens/iconeMark.png"));
-        stage.setResizable(false);
-        stage.show();
+		Parent root = loader.load();
+		Stage stage = new Stage();
+		stage.setTitle("Sistema de Triagem Mark - Administração");
+		stage.setScene(new Scene(root));
+		stage.getIcons().add(new Image("/fxml/Imagens/iconeMark.png"));
+		stage.setResizable(false);
+		stage.show();
 	}
 
 

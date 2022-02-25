@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-
         try {
             // Carrega o layout FXML
             Pane root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));

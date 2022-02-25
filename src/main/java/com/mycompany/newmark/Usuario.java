@@ -31,6 +31,12 @@ class Usuario {
     public void logar(WebDriver driver, WebDriverWait wait, Usuario usuario) throws InterruptedException {
     	driver.findElement(By.id("cpffield-1017-inputEl")).sendKeys(usuario.getLogin());
 		driver.findElement(By.id("textfield-1018-inputEl")).sendKeys(usuario.getSenha());
-		driver.findElement(By.id("button-1019-btnInnerEl")).click();	
+		try {
+            driver.findElement(By.id("button-1019-btnInnerEl")).click();
+        }
+		catch(Exception erro){
+            System.out.println("Erro no clique");
+        }
+
     }
 }
