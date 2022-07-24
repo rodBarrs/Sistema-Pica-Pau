@@ -33,11 +33,9 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import com.mycompany.newmark.DAO.UsuarioLocalDAO;
-import com.mycompany.newmark.controllers.LoginLocal;
+import com.mycompany.newmark.Controllers.LoginLocal;
 import com.mycompany.newmark.entities.UsuarioLocal;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,9 +52,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Controller_Login implements Initializable {
 	private boolean triagemIniciada = false;

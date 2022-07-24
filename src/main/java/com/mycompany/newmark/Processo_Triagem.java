@@ -13,8 +13,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
+import com.mycompany.newmark.Controllers.ControllerMaternida;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -52,7 +51,8 @@ public class Processo_Triagem {
 		Processo_Movimentacao movimentacao = new Processo_Movimentacao();
 		Processo_Documento documento = new Processo_Documento();
 		Processo_Pericial pericial = new Processo_Pericial();
-		Processo_PeticaoInicial peticao = new Processo_PeticaoInicial();
+		ControllerMaternida controllerMaternida = new ControllerMaternida();
+		ControllerMaternida peticao = new ControllerMaternida();
 		Processo_Etiquetar etiqueta = new Processo_Etiquetar();
 		boolean grid;
 		try {
@@ -67,7 +67,9 @@ public class Processo_Triagem {
 					if (config.isLaudoPericial() == true) {
 						resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
 					} else if (config.isPeticaoInicial() == true) {
-						resultado = peticao.peticaoInicial(resultado.getDriver(), wait, config, bancos, debugPi);
+						//if (resultado.getAssunto().contains("SALÁRIO-MATERNIDADE")) {
+							resultado = controllerMaternida.iniciar(resultado.getDriver(), wait, config, bancos);
+						//}
 					} else {
 						switch (config.getTipoTriagem()) {
 						case "COM":

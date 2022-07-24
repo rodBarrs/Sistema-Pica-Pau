@@ -49,6 +49,8 @@ public class Processo_Grid {
                 tarefas = new ArrayList(tabela.findElements(By.cssSelector("tr")));
                 driver.findElement(By.xpath("//tr[1]/td[3]/div/a")).click();
                 try {
+                    String assunto = driver.findElement(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[5]/div")).getText();
+                    resultado.setAssunto(assunto);
                     boolean flag = false;
                     while (!flag) {
                         try {
@@ -65,6 +67,7 @@ public class Processo_Grid {
                             // nothing to do
                         }
                     }
+
                     resultado.setDriver(driver);
                     resultado.setGrid(true);
                     return resultado;

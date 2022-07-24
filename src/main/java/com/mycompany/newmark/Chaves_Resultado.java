@@ -14,6 +14,8 @@ public class Chaves_Resultado {
     private String subnucleo = "";
     private String Local = "";
     private Integer id;
+
+    private String assunto;
     private WebDriver driver;
     private boolean grid;
     
@@ -89,5 +91,11 @@ public class Chaves_Resultado {
 		this.id = id;
 	}
 
-    
+    public String getAssunto() {
+        return assunto;
+    }
+
+    public void setAssunto(String assunto) {
+        this.assunto = assunto;
+    }
 }

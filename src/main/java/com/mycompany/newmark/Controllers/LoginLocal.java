@@ -1,4 +1,4 @@
-package com.mycompany.newmark.controllers;
+package com.mycompany.newmark.Controllers;
 
 import java.io.IOException;
 

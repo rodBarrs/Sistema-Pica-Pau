@@ -1,8 +1,7 @@
-package com.mycompany.newmark.controllers;
+package com.mycompany.newmark.Controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -27,7 +26,6 @@ import com.mycompany.newmark.DAO.TipoMovimentacaoDAO;
 import com.mycompany.newmark.DAO.UsuarioLocalDAO;
 import com.mycompany.newmark.entities.UsuarioLocal;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
