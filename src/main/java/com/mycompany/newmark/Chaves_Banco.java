@@ -3,7 +3,7 @@
  * 
  * Responsável por indicar quais são as chaves de uso do banco de dados
  */
-//oi
+
 package com.mycompany.newmark;
 
 public class Chaves_Banco {
