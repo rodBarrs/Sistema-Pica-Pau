@@ -25,7 +25,7 @@ public class ControllerMaternida {
 		String localTriagem = "DOC";
 		String processo = "";
 
-		materidadeRepositorio.clicarDosprev();
+		materidadeRepositorio.clicarDosprev(driver, wait);
 
 		return resultado;
 	}

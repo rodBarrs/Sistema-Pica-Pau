@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class RepositoryMaternidade {
-    WebDriver driver;
-    WebDriverWait wait;
-    public void clicarDosprev() throws InterruptedException {
-        this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS).pageLoadTimeout(30, TimeUnit.SECONDS);
+
+    public void clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS).pageLoadTimeout(30, TimeUnit.SECONDS);
         Thread.sleep(1000);
         List<String> janela = new ArrayList<String>(driver.getWindowHandles());
         driver.switchTo().window(janela.get(1));
