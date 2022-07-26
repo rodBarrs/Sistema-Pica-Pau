@@ -5,6 +5,7 @@ package com.mycompany.newmark.Controllers;
 
 import com.mycompany.newmark.*;
 import com.mycompany.newmark.Repositories.RepositoryMaternidade;
+import com.mycompany.newmark.entities.InformacoesDosprev;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -12,6 +13,7 @@ public class ControllerMaternida {
 
 
 	public Chaves_Resultado iniciar(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException {
+		InformacoesDosprev informacao = new InformacoesDosprev();
 		RepositoryMaternidade materidadeRepositorio = new RepositoryMaternidade();
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		LeituraPDF pdf = new LeituraPDF();
@@ -25,7 +27,8 @@ public class ControllerMaternida {
 		String localTriagem = "DOC";
 		String processo = "";
 
-		materidadeRepositorio.clicarDosprev(driver, wait);
+		String passou = materidadeRepositorio.clicarDosprev(driver, wait);
+		informacao = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
 
 		return resultado;
 	}

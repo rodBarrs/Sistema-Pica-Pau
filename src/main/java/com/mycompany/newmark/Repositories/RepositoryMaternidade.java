@@ -1,18 +1,25 @@
 package com.mycompany.newmark.Repositories;
 
+import com.mycompany.newmark.entities.InformacoesDosprev;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class RepositoryMaternidade {
 
-    public void clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public String clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS).pageLoadTimeout(30, TimeUnit.SECONDS);
         Thread.sleep(1000);
         List<String> janela = new ArrayList<String>(driver.getWindowHandles());
@@ -35,8 +42,50 @@ public class RepositoryMaternidade {
             if (existeDosPrev == true) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
+                return "passou";
+            }
+
+        }
+        return "passou";
+    }
+
+    public InformacoesDosprev coletarInformacoesDosprev (WebDriver driver, WebDriverWait wait){
+        InformacoesDosprev informacao = new InformacoesDosprev();
+        String dataInicioMaisRecente = "zero";
+        String nbMaisRecente ="";
+        driver.switchTo().frame(0);
+        String dataAjuizamento = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[2]/td"))
+                .getText();
+        String sexo = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[11]/td"))
+                .getText();
+
+        for(int i=2; i < 30; i++){
+
+            String status = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[6]")).getText();
+            if (status.contains("INDEFERIDO")){
+                String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[1]")).getText();
+                String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[3]")).getText();
+                if(dataInicioMaisRecente.contains("zero")) {
+                    dataInicioMaisRecente = dataDeInicio;
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                formatter = formatter.withLocale(Locale.US);
+                LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                long diferenca = ChronoUnit.DAYS.between(dataValidacao , dataAtual);
+                System.out.println(diferenca);
+                if (diferenca < 0){
+                    dataInicioMaisRecente = dataDeInicio;
+                    nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[1]")).getText();
+                }
             }
         }
+        informacao.setDataDeAjuizamento(dataAjuizamento);
+        informacao.setSexo(sexo);
+        informacao.setDataInicioIndeferido(dataInicioMaisRecente);
+        informacao.setNbProcessoIndeferido(nbMaisRecente);
+
+        return informacao;
     }
 }
 
