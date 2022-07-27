@@ -29,7 +29,7 @@ public class ControllerMaternida {
 
 		String passou = materidadeRepositorio.clicarDosprev(driver, wait);
 		informacao = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
-
+		resultado.setDriver(driver);
 		return resultado;
 	}
 

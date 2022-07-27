@@ -8,6 +8,7 @@ public class InformacoesDosprev {
     private String sexo;
     private String nbProcessoIndeferido;
     private String dataInicioIndeferido;
+    private boolean existeProcessoINSS;
 
     public String getDataDeAjuizamento() {
         return dataDeAjuizamento;
@@ -39,5 +40,13 @@ public class InformacoesDosprev {
 
     public void setDataInicioIndeferido(String dataInicioIndeferido) {
         this.dataInicioIndeferido = dataInicioIndeferido;
+    }
+
+    public boolean isExisteProcessoINSS() {
+        return existeProcessoINSS;
+    }
+
+    public void setExisteProcessoINSS(boolean existeProcessoINSS) {
+        this.existeProcessoINSS = existeProcessoINSS;
     }
 }

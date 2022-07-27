@@ -50,6 +50,7 @@ public class RepositoryMaternidade {
     }
 
     public InformacoesDosprev coletarInformacoesDosprev (WebDriver driver, WebDriverWait wait){
+
         InformacoesDosprev informacao = new InformacoesDosprev();
         String dataInicioMaisRecente = "zero";
         String nbMaisRecente ="";
@@ -58,30 +59,56 @@ public class RepositoryMaternidade {
                 .getText();
         String sexo = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[11]/td"))
                 .getText();
+        boolean processoINSS = false;
 
-        for(int i=2; i < 30; i++){
+        String textoNãoContemProcessosINSS = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td")).getText();
+        if (!textoNãoContemProcessosINSS.contains("Não há relação dos processos movidos pelo autor contra o INSS.")){
 
-            String status = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[6]")).getText();
-            if (status.contains("INDEFERIDO")){
-                String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[1]")).getText();
-                String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[3]")).getText();
-                if(dataInicioMaisRecente.contains("zero")) {
-                    dataInicioMaisRecente = dataDeInicio;
+                for (int i = 1;i <= 10; i++ ){
+                    try {
+                    String texto = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td[3]/table/tbody/tr["+i+"]/td")).getText();
+                    if (texto.contains("INSTITUTO NACIONAL DO SEGURO SOCIAL")) {
+                        processoINSS = true;
+                        i = 11;
+                    }
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                formatter = formatter.withLocale(Locale.US);
-                LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
-                LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
-                long diferenca = ChronoUnit.DAYS.between(dataValidacao , dataAtual);
-                System.out.println(diferenca);
-                if (diferenca < 0){
-                    dataInicioMaisRecente = dataDeInicio;
-                    nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr["+i+"]/td[1]")).getText();
+                    catch (Exception e){
+                        i = 11;
+                    }
+            }
+
+        }
+
+
+            for(int i = 2; i < 30; i++) {
+                try {
+                    String status = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[" + i + "]/td[6]")).getText();
+                    if (status.contains("INDEFERIDO")) {
+                        String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[" + i + "]/td[1]")).getText();
+                        String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[" + i + "]/td[3]")).getText();
+                        if (dataInicioMaisRecente.contains("zero")) {
+                            dataInicioMaisRecente = dataDeInicio;
+                        }
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        formatter = formatter.withLocale(Locale.US);
+                        LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                        LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                        long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
+                        System.out.println(diferenca);
+                        if (diferenca < 0) {
+                            dataInicioMaisRecente = dataDeInicio;
+                            nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[" + i + "]/td[1]")).getText();
+                        }
+                    }
+
+                } catch (Exception e) {
+                    i = 30;
                 }
             }
-        }
+
         informacao.setDataDeAjuizamento(dataAjuizamento);
         informacao.setSexo(sexo);
+        informacao.setExisteProcessoINSS(processoINSS);
         informacao.setDataInicioIndeferido(dataInicioMaisRecente);
         informacao.setNbProcessoIndeferido(nbMaisRecente);
 
