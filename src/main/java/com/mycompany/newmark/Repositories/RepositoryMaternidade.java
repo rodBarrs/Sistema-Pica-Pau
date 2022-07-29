@@ -107,11 +107,34 @@ public class RepositoryMaternidade {
                 }
             }
 
+        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[4]"));
+        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+        String filiacao = "";
+        String nomeEmpresa = "";
+        String nit = "";
+        String dataInicio = "";
+        String dataFim = "";
+        for(int i = listaRelPrev.size(); i>0; i--){
+            filiacao = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[7]")).getText();
+            if(filiacao.contains("Empregado")){
+
+                nit = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[2]")).getText();
+                nomeEmpresa = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[4]")).getText();
+                dataInicio = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[5]")).getText();
+                dataFim = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[6]")).getText();
+                i = -1;
+            }
+        }
+
         informacao.setDataDeAjuizamento(dataAjuizamento);
         informacao.setSexo(sexo);
         informacao.setExisteProcessoINSS(processoINSS);
         informacao.setDataInicioIndeferido(dataInicioMaisRecente);
         informacao.setNbProcessoIndeferido(nbMaisRecente);
+        informacao.setNit(nit);
+        informacao.setNomeEmpresa(nomeEmpresa);
+        informacao.setDataInicio(dataInicio);
+        informacao.setDataFim(dataFim);
 
         return informacao;
     }

@@ -10,6 +10,14 @@ public class InformacoesDosprev {
     private String dataInicioIndeferido;
     private boolean existeProcessoINSS;
 
+    private String nit;
+
+    private String nomeEmpresa;
+
+    private String dataInicio;
+
+    private String dataFim;
+
     public String getDataDeAjuizamento() {
         return dataDeAjuizamento;
     }
@@ -48,5 +56,37 @@ public class InformacoesDosprev {
 
     public void setExisteProcessoINSS(boolean existeProcessoINSS) {
         this.existeProcessoINSS = existeProcessoINSS;
+    }
+
+    public String getNit() {
+        return nit;
+    }
+
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+
+    public String getNomeEmpresa() {
+        return nomeEmpresa;
+    }
+
+    public void setNomeEmpresa(String nomeEmpresa) {
+        this.nomeEmpresa = nomeEmpresa;
+    }
+
+    public String getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(String dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public String getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(String dataFim) {
+        this.dataFim = dataFim;
     }
 }
