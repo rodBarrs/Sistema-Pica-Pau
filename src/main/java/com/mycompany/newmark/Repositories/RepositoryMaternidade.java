@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class RepositoryMaternidade {
 
     public String clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS).pageLoadTimeout(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         Thread.sleep(1000);
         List<String> janela = new ArrayList<String>(driver.getWindowHandles());
         driver.switchTo().window(janela.get(1));
@@ -50,7 +50,7 @@ public class RepositoryMaternidade {
     }
 
     public InformacoesDosprev coletarInformacoesDosprev (WebDriver driver, WebDriverWait wait){
-
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         InformacoesDosprev informacao = new InformacoesDosprev();
         String dataInicioMaisRecente = "zero";
         String nbMaisRecente ="";
@@ -88,6 +88,7 @@ public class RepositoryMaternidade {
                         String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[" + i + "]/td[3]")).getText();
                         if (dataInicioMaisRecente.contains("zero")) {
                             dataInicioMaisRecente = dataDeInicio;
+                            nbMaisRecente = nbIndeferido;
                         }
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         formatter = formatter.withLocale(Locale.US);
