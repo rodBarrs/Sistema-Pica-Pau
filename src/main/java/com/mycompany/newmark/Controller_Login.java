@@ -428,8 +428,8 @@ public class Controller_Login implements Initializable {
 		profile.setPreference("browser.download.dir", "C:\\Temp"); // folder
 		profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf"); // MIME type
 		profile.setPreference("pdfjs.disabled", true); // disable the built-in viewer
-		profile.setPreference("browser.download.folderList", 2);
-		// profile.setPreference("browser.download.panel.shown", false);
+	    profile.setPreference("browser.download.folderList", 2);
+		profile.setPreference("browser.download.panel.shown", false);
 
 		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 		capabilities.setCapability(CapabilityType.ELEMENT_SCROLL_BEHAVIOR, 1);

@@ -1,13 +1,16 @@
 package com.mycompany.newmark.Repositories;
 
+import com.mycompany.newmark.LeituraPDF;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 
+import com.mycompany.newmark.entities.InformacoesSislabra;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,7 +42,7 @@ public class RepositoryMaternidade {
 
             Boolean existeDosPrev = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
                     .toUpperCase().contains("DOSSIÊ PREVIDENCIÁRIO");
-            if (existeDosPrev == true) {
+            if (existeDosPrev) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
                 return "passou";
@@ -135,29 +138,6 @@ public class RepositoryMaternidade {
             }
         }
 
-
-
-
-
-//        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[4]"));
-//        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-//        String filiacao = "";
-//        String nomeEmpresa = "";
-//        String nit = "";
-//        String dataInicio = "";
-//        String dataFim = "";
-//        for(int i = listaRelPrev.size(); i>0; i--){
-//            filiacao = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[7]")).getText();
-//            if(filiacao.contains("Empregado")){
-//
-//                nit = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[2]")).getText();
-//                nomeEmpresa = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[4]")).getText();
-//                dataInicio = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[5]")).getText();
-//                dataFim = driver.findElement(By.xpath("/html/body/div/div[4]/table/tbody/tr["+i+"]/td[6]")).getText();
-//                i = -1;
-//            }
-//        }
-
         informacao.setDataDeAjuizamento(dataAjuizamento);
         informacao.setSexo(sexo);
         informacao.setExisteProcessoINSS(processoINSS);
@@ -170,5 +150,63 @@ public class RepositoryMaternidade {
 
         return informacao;
     }
+
+
+    public String clicarSislabra(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+        driver.switchTo().defaultContent();
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
+        Thread.sleep(1000);
+        List<String> janela = new ArrayList<String>(driver.getWindowHandles());
+        driver.switchTo().window(janela.get(1));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
+        WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
+        List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+        for (int i = listaMovimentacao.size(); i > 2; i--) {
+
+            // Providência Jurídica é o título da movimentação
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td[2]/div/span")));
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div/span")));
+            if (i > listaMovimentacao.size() - 3) {
+                Thread.sleep(500);
+            }
+
+
+            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+                    .toUpperCase().contains("SISLABRA") ;
+            if (existeSislabra) {
+                WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
+                dosClick.click();
+                return "passou";
+            }
+
+        }
+        return "passou";
+    }
+
+    public InformacoesSislabra coletarInformacoesSislabra (WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
+        LeituraPDF pdf = new LeituraPDF();
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
+        InformacoesSislabra informacao = new InformacoesSislabra();
+        driver.switchTo().frame(0);
+        String processo;
+
+
+        int cont = 0;
+        while (cont <= 2) {
+
+            if (pdf.PDFBaixado()) {
+                processo = pdf.lerPDF();
+                break;
+            } else {
+                pdf.apagarPDF();
+            }
+            cont++;
+        }
+
+        pdf.apagarPDF();
+        return informacao;
+    }
+
 }
 
