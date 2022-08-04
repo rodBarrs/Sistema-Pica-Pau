@@ -423,17 +423,17 @@ public class Controller_Login implements Initializable {
 		// Configurações de perfil para o Firefox
 		// Seta a pasta de downloads para a mencionada e faz o download automático de
 		// pdfs
-		FirefoxProfile profile = new FirefoxProfile();
-		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-		profile.setPreference("browser.download.dir", "C:\\Temp"); // folder
-		profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf"); // MIME type
-		profile.setPreference("pdfjs.disabled", true); // disable the built-in viewer
-		profile.setPreference("browser.download.folderList", 2);
+//		FirefoxProfile profile = new FirefoxProfile();
+//		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+//		profile.setPreference("browser.download.dir", "C:\\Temp"); // folder
+//		profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf"); // MIME type
+//		profile.setPreference("pdfjs.disabled", true); // disable the built-in viewer
+//		profile.setPreference("browser.download.folderList", 2);
 		// profile.setPreference("browser.download.panel.shown", false);
 
-		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
-		capabilities.setCapability(CapabilityType.ELEMENT_SCROLL_BEHAVIOR, 1);
-		final WebDriver driver = new FirefoxDriver(capabilities);
+//		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
+//		capabilities.setCapability(CapabilityType.ELEMENT_SCROLL_BEHAVIOR, 1);
+		final WebDriver driver = new FirefoxDriver();
 
 		wait = new WebDriverWait(driver, 15);
 		try {
