@@ -189,9 +189,13 @@ public class RepositoryMaternidade {
             }
 
 
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("SISLABRA") ;
+//            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+//                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+//                    .toUpperCase().contains("SISLABRA") ;
+
+            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+                    .toUpperCase().contains("PROCESSO ADMINISTRATIVO") ;
+
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
@@ -215,6 +219,14 @@ public class RepositoryMaternidade {
 
             if (pdf.PDFBaixado()) {
                 processo = pdf.lerPDF();
+                System.out.println(processo);
+                String[] buscaNb = processo.split("/r/n");
+                for(int indexBuscaNb =0; indexBuscaNb<buscaNb.length; indexBuscaNb++){
+                    if(buscaNb[indexBuscaNb].equals("196.960.955-6")){
+                        System.out.println(buscaNb[indexBuscaNb] + " : "+ indexBuscaNb);
+                        break;
+                    }
+                }
                 break;
             } else {
                 pdf.apagarPDF();
