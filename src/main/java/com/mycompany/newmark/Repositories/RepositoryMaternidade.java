@@ -7,6 +7,10 @@ import com.mycompany.newmark.entities.InformacoesSislabra;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -84,34 +88,41 @@ public class RepositoryMaternidade {
 
         }
             for(int i = 3; i<7; i++){
-                try{
-                    WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div["+i+"]"));
-                    List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-                    for(int j = 2; j <= listaRelPrev.size(); j++) {
-                        String status = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[6]")).getText();
-                        if (status.contains("INDEFERIDO")) {
-                            String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                            String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[3]")).getText();
-                            if (dataInicioMaisRecente.contains("zero")) {
-                                dataInicioMaisRecente = dataDeInicio;
-                                nbMaisRecente = nbIndeferido;
+                String titulo = driver.findElement(By.xpath("/html/body/div/p["+(i+1)+"]/b/u")).getText();
+                if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
+                    try{
+                        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div["+i+"]"));
+                        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+                        for(int j = 2; j <= listaRelPrev.size(); j++) {
+                            String status = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[6]")).getText();
+                            if (status.contains("INDEFERIDO")) {
+                                String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[3]")).getText();
+                                if (dataInicioMaisRecente.contains("zero")) {
+                                    dataInicioMaisRecente = dataDeInicio;
+                                    nbMaisRecente = nbIndeferido;
+                                }
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                formatter = formatter.withLocale(Locale.US);
+                                LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                                LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                                long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
+                                System.out.println(diferenca);
+                                if (diferenca < 0) {
+                                    dataInicioMaisRecente = dataDeInicio;
+                                    nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                }
+
                             }
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                            formatter = formatter.withLocale(Locale.US);
-                            LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
-                            LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
-                            long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
-                            System.out.println(diferenca);
-                            if (diferenca < 0) {
-                                dataInicioMaisRecente = dataDeInicio;
-                                nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                            }
-                            i = 7;
+
                         }
+                        i = 7;
+                    }catch(Exception e){
+
+                        System.out.println(e);
                     }
-                }catch(Exception e){
-                    System.out.println(e);
                 }
+
             }
 
         String filiacao = "";
@@ -159,6 +170,7 @@ public class RepositoryMaternidade {
 
 
     public String clicarSislabra(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+
         driver.switchTo().defaultContent();
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         Thread.sleep(1000);
@@ -177,12 +189,11 @@ public class RepositoryMaternidade {
             }
 
 
-//            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-//                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-//                    .toUpperCase().contains("SISLABRA") ;
+            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+                    .toUpperCase().contains("SISLABRA") ;
 
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("PROCESSO ADMINISTRATIVO") ;
+
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
@@ -215,6 +226,39 @@ public class RepositoryMaternidade {
 
         pdf.apagarPDF();
         return informacao;
+    }
+
+    public String clicarProcesoAdministrativo(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+
+        driver.switchTo().defaultContent();
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
+        Thread.sleep(1000);
+        List<String> janela = new ArrayList<String>(driver.getWindowHandles());
+        driver.switchTo().window(janela.get(1));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
+        WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
+        List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+        for (int i = listaMovimentacao.size(); i > 2; i--) {
+
+            // Providência Jurídica é o título da movimentação
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[" + i + "]/td[2]/div/span")));
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tr[" + i + "]/td[2]/div/span")));
+            if (i > listaMovimentacao.size() - 3) {
+                Thread.sleep(500);
+            }
+
+
+            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+                    .toUpperCase().contains("SISLABRA") ;
+            if (existeSislabra) {
+                WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
+                dosClick.click();
+                return "passou";
+            }
+
+        }
+        return "passou";
     }
 
 }
