@@ -54,7 +54,7 @@ public class RepositoryMaternidade {
 
 
     public InformacoesDosprev coletarInformacoesDosprev (WebDriver driver, WebDriverWait wait) throws InterruptedException {
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS).pageLoadTimeout(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         Thread.sleep(1000);
         InformacoesDosprev informacao = new InformacoesDosprev();
         String dataInicioMaisRecente = "zero";
@@ -177,9 +177,12 @@ public class RepositoryMaternidade {
             }
 
 
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("SISLABRA") ;
+//            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+//                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+//                    .toUpperCase().contains("SISLABRA") ;
+
+            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+                    .toUpperCase().contains("PROCESSO ADMINISTRATIVO") ;
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
