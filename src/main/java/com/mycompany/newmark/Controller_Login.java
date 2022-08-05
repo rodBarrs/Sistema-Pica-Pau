@@ -436,7 +436,7 @@ public class Controller_Login implements Initializable {
 
 		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 		capabilities.setCapability(CapabilityType.ELEMENT_SCROLL_BEHAVIOR, 1);
-		final WebDriver driver = new FirefoxDriver();
+		final WebDriver driver = new FirefoxDriver(capabilities);
 
 
 
