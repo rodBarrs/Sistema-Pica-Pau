@@ -57,12 +57,12 @@ public class RepositoryMaternidade {
     }
 
 
-    public InformacoesDosprev coletarInformacoesDosprev (WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public InformacoesDosprev coletarInformacoesDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         Thread.sleep(1000);
         InformacoesDosprev informacao = new InformacoesDosprev();
         String dataInicioMaisRecente = "zero";
-        String nbMaisRecente ="";
+        String nbMaisRecente = "";
         driver.switchTo().frame(0);
         String dataAjuizamento = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[2]/td"))
                 .getText();
@@ -71,88 +71,85 @@ public class RepositoryMaternidade {
         boolean processoINSS = false;
 
         String textoNãoContemProcessosINSS = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td")).getText();
-        if (!textoNãoContemProcessosINSS.contains("Não há relação dos processos movidos pelo autor contra o INSS.")){
+        if (!textoNãoContemProcessosINSS.contains("Não há relação dos processos movidos pelo autor contra o INSS.")) {
 
-                for (int i = 1;i <= 10; i++ ){
-                    try {
-                    String texto = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td[3]/table/tbody/tr["+i+"]/td")).getText();
+            for (int i = 1; i <= 10; i++) {
+                try {
+                    String texto = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td[3]/table/tbody/tr[" + i + "]/td")).getText();
                     if (texto.contains("INSTITUTO NACIONAL DO SEGURO SOCIAL")) {
                         processoINSS = true;
                         i = 11;
                     }
+                } catch (Exception e) {
+                    i = 11;
                 }
-                    catch (Exception e){
-                        i = 11;
-                    }
             }
 
         }
-            for(int i = 3; i<7; i++){
-                String titulo = driver.findElement(By.xpath("/html/body/div/p["+(i+1)+"]/b/u")).getText();
-                if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
-                    try{
-                        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div["+i+"]"));
-                        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-                        for(int j = 2; j <= listaRelPrev.size(); j++) {
-                            String status = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[6]")).getText();
-                            if (status.contains("INDEFERIDO")) {
-                                String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                                String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[3]")).getText();
-                                if (dataInicioMaisRecente.contains("zero")) {
-                                    dataInicioMaisRecente = dataDeInicio;
-                                    nbMaisRecente = nbIndeferido;
-                                }
-                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                                formatter = formatter.withLocale(Locale.US);
-                                LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
-                                LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
-                                long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
-                                System.out.println(diferenca);
-                                if (diferenca < 0) {
-                                    dataInicioMaisRecente = dataDeInicio;
-                                    nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                                }
-
+        for (int i = 3; i < 7; i++) {
+            String titulo = driver.findElement(By.xpath("/html/body/div/p[" + (i + 1) + "]/b/u")).getText();
+            if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
+                try {
+                    WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
+                    List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+                    for (int j = 2; j <= listaRelPrev.size(); j++) {
+                        String status = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
+                        if (status.contains("INDEFERIDO")) {
+                            String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                            String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
+                            if (dataInicioMaisRecente.contains("zero")) {
+                                dataInicioMaisRecente = dataDeInicio;
+                                nbMaisRecente = nbIndeferido;
+                            }
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                            formatter = formatter.withLocale(Locale.US);
+                            LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                            LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                            long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
+                            System.out.println(diferenca);
+                            if (diferenca < 0) {
+                                dataInicioMaisRecente = dataDeInicio;
+                                nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
                             }
 
                         }
-                        i = 7;
-                    }catch(Exception e){
 
-                        System.out.println(e);
                     }
-                }
+                    i = 7;
+                } catch (Exception e) {
 
+                    System.out.println(e);
+                }
             }
+
+        }
 
         String filiacao = "";
         String nomeEmpresa = "";
         String nit = "";
         String dataInicio = "";
         String dataFim = "";
-        for (int i = 4; i<7; i++) {
-            try{
-                WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div["+i+"]"));
+        for (int i = 4; i < 7; i++) {
+            try {
+                WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
                 List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
                 for (int j = listaRelPrev.size(); j > 0; j--) {
-                    filiacao = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[7]")).getText();
+                    filiacao = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[7]")).getText();
                     if (filiacao.contains("Empregado")) {
 
-                        nit = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[2]")).getText();
-                        nomeEmpresa = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[4]")).getText();
-                        dataInicio = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[5]")).getText();
-                        dataFim = driver.findElement(By.xpath("/html/body/div/div["+i+"]/table/tbody/tr[" + j + "]/td[6]")).getText();
+                        nit = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[2]")).getText();
+                        nomeEmpresa = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[4]")).getText();
+                        dataInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[5]")).getText();
+                        dataFim = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
                         j = -1;
                         i = 7;
                     }
                 }
-            }catch(Exception e){
-               System.out.println(e);
+            } catch (Exception e) {
+                System.out.println(e);
             }
 
         }
-
-
 
 
         informacao.setDataDeAjuizamento(dataAjuizamento);
@@ -189,12 +186,10 @@ public class RepositoryMaternidade {
             }
 
 
-//            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-//                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-//                    .toUpperCase().contains("SISLABRA") ;
+            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
+                    .toUpperCase().contains("SISLABRA");
 
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("PROCESSO ADMINISTRATIVO") ;
 
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
@@ -206,7 +201,7 @@ public class RepositoryMaternidade {
         return "passou";
     }
 
-    public InformacoesSislabra coletarInformacoesSislabra (WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
+    public InformacoesSislabra coletarInformacoesSislabra(WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
         LeituraPDF pdf = new LeituraPDF();
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         InformacoesSislabra informacao = new InformacoesSislabra();
@@ -220,10 +215,10 @@ public class RepositoryMaternidade {
             if (pdf.PDFBaixado()) {
                 processo = pdf.lerPDF();
                 System.out.println(processo);
-                String[] buscaNb = processo.split("/r/n");
-                for(int indexBuscaNb =0; indexBuscaNb<buscaNb.length; indexBuscaNb++){
-                    if(buscaNb[indexBuscaNb].equals("196.960.955-6")){
-                        System.out.println(buscaNb[indexBuscaNb] + " : "+ indexBuscaNb);
+                String[] buscaNb = processo.split("\r\n");
+                for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
+                    if (buscaNb[indexBuscaNb].contains("196.960.955-6")) {
+                        System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
                         break;
                     }
                 }
@@ -238,7 +233,7 @@ public class RepositoryMaternidade {
         return informacao;
     }
 
-    public String clicarProcesoAdministrativo(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public String clicarProcesoAdministrativo(WebDriver driver, WebDriverWait wait, String nbProcessoIndeferido) throws InterruptedException, IOException {
 
         driver.switchTo().defaultContent();
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
@@ -258,18 +253,53 @@ public class RepositoryMaternidade {
             }
 
 
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("SISLABRA") ;
-            if (existeSislabra) {
+            Boolean existeProcessoAdministrativo = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                    .toUpperCase().contains("PROCESSO ADMINISTRATIVO");
+            if (existeProcessoAdministrativo) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
-                return "passou";
+
+                LeituraPDF pdf = new LeituraPDF();
+                driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
+
+                String processo;
+
+
+                int cont = 0;
+                while (cont <= 2) {
+
+                    if (pdf.PDFBaixado()) {
+                        processo = pdf.lerPDF();
+                        System.out.println(processo);
+                        String[] buscaNb = processo.split("\r\n");
+                        for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
+                            if (buscaNb[indexBuscaNb].contains("NB")) {
+                                System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
+                                String replaceNb = buscaNb[indexBuscaNb].replace(".", "");
+                                replaceNb = replaceNb.replace("-", "");
+                                if (replaceNb.contains(nbProcessoIndeferido)) {
+
+                                    return replaceNb;
+                                }
+
+                            }
+                        }
+                        break;
+                    } else {
+                        pdf.apagarPDF();
+                    }
+                    cont++;
+                }
+
+                pdf.apagarPDF();
+
+
             }
 
-        }
-        return "passou";
-    }
 
+        }
+
+        return  "nao achou";
+    }
 }
 
