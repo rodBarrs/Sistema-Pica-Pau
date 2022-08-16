@@ -4,6 +4,7 @@ import com.mycompany.newmark.LeituraPDF;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 
 import com.mycompany.newmark.entities.InformacoesSislabra;
+import net.sf.cglib.core.Local;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -149,6 +151,17 @@ public class RepositoryMaternidade {
                 System.out.println(e);
             }
 
+        }
+        //verificação periodo prescrição
+        boolean prescricao = false;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        formatter = formatter.withLocale(Locale.US);
+        LocalDate d1 = LocalDate.parse(dataAjuizamento, formatter);
+        LocalDate d2 = LocalDate.parse(dataInicioMaisRecente, formatter);
+        Period period = Period.between(d1,d2);
+        int difAnos = Math.abs(period.getYears());
+        if(difAnos>5){
+            prescricao=true;
         }
 
 
