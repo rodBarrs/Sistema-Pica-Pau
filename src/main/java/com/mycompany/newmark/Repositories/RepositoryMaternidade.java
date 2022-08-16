@@ -216,12 +216,12 @@ public class RepositoryMaternidade {
                 processo = pdf.lerPDF();
                 System.out.println(processo);
                 String[] buscaNb = processo.split("\r\n");
-                for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
-                    if (buscaNb[indexBuscaNb].contains("196.960.955-6")) {
-                        System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
-                        break;
-                    }
-                }
+//                for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
+//                    if (buscaNb[indexBuscaNb].contains("196.960.955-6")) {
+//                        System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
+//                        break;
+//                    }
+//                }
                 break;
             } else {
                 pdf.apagarPDF();
