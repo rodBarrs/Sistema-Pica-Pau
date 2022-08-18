@@ -197,11 +197,17 @@ public class RepositoryMaternidade {
             if (i > listaMovimentacao.size() - 3) {
                 Thread.sleep(500);
             }
-
-
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("SISLABRA");
+            Boolean existeSislabra = false;
+            for(int j=3; j>0;){
+                try{
+                            existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                            .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span["+j+"]")).getText()
+                            .toUpperCase().contains("SISLABRA");
+                            j=0;
+                }catch (Exception e){
+                    j--;
+                }
+            }
 
 
             if (existeSislabra) {
