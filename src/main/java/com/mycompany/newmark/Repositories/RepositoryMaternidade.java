@@ -235,12 +235,28 @@ public class RepositoryMaternidade {
                 processo = pdf.lerPDF();
                 System.out.println(processo);
                 String[] buscaNb = processo.split("\r\n");
+                String situacaoEmpAtual;
+                String modelo;
+                String tipo;
+                List<String> situacaoEmpresa = new ArrayList<>();
+                List<InformacoesSislabra.InfVeiculo> infVeiculo = new ArrayList<>();
                 for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
-                    if (buscaNb[indexBuscaNb].contains("196.960.955-6")) {
+                    if (buscaNb[indexBuscaNb].contains("Situação Empresa:")) {
                         System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
-                        break;
+                        situacaoEmpAtual = buscaNb[indexBuscaNb+1];
+                        situacaoEmpresa.add(situacaoEmpAtual);
+
+                    }
+                    if (buscaNb[indexBuscaNb].contains("MOTOCICLETA") || buscaNb[indexBuscaNb].contains("AUTOMOVEL")) {
+                        System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
+                        tipo = buscaNb[indexBuscaNb];
+                        modelo = buscaNb[indexBuscaNb+2];
+                        infVeiculo.add(new InformacoesSislabra.InfVeiculo(modelo,tipo));
                     }
                 }
+
+                informacao.setInfVeiculo(infVeiculo);
+                informacao.setSituacaoEmpresa(situacaoEmpresa);
                 break;
             } else {
                 pdf.apagarPDF();
