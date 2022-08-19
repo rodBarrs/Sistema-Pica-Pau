@@ -1,23 +1,46 @@
 package com.mycompany.newmark.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InformacoesSislabra {
 
-    boolean contemEmpresa;
-    boolean contemVeiculo;
+    List<InfVeiculo> infVeiculo;
+    List<String> situacaoEmpresa = new ArrayList<>();
 
-    public boolean isContemEmpresa() {
-        return contemEmpresa;
+    public List<String> getSituacaoEmpresa() {
+        return situacaoEmpresa;
     }
 
-    public void setContemEmpresa(boolean contemEmpresa) {
-        this.contemEmpresa = contemEmpresa;
+    public void setSituacaoEmpresa(List<String> situacaoEmpresa) {
+        this.situacaoEmpresa = situacaoEmpresa;
     }
 
-    public boolean isContemVeiculo() {
-        return contemVeiculo;
+    public List<InfVeiculo> getInfVeiculo() {
+        return infVeiculo;
     }
 
-    public void setContemVeiculo(boolean contemVeiculo) {
-        this.contemVeiculo = contemVeiculo;
+    public void setInfVeiculo(List<InfVeiculo> infVeiculo) {
+        this.infVeiculo = infVeiculo;
+    }
+
+    public static class InfVeiculo{
+        String modelo;
+        String tipo;
+
+        public InfVeiculo(String modelo, String tipo) {
+            this.modelo = modelo;
+            this.tipo = tipo;
+        }
+
+        public String getModelo() {
+            return modelo;
+        }
+
+        public String getTipo() {
+            return tipo;
+        }
+
     }
 }
+

@@ -197,11 +197,17 @@ public class RepositoryMaternidade {
             if (i > listaMovimentacao.size() - 3) {
                 Thread.sleep(500);
             }
-
-
-            Boolean existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
-                    .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span[3]")).getText()
-                    .toUpperCase().contains("SISLABRA");
+            Boolean existeSislabra = false;
+            for(int j=3; j>0;){
+                try{
+                            existeSislabra = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+                            .toUpperCase().contains("BENS") || driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span/span["+j+"]")).getText()
+                            .toUpperCase().contains("SISLABRA");
+                            j=0;
+                }catch (Exception e){
+                    j--;
+                }
+            }
 
 
             if (existeSislabra) {
@@ -229,12 +235,28 @@ public class RepositoryMaternidade {
                 processo = pdf.lerPDF();
                 System.out.println(processo);
                 String[] buscaNb = processo.split("\r\n");
+                String situacaoEmpAtual;
+                String modelo;
+                String tipo;
+                List<String> situacaoEmpresa = new ArrayList<>();
+                List<InformacoesSislabra.InfVeiculo> infVeiculo = new ArrayList<>();
                 for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
-                    if (buscaNb[indexBuscaNb].contains("196.960.955-6")) {
+                    if (buscaNb[indexBuscaNb].contains("Situação Empresa:")) {
                         System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
-                        break;
+                        situacaoEmpAtual = buscaNb[indexBuscaNb+1];
+                        situacaoEmpresa.add(situacaoEmpAtual);
+
+                    }
+                    if (buscaNb[indexBuscaNb].contains("MOTOCICLETA") || buscaNb[indexBuscaNb].contains("AUTOMOVEL")) {
+                        System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
+                        tipo = buscaNb[indexBuscaNb];
+                        modelo = buscaNb[indexBuscaNb+2];
+                        infVeiculo.add(new InformacoesSislabra.InfVeiculo(modelo,tipo));
                     }
                 }
+
+                informacao.setInfVeiculo(infVeiculo);
+                informacao.setSituacaoEmpresa(situacaoEmpresa);
                 break;
             } else {
                 pdf.apagarPDF();
