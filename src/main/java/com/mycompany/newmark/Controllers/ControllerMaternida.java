@@ -37,8 +37,10 @@ public class ControllerMaternida {
 		String passou = materidadeRepositorio.clicarDosprev(driver, wait);
 		informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
 		String nbIndeferido = informacaoDosPrev.getNbProcessoIndeferido();
+
 	//	String passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
 	//	informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
+
 		dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, nbIndeferido);
 
 		resultado.setDriver(driver);
