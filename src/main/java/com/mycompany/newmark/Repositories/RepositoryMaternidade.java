@@ -290,7 +290,7 @@ public class RepositoryMaternidade {
             }
 
 
-            Boolean existeProcessoAdministrativo = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span")).getText()
+            Boolean existeProcessoAdministrativo = driver.findElement(By.xpath("/html/body/div[2]/div[2]/div/div[2]/div/div[3]/div/table/tbody/tr["+ i +"]/td[2]/div/span/span[1]")).getText()
                     .toUpperCase().contains("PROCESSO ADMINISTRATIVO");
             if (existeProcessoAdministrativo) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
@@ -315,8 +315,8 @@ public class RepositoryMaternidade {
                                 String replaceNb = buscaNb[indexBuscaNb].replace(".", "");
                                 replaceNb = replaceNb.replace("-", "");
                                 if (replaceNb.contains(nbProcessoIndeferido)) {
-
-                                    return replaceNb;
+                                    String dataParto = buscaNb[indexBuscaNb-8].replace("Informe a data do parto, atestado médico ou adoção/guarda para fins de adoção: ","");
+                                    return dataParto;
                                 }
 
                             }
