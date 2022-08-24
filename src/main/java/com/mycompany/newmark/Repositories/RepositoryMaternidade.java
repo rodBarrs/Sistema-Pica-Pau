@@ -1,21 +1,25 @@
 package com.mycompany.newmark.Repositories;
 
 import com.mycompany.newmark.LeituraPDF;
+import com.mycompany.newmark.Processo_Etiquetar;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 
 import com.mycompany.newmark.entities.InformacoesSislabra;
 import net.sf.cglib.core.Local;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.security.Key;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -153,16 +157,7 @@ public class RepositoryMaternidade {
 
         }
         //verificação periodo prescrição
-        boolean prescricao = false;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        formatter = formatter.withLocale(Locale.US);
-        LocalDate d1 = LocalDate.parse(dataAjuizamento, formatter);
-        LocalDate d2 = LocalDate.parse(dataInicioMaisRecente, formatter);
-        Period period = Period.between(d1,d2);
-        int difAnos = Math.abs(period.getYears());
-        if(difAnos>5){
-            prescricao=true;
-        }
+
 
 
         informacao.setDataDeAjuizamento(dataAjuizamento);
@@ -213,6 +208,8 @@ public class RepositoryMaternidade {
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
+                LeituraPDF pdf = new LeituraPDF();
+                pdf.apagarPDF();
                 return "passou";
             }
 
@@ -297,6 +294,7 @@ public class RepositoryMaternidade {
                 dosClick.click();
 
                 LeituraPDF pdf = new LeituraPDF();
+
                 driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
 
                 String processo;
@@ -338,5 +336,67 @@ public class RepositoryMaternidade {
 
         return  "nao achou";
     }
+
+    public String etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca){
+        Processo_Etiquetar etiquetar = new Processo_Etiquetar();
+        String etiqueta = "PRESCRIÇÃO - N; ";
+
+       //PRESCRIÇÃO
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        formatter = formatter.withLocale(Locale.US);
+        LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
+        LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
+        Period period = Period.between(d1,d2);
+        int difAnos = Math.abs(period.getYears());
+        if(difAnos>=5){
+           etiqueta = "PRESCRIÇÃO - S; ";
+        }
+
+        //LITISPENDÊNCIA
+
+        if (infoDosprev.isExisteProcessoINSS()){
+            etiqueta += " LITISPENDÊNCIA - S; ";
+        }else {
+            etiqueta += " LITISPENDÊNCIA - N; ";
+        }
+
+
+        //PATRIMÔNIO
+        int i = 0;
+        //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
+        for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
+            if(teste.getTipo().equals("MOTOCICLETA")){
+                i++;
+            }
+        }
+        if(i>1){
+            etiqueta+="PATRIMÔNIO - N; ";
+        }else{
+            etiqueta+="PATRIMÔNIO - S; ";
+        }
+
+        //URBANO
+
+//        infoDosprev.getDataFim()
+        if (infoDosprev.getDataFim().equals("")) {
+            etiqueta += "URBANO - N ";
+        }else {
+            LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
+            LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
+            Period period2 = Period.between(data1,data2);
+            int difMeses = Math.abs(period2.getMonths());
+
+            if (difMeses >= 10){
+                etiqueta += "URBANO - S ";
+            }else {
+                etiqueta += "URBANO - N ";
+            }
+        }
+
+        return etiqueta;
+
+    }
+
+
 }
 

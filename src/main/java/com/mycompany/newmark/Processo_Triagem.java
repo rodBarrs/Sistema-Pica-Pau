@@ -93,14 +93,7 @@ public class Processo_Triagem {
 					resultado.getDriver().switchTo().window(janela.get(0));
 
 					etiqueta.etiquetar(resultado.getDriver(), wait, resultado);
-					//Contadores
-					if (resultado.getLocal().contains("MOV")) {
-						banco.contarMov();
-					} else if (resultado.getLocal().contains("DOC")) {
-						banco.contarDoc();
-					} else {
-						banco.contarNao();
-					}
+
 				}
 			} while (grid != false);
 		} catch (Exception e) {

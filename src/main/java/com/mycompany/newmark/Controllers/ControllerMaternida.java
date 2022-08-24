@@ -22,28 +22,23 @@ public class ControllerMaternida {
 
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		LeituraPDF pdf = new LeituraPDF();
-		//resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
-		Triagem_Etiquetas triagem = new Triagem_Etiquetas();
-		VerificarData verificarData = new VerificarData();
-		Triagem_Condicao condicao = new Triagem_Condicao();
-		String linhaMovimentacao = "";
-		String condicaoProv = "PRO";
-		String condicaoCabecalho = "CAB";
-		String localTriagem = "DOC";
-		String processo = "";
 
-		String dataNascimentoCrianca;
+			String dataNascimentoCrianca;
 
-		String passou = materidadeRepositorio.clicarDosprev(driver, wait);
-		informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
-		String nbIndeferido = informacaoDosPrev.getNbProcessoIndeferido();
+			String passou = materidadeRepositorio.clicarDosprev(driver, wait);
+			informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
 
-	//	String passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
-	//	informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
+			String passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
+			informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
 
-		dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, nbIndeferido);
+			dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
 
-		resultado.setDriver(driver);
+			String etiqueta = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, dataNascimentoCrianca);
+
+			resultado.setDriver(driver);
+			resultado.setEtiqueta(etiqueta);
+
+
 		return resultado;
 	}
 
