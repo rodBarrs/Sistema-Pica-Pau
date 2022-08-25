@@ -130,8 +130,8 @@ public class RepositoryMaternidade {
 
         }
 
-        String filiacao = "";
-        String nomeEmpresa = "";
+        String codNB = "";
+        String origemVinculo = "";
         String nit = "";
         String dataInicio = "";
         String dataFim = "";
@@ -140,11 +140,10 @@ public class RepositoryMaternidade {
                 WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
                 List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
                 for (int j = listaRelPrev.size(); j > 0; j--) {
-                    filiacao = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[7]")).getText();
-                    if (filiacao.contains("Empregado")) {
-
+                    codNB = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
+                    if (codNB.equals("")) {
                         nit = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[2]")).getText();
-                        nomeEmpresa = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[4]")).getText();
+                        origemVinculo = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[4]")).getText();
                         dataInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[5]")).getText();
                         dataFim = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
                         j = -1;
@@ -166,7 +165,7 @@ public class RepositoryMaternidade {
         informacao.setDataInicioIndeferido(dataInicioMaisRecente);
         informacao.setNbProcessoIndeferido(nbMaisRecente);
         informacao.setNit(nit);
-        informacao.setNomeEmpresa(nomeEmpresa);
+        informacao.setNomeEmpresa(origemVinculo);
         informacao.setDataInicio(dataInicio);
         informacao.setDataFim(dataFim);
 
@@ -207,9 +206,9 @@ public class RepositoryMaternidade {
 
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
-                dosClick.click();
                 LeituraPDF pdf = new LeituraPDF();
                 pdf.apagarPDF();
+                dosClick.click();
                 return "passou";
             }
 
@@ -313,8 +312,12 @@ public class RepositoryMaternidade {
                                 String replaceNb = buscaNb[indexBuscaNb].replace(".", "");
                                 replaceNb = replaceNb.replace("-", "");
                                 if (replaceNb.contains(nbProcessoIndeferido)) {
-                                    String dataParto = buscaNb[indexBuscaNb-8].replace("Informe a data do parto, atestado médico ou adoção/guarda para fins de adoção: ","");
-                                    return dataParto;
+                                    for(int j = indexBuscaNb; j>0; j--){
+                                        if(buscaNb[j].contains("Informe a data do parto, atestado médico ou adoção/guarda para fins de adoção:")){
+                                            String dataParto = buscaNb[j].replace("Informe a data do parto, atestado médico ou adoção/guarda para fins de adoção: ","");
+                                            return dataParto;
+                                        }
+                                    }
                                 }
 
                             }
@@ -378,7 +381,7 @@ public class RepositoryMaternidade {
         //URBANO
 
 //        infoDosprev.getDataFim()
-        if (infoDosprev.getDataFim().equals("")) {
+        if (infoDosprev.getDataFim().equals("") || dataNascimentoCrianca.equals("nao achou")) {
             etiqueta += "URBANO - N ";
         }else {
             LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
@@ -391,6 +394,10 @@ public class RepositoryMaternidade {
             }else {
                 etiqueta += "URBANO - N ";
             }
+        }
+
+        if(etiqueta.equals("PRESCRIÇÃO - N;  LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N")){
+            etiqueta = "Não contém impeditivos";
         }
 
         return etiqueta;
