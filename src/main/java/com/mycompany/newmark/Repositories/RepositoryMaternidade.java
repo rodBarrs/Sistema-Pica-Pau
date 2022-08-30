@@ -340,6 +340,7 @@ public class RepositoryMaternidade {
     public String etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca){
         Processo_Etiquetar etiquetar = new Processo_Etiquetar();
         String etiqueta = "PRESCRIÇÃO - N; ";
+        String observacao = "";
 
        //PRESCRIÇÃO
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -350,6 +351,7 @@ public class RepositoryMaternidade {
         int difAnos = Math.abs(period.getYears());
         if(difAnos>=5){
            etiqueta = "PRESCRIÇÃO - S; ";
+           observacao +="data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido();
         }
 
         //LITISPENDÊNCIA
@@ -363,16 +365,25 @@ public class RepositoryMaternidade {
 
         //PATRIMÔNIO
         int i = 0;
+        int j = 0;
         //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
         for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
             if(teste.getTipo().equals("MOTOCICLETA")){
                 i++;
             }
         }
-        if(i>1){
-            etiqueta+="PATRIMÔNIO - N; ";
-        }else{
+
+        for (int z = 0; z <= infoSislabra.getSituacaoEmpresa().size(); z++){
+            if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
+                j++;
+            }
+        }
+
+        if(i>1 || j>0){
             etiqueta+="PATRIMÔNIO - S; ";
+            observacao += "";
+        }else{
+            etiqueta+="PATRIMÔNIO - N; ";
         }
 
         //URBANO
