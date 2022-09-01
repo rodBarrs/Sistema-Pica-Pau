@@ -67,8 +67,11 @@ public class Processo_Triagem {
 					if (config.isLaudoPericial() == true) {
 						resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
 					} else if (config.isPeticaoInicial() == true) {
-						//if (resultado.getAssunto().contains("SALÁRIO-MATERNIDADE")) {
-							resultado = controllerMaternida.iniciar(resultado.getDriver(), wait, config, bancos);
+						if (resultado.getAssunto().contains("SALÁRIO-MATERNIDADE") || resultado.getAssunto().contains("RURAL")) {
+							resultado = controllerMaternida.iniciar(resultado.getDriver(),resultado.getAssunto(), wait, config, bancos);
+						}
+
+
 						//}
 					} else {
 						switch (config.getTipoTriagem()) {

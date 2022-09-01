@@ -11,6 +11,7 @@ public class Chaves_Resultado {
 	private static String palavraChavePeticao;
     private String PalavraChave = "";
     private String Etiqueta = "";
+    private String Observacao = "";
     private String subnucleo = "";
     private String Local = "";
     private Integer id;
@@ -18,7 +19,15 @@ public class Chaves_Resultado {
     private String assunto;
     private WebDriver driver;
     private boolean grid;
-    
+
+    public String getObservacao() {
+        return Observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        Observacao = observacao;
+    }
+
     public static String getSeqPeticao() {
 		return seqPeticao;
 	}
