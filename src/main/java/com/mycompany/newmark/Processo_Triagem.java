@@ -68,35 +68,21 @@ public class Processo_Triagem {
 						resultado = pericial.pericial(resultado.getDriver(), wait, bancos);
 					} else if (config.isPeticaoInicial() == true) {
 						if (resultado.getAssunto().contains("SALÁRIO-MATERNIDADE") || resultado.getAssunto().contains("RURAL")) {
-							resultado = controllerMaternida.iniciar(resultado.getDriver(),resultado.getAssunto(), wait, config, bancos);
-						}
+							resultado = controllerMaternida.iniciar(resultado.getDriver(), resultado.getAssunto(), wait, config, bancos);
+							List<String> janela = new ArrayList(resultado.getDriver().getWindowHandles());
+							resultado.getDriver().switchTo().window(janela.get(1)).close();
+							resultado.getDriver().switchTo().window(janela.get(0));
 
 
-						//}
-					} else {
-						switch (config.getTipoTriagem()) {
-						case "COM":
-							resultado = movimentacao.movimentacao(resultado.getDriver(), wait, config, bancos);
-							if (resultado.getEtiqueta().contains("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA")) {
-								resultado = documento.documento(resultado.getDriver(), wait, config, bancos);
-							}
-							break;
-						case "MOV":
-							resultado = movimentacao.movimentacao(resultado.getDriver(), wait, config, bancos);
-							break;
-						case "DOC":
-							resultado = documento.documento(resultado.getDriver(), wait, config, bancos);
-							;
-							break;
+						} else {
+							resultado.setEtiqueta("ASSUNTO NÃO APLICÁVEL");
+							resultado.setObservacao("");
 						}
+
+						etiqueta.etiquetar(resultado.getDriver(), wait, resultado);
+
+
 					}
-					//Fecha a janela do processo e volta para a janela do grid
-					List<String> janela = new ArrayList(resultado.getDriver().getWindowHandles());
-					resultado.getDriver().switchTo().window(janela.get(1)).close();
-					resultado.getDriver().switchTo().window(janela.get(0));
-
-					etiqueta.etiquetar(resultado.getDriver(), wait, resultado);
-
 				}
 			} while (grid != false);
 		} catch (Exception e) {

@@ -366,7 +366,7 @@ public class RepositoryMaternidade {
             int difAnos = Math.abs(period.getYears());
             if(difAnos>=5){
                 etiqueta = "PRESCRIÇÃO - S; ";
-                observacao +="data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido();
+                observacao +="PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
             }
         }
 
@@ -385,13 +385,13 @@ public class RepositoryMaternidade {
         int i = 0;
         int j = 0;
         int indexVeiculo = 0;
-        observacao += "Veículos: " + infoSislabra.getInfVeiculo().size();
+        observacao += "PATRI- Nº de Veículos: " + infoSislabra.getInfVeiculo().size();
         //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
         for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
             if((teste.getTipo().contains("MOTOCICLETA")) || teste.getTipo().contains("AUTOMOVEL")) {
                 i++;
-                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo();
-                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo();
+                observacao += "; " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo();
+                observacao += "; " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo();
                 indexVeiculo++;
 
             }else {
@@ -402,7 +402,7 @@ public class RepositoryMaternidade {
         for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++){
             if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
                 j++;
-                observacao += "Empresa Situação: "+ infoSislabra.getSituacaoEmpresa();
+                observacao += "; Empresa Situação: "+ infoSislabra.getSituacaoEmpresa();
             }
         }
 
@@ -427,7 +427,7 @@ public class RepositoryMaternidade {
 
                 if (difMeses >= 10){
                     etiqueta += "URBANO - S ";
-                    observacao += "Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
+                    observacao += "URB- Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
                 }else {
                     etiqueta += "URBANO - N ";
                 }
