@@ -78,7 +78,7 @@ public class Processo_Grid {
                 }
 
             } catch (Exception erro) {
-                URL url = getClass().getResource("/SOUNDS/have_this.wav");
+                URL url = getClass().getResource("/SOUNDS/Urna.wav");
                 AudioClip clip = Applet.newAudioClip(url);
                 clip.play();
                 

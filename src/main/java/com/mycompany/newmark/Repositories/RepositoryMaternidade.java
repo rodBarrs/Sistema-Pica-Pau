@@ -366,7 +366,7 @@ public class RepositoryMaternidade {
             int difAnos = Math.abs(period.getYears());
             if(difAnos>=5){
                 etiqueta = "PRESCRIÇÃO - S; ";
-                observacao +="PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
+                observacao +="|PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
             }
         }
 
@@ -385,13 +385,17 @@ public class RepositoryMaternidade {
         int i = 0;
         int j = 0;
         int indexVeiculo = 0;
-        observacao += "PATRI- Nº de Veículos: " + infoSislabra.getInfVeiculo().size();
+        int cont = 0;
         //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
         for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
             if((teste.getTipo().contains("MOTOCICLETA")) || teste.getTipo().contains("AUTOMOVEL")) {
+                if (cont ==0){
+                    observacao += "PATRI- Nº de Veículos: " + infoSislabra.getInfVeiculo().size();
+                }
+                cont++;
                 i++;
-                observacao += "; " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo();
-                observacao += "; " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo();
+                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo()+"; ";
+                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo()+"; ";
                 indexVeiculo++;
 
             }else {
@@ -402,7 +406,7 @@ public class RepositoryMaternidade {
         for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++){
             if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
                 j++;
-                observacao += "; Empresa Situação: "+ infoSislabra.getSituacaoEmpresa();
+                observacao += "Empresa Situação: "+ infoSislabra.getSituacaoEmpresa()+"; ";
             }
         }
 
@@ -425,9 +429,9 @@ public class RepositoryMaternidade {
                 Period period2 = Period.between(data1,data2);
                 int difMeses = Math.abs(period2.getMonths());
 
-                if (difMeses >= 10){
+                if (difMeses < 10){
                     etiqueta += "URBANO - S ";
-                    observacao += "URB- Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
+                    observacao += "|URBA - Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
                 }else {
                     etiqueta += "URBANO - N ";
                 }
@@ -441,7 +445,7 @@ public class RepositoryMaternidade {
                 Period period2 = Period.between(data1,data2);
                 int difAnosUrbano = Math.abs(period2.getYears());
 
-                if (difAnosUrbano >= 15){
+                if (difAnosUrbano < 15){
                     etiqueta += "URBANO - S ";
                     observacao += "Data de Ajuizamento: " + infoDosprev.getDataDeAjuizamento() + "Data Fim: " + infoDosprev.getDataFim();
                 }else {
@@ -449,7 +453,7 @@ public class RepositoryMaternidade {
                 }
             }
         }
-        if (etiqueta.equals("PRESCRIÇÃO - N;  LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N")){
+        if (etiqueta.equals("PRESCRIÇÃO - N;  LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N ")){
             etiqueta = "Não contêm impeditivos";
         }
 

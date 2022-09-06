@@ -4,10 +4,13 @@
  */
 package com.mycompany.newmark;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -54,6 +57,9 @@ public class Processo_Triagem {
 		ControllerMaternida controllerMaternida = new ControllerMaternida();
 		ControllerMaternida peticao = new ControllerMaternida();
 		Processo_Etiquetar etiqueta = new Processo_Etiquetar();
+//		URL url = getClass().getResource("/SOUNDS/ferrolho.wav"); // Som duvidoso
+//		AudioClip clip = Applet.newAudioClip(url);
+//		clip.play();
 		boolean grid;
 		try {
 
