@@ -307,7 +307,7 @@ public class Controller_Login implements Initializable {
 	}
 
 	@FXML
-	public void triar(ActionEvent event) {
+	public void triar() {
 		som();
 		Runnable task = new Runnable() {
 			@Override
@@ -449,6 +449,9 @@ public class Controller_Login implements Initializable {
 			usuario.logar(driver, wait, usuario);
 			this.driver = driver;
 			SaidaTriagem.setText("- Login Realizado!");
+			triar();
+
+
 		} catch (Exception erro) {
 			SaidaTriagem.setText("- Erro de comunicação!");
 			erro.printStackTrace();
