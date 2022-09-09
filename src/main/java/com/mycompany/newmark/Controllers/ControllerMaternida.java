@@ -5,17 +5,22 @@ package com.mycompany.newmark.Controllers;
 
 import com.mycompany.newmark.*;
 import com.mycompany.newmark.Repositories.RepositoryMaternidade;
+import com.mycompany.newmark.entities.EtiquetaObservacao;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 import com.mycompany.newmark.entities.InformacoesSislabra;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.io.IOException;
+import java.net.URL;
 
 public class ControllerMaternida {
 
 
-	public Chaves_Resultado iniciar(WebDriver driver, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, IOException {
+	public Chaves_Resultado iniciar(WebDriver driver, String assunto, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, IOException {
+
 		InformacoesDosprev informacaoDosPrev = new InformacoesDosprev();
 		InformacoesSislabra informacaoSislabra = new InformacoesSislabra();
 		RepositoryMaternidade materidadeRepositorio = new RepositoryMaternidade();
@@ -33,10 +38,11 @@ public class ControllerMaternida {
 
 			dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
 
-			String etiqueta = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, dataNascimentoCrianca);
+			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, dataNascimentoCrianca, assunto);
 
 			resultado.setDriver(driver);
-			resultado.setEtiqueta(etiqueta);
+			resultado.setEtiqueta(etiquetaObservacao.getEtiqueta());
+			resultado.setObservacao(etiquetaObservacao.getObservacao());
 
 
 		return resultado;

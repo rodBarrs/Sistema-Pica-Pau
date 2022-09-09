@@ -70,9 +70,12 @@ public class Controller_Login implements Initializable {
 	@FXML
 	public JFXButton btInformacao, btAdministracao, btLogin, btTriar, btParar;
 	@FXML
-	public JFXTextField LoginTxt, SenhaTxtMostar;
+	public JFXTextField LoginTxt, SenhaTxtMostar, Etiquetatxt;
 	@FXML
 	public JFXPasswordField SenhaTxt;
+
+	@FXML
+	JFXButton btn_triagem;
 
 	@FXML
 	public ComboBox<String> Bancos;
@@ -101,6 +104,8 @@ public class Controller_Login implements Initializable {
 		Bancos.setValue("Selecione um banco:");
 	}
 
+
+
 	@FXML
 	public void exibirDebugPI() {
 		if (debugPi.isDebugpi()) {
@@ -111,6 +116,7 @@ public class Controller_Login implements Initializable {
 			debugPi.setDebugpi(true);
 			popupDebug.setText("Ocultar Debug de Petição Inicial");
 			labelDebug.setVisible(true);
+
 		}
 	}
 
@@ -195,6 +201,7 @@ public class Controller_Login implements Initializable {
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {
 				LoginTxt.setText(resultadoBanco.getString("Login"));
+				Etiquetatxt.setText(resultadoBanco.getString("Etiqueta"));
 				String senha = descriptografar(resultadoBanco.getString("Senha"));
 				if (exibirSenha.isSelected()) {
 					// Exibir senha
@@ -259,6 +266,50 @@ public class Controller_Login implements Initializable {
 		stage.show();
 	}
 
+	@FXML
+	JFXButton voltar;
+
+	@FXML
+	void retornaMenu(ActionEvent event) {
+		Node node = (Node) event.getSource();
+		Stage stage = (Stage) node.getScene().getWindow();
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
+		}
+		catch (IOException erro) {
+			erro.getMessage();
+		}
+		Scene scene = new Scene(root);
+		stage.setMinWidth(900);
+		stage.setMinHeight(500);
+		stage.setScene(scene);
+		stage.centerOnScreen();
+		stage.show();
+		stage.setTitle("Sistema de Triagem Mark");
+	}
+
+//	@FXML
+//	void exec_triagem (ActionEvent event){
+//		Node node = (Node) event.getSource();
+//		Stage stage = (Stage) node.getScene().getWindow();
+//		Parent root = null;
+//		try {
+//			root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
+//
+//		}
+//		catch (IOException erro) {
+//			erro.getMessage();
+//		}
+//		Scene scene = new Scene(root);
+//		stage.setMinWidth(900);
+//		stage.setMinHeight(500);
+//		stage.setScene(scene);
+//		stage.centerOnScreen();
+//		stage.show();
+//		stage.setTitle("Sistema de Triagem Mark Caeiro");
+//
+//	}
 
 	@FXML
 	public void editarBancos(ActionEvent event) {
@@ -307,7 +358,7 @@ public class Controller_Login implements Initializable {
 	}
 
 	@FXML
-	public void triar(ActionEvent event) {
+	public void triar() {
 		som();
 		Runnable task = new Runnable() {
 			@Override
@@ -329,18 +380,16 @@ public class Controller_Login implements Initializable {
 				som();
 				SaidaTriagem.setText("- Erro: Login Não Realizado!");
 				BarraDeProgresso.setVisible(false);
-			} else {
-				if (Bancos.getValue().contains("Selecione")) {
-					SaidaTriagem.setText("- Selecione um banco para a triagem!");
-				} else {
+			}
+				else {
 					Banco banco = new Banco();
 					String bancoSelecionado = banco.selecionarBanco(Bancos.getSelectionModel().getSelectedItem());
-					if (!bancoSelecionado.equals("")) {
+
 						SaidaTriagem.setText("- Triagem Iniciada!");
 						BarraDeProgresso.setVisible(true);
 						Processo_Triagem triagem = new Processo_Triagem(driver, bancoSelecionado);
 						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada,
-								debugPi);
+								debugPi, Etiquetatxt.getText());
 						if (triar == false) {
 							som();
 							SaidaTriagem.setText("- Erro de comunicação com plataforma Sapiens!");
@@ -350,9 +399,9 @@ public class Controller_Login implements Initializable {
 							SaidaTriagem.setText("- Triagem finalizada");
 							BarraDeProgresso.setVisible(false);
 						}
-					}
+
 				}
-			}
+
 			triagemIniciada = true;
 		} catch (Exception erro) {
 			som();
@@ -396,15 +445,18 @@ public class Controller_Login implements Initializable {
 		} else {
 			usuario.setSenha(SenhaTxt.getText());
 		}
+		usuario.setEtiqueta(Etiquetatxt.getText());
 		if (salvarSenha.isSelected()) {
 			Usuario usuarioSalvar = new Usuario();
 			usuarioSalvar.setLogin(usuario.getLogin());
 			usuarioSalvar.setSenha(criptografar(usuario.getSenha()));
+			usuarioSalvar.setEtiqueta(usuario.getEtiqueta());
 			banco.salvarSenha(usuarioSalvar);
 		} else {
 			Usuario zerar = new Usuario();
 			zerar.setLogin("");
 			zerar.setSenha("");
+			zerar.setLogin("");
 			banco.salvarSenha(zerar);
 		}
 		try {
@@ -449,6 +501,9 @@ public class Controller_Login implements Initializable {
 			usuario.logar(driver, wait, usuario);
 			this.driver = driver;
 			SaidaTriagem.setText("- Login Realizado!");
+			triar();
+
+
 		} catch (Exception erro) {
 			SaidaTriagem.setText("- Erro de comunicação!");
 			erro.printStackTrace();

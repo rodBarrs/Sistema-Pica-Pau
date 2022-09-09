@@ -2,6 +2,7 @@ package com.mycompany.newmark.Repositories;
 
 import com.mycompany.newmark.LeituraPDF;
 import com.mycompany.newmark.Processo_Etiquetar;
+import com.mycompany.newmark.entities.EtiquetaObservacao;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 
 import com.mycompany.newmark.entities.InformacoesSislabra;
@@ -107,16 +108,19 @@ public class RepositoryMaternidade {
                                 dataInicioMaisRecente = dataDeInicio;
                                 nbMaisRecente = nbIndeferido;
                             }
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                            formatter = formatter.withLocale(Locale.US);
-                            LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
-                            LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
-                            long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
-                            System.out.println(diferenca);
-                            if (diferenca < 0) {
-                                dataInicioMaisRecente = dataDeInicio;
-                                nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                            if(!dataInicioMaisRecente.equals("")){
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                formatter = formatter.withLocale(Locale.US);
+                                LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                                LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                                long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
+                                System.out.println(diferenca);
+                                if (diferenca < 0) {
+                                    dataInicioMaisRecente = dataDeInicio;
+                                    nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                }
                             }
+
 
                         }
 
@@ -130,18 +134,23 @@ public class RepositoryMaternidade {
 
         }
 
-        String codNB = "";
+        String filiacao = "";
         String origemVinculo = "";
         String nit = "";
         String dataInicio = "";
         String dataFim = "";
+        String codNB = "";
         for (int i = 4; i < 7; i++) {
             try {
                 WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
                 List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
                 for (int j = listaRelPrev.size(); j > 0; j--) {
+                    if (j == 1){
+                        break;
+                    }
                     codNB = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
                     if (codNB.equals("")) {
+
                         nit = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[2]")).getText();
                         origemVinculo = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[4]")).getText();
                         dataInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[5]")).getText();
@@ -206,9 +215,9 @@ public class RepositoryMaternidade {
 
             if (existeSislabra) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
+                dosClick.click();
                 LeituraPDF pdf = new LeituraPDF();
                 pdf.apagarPDF();
-                dosClick.click();
                 return "passou";
             }
 
@@ -340,20 +349,28 @@ public class RepositoryMaternidade {
         return  "nao achou";
     }
 
-    public String etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca){
+    public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca, String assunto){
+        EtiquetaObservacao etiquetaObservacao = new EtiquetaObservacao();
         Processo_Etiquetar etiquetar = new Processo_Etiquetar();
         String etiqueta = "PRESCRIÇÃO - N; ";
-
-       //PRESCRIÇÃO
+        String observacao = "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         formatter = formatter.withLocale(Locale.US);
-        LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
-        LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
-        Period period = Period.between(d1,d2);
-        int difAnos = Math.abs(period.getYears());
-        if(difAnos>=5){
-           etiqueta = "PRESCRIÇÃO - S; ";
+       //PRESCRIÇÃO
+        if(infoDosprev.getDataInicioIndeferido().equals("") || (infoDosprev.getDataDeAjuizamento().equals(""))){
+            etiqueta = "PRESCRIÇÃO - N; ";
+        }else{
+            LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
+            LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
+            Period period = Period.between(d1,d2);
+            int difAnos = Math.abs(period.getYears());
+            if(difAnos>=5){
+                etiqueta = "PRESCRIÇÃO - S; ";
+                observacao +="|PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
+            }
         }
+
+
 
         //LITISPENDÊNCIA
 
@@ -366,41 +383,84 @@ public class RepositoryMaternidade {
 
         //PATRIMÔNIO
         int i = 0;
+        int j = 0;
+        int indexVeiculo = 0;
+        int cont = 0;
         //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
         for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
-            if(teste.getTipo().equals("MOTOCICLETA")){
+            if((teste.getTipo().contains("MOTOCICLETA")) || teste.getTipo().contains("AUTOMOVEL")) {
+                if (cont ==0){
+                    observacao += "PATRI- Nº de Veículos: " + infoSislabra.getInfVeiculo().size();
+                }
+                cont++;
                 i++;
+                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo()+"; ";
+                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo()+"; ";
+                indexVeiculo++;
+
+            }else {
+                indexVeiculo++;
             }
         }
-        if(i>1){
-            etiqueta+="PATRIMÔNIO - N; ";
-        }else{
+
+        for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++){
+            if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
+                j++;
+                observacao += "Empresa Situação: "+ infoSislabra.getSituacaoEmpresa()+"; ";
+            }
+        }
+
+        if(i>1 || j>0){
             etiqueta+="PATRIMÔNIO - S; ";
+
+        }else{
+            etiqueta+="PATRIMÔNIO - N; ";
         }
 
         //URBANO
 
 //        infoDosprev.getDataFim()
-        if (infoDosprev.getDataFim().equals("") || dataNascimentoCrianca.equals("nao achou")) {
-            etiqueta += "URBANO - N ";
-        }else {
-            LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
-            LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
-            Period period2 = Period.between(data1,data2);
-            int difMeses = Math.abs(period2.getMonths());
-
-            if (difMeses >= 10){
-                etiqueta += "URBANO - S ";
-            }else {
+        if(assunto.contains("SALÁRIO-MATERNIDADE")){
+            if ((infoDosprev.getDataFim().equals("")) || (dataNascimentoCrianca.equals("nao achou"))){
                 etiqueta += "URBANO - N ";
+            }else {
+                LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
+                LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
+                Period period2 = Period.between(data1,data2);
+                int difMeses = Math.abs(period2.getMonths());
+
+                if (difMeses < 10){
+                    etiqueta += "URBANO - S ";
+                    observacao += "|URBA - Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
+                }else {
+                    etiqueta += "URBANO - N ";
+                }
+            }
+        } else {
+            if (infoDosprev.getDataFim().equals("")) {
+                etiqueta += "URBANO - N ";
+            }else {
+                LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
+                LocalDate data2 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
+                Period period2 = Period.between(data1,data2);
+                int difAnosUrbano = Math.abs(period2.getYears());
+
+                if (difAnosUrbano < 15){
+                    etiqueta += "URBANO - S ";
+                    observacao += "Data de Ajuizamento: " + infoDosprev.getDataDeAjuizamento() + "Data Fim: " + infoDosprev.getDataFim();
+                }else {
+                    etiqueta += "URBANO - N ";
+                }
             }
         }
-
-        if(etiqueta.equals("PRESCRIÇÃO - N;  LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N")){
-            etiqueta = "Não contém impeditivos";
+        if (etiqueta.equals("PRESCRIÇÃO - N;  LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N ")){
+            etiqueta = "Não contêm impeditivos";
         }
 
-        return etiqueta;
+        etiquetaObservacao.setEtiqueta(etiqueta);
+        etiquetaObservacao.setObservacao(observacao);
+
+        return etiquetaObservacao;
 
     }
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import java.net.URL?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchor" prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.newmark.Controller_TelaInicial">
+   <children>
+      <AnchorPane layoutX="450.0" prefHeight="500.0" prefWidth="456.0" styleClass="div-direita">
+         <stylesheets>
+            <URL value="@../styles/tema.css" />
+            <URL value="@../styles/menu_colofao.css" />
+         </stylesheets>
+      </AnchorPane>
+      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="456.0" styleClass="div-esquerda" stylesheets="@../styles/menu_colofao.css">
+         <children>
+            <JFXTextArea fx:id="Saida" editable="false" focusColor="#ffffff00" focusTraversable="false" layoutX="617.0" layoutY="38.0" prefHeight="89.0" prefWidth="253.0" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="TRANSPARENT" visible="false" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXTextArea>
+<!--            <JFXButton fx:id="btAdministracao" buttonType="RAISED" focusTraversable="false" layoutX="131.0" layoutY="161.0" onAction="#abrirPopupLogin" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000017" style="-fx-background-color: #0D4373;" styleClass="botaoVerde" stylesheets="@../styles/botoes.css" text="Administração" visible="false">-->
+<!--               <font>-->
+<!--                  <Font name="System Bold" size="12.0" />-->
+<!--               </font>-->
+<!--               <cursor>-->
+<!--                  <Cursor fx:constant="DEFAULT" />-->
+<!--               </cursor>-->
+<!--            </JFXButton>-->
+<!--            <JFXButton fx:id="btConfigurar" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="279.0" onAction="#configuracao" prefHeight="27.0" prefWidth="170.0" ripplerFill="TRANSPARENT" style="-fx-background-color: #310047;" styleClass="botaoRoxo" stylesheets="@../styles/botoes.css" text="Configurações" visible="false">-->
+<!--               <font>-->
+<!--                  <Font name="System Bold" size="12.0" />-->
+<!--               </font>-->
+<!--&lt;!&ndash;               <contextMenu>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <ContextMenu>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <items>&ndash;&gt;-->
+<!--&lt;!&ndash;                      <MenuItem fx:id="popupDebug" mnemonicParsing="false" onAction="#exibirDebugPI" text="Exibir Debug de Petição Inicial" />&ndash;&gt;-->
+<!--&lt;!&ndash;                    </items>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </ContextMenu>&ndash;&gt;-->
+<!--&lt;!&ndash;               </contextMenu>&ndash;&gt;-->
+<!--            </JFXButton>-->
+            <Line endX="30.0" endY="300.0" layoutX="270.0" layoutY="130.0" opacity="0.5" startX="30.0" startY="70.0" stroke="WHITE" visible="false" />
+            <Line endX="30.0" endY="300.0" layoutX="585.0" layoutY="130.0" opacity="0.5" startX="30.0" startY="70.0" stroke="WHITE" />
+            <ComboBox fx:id="Bancos" layoutX="680.0" layoutY="162.0" prefWidth="170.0" visible="false" />
+            <FontAwesomeIcon fill="WHITE" iconName="KEY" layoutX="87.0" layoutY="338.0" size="15" visible="false" />
+            <FontAwesomeIcon fill="WHITE" iconName="GEAR" layoutX="87.0" layoutY="298.0" size="15" visible="false" />
+            <JFXTextArea fx:id="SaidaTriagem" editable="false" focusColor="#ffffff00" focusTraversable="false" layoutX="652.0" layoutY="432.0" prefHeight="49.0" prefWidth="185.0" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="TRANSPARENT" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </JFXTextArea>
+            <JFXProgressBar fx:id="BarraDeProgresso" layoutX="100.0" layoutY="490.0" prefHeight="10.0" prefWidth="700.0" secondaryProgress="-2.0" visible="false" />
+            <ImageView fitHeight="112.0" fitWidth="168.0" layoutX="3.0" layoutY="7.0" visible="false">
+               <image>
+                  <Image url="@Imagens/LogoSapiens.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="127.0" fitWidth="112.0" layoutX="717.0" layoutY="14.0" visible="false">
+               <image>
+                  <Image url="@Imagens/LogoMark.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="labelDebug" layoutX="36.0" layoutY="463.0" prefHeight="27.0" prefWidth="436.0" text="EXIBINDO ALERTAS DE DEBUG PARA TRIAGEM NA PETIÇÃO INICIAL" textFill="WHITE" visible="false">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+<!--            <JFXButton id="input" layoutX="7.0" layoutY="468.0" onAction="#informacao" prefHeight="25.0" prefWidth="24.0" text=" " />-->
+            <FontAwesomeIcon disable="true" fill="WHITE" iconName="INFO" layoutX="16.0" layoutY="486.0" size="15" visible="false" />
+            <ImageView fitHeight="158.0" fitWidth="220.0" layoutX="340.0" layoutY="14.0">
+               <image>
+                  <Image url="/fxml/Imagens/Logo.png" />
+               </image>
+            </ImageView>
+            <JFXButton layoutX="350.0" layoutY="250.0" style="-fx-background-color: #258398;;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="IMPEDIMENTOS" />
+            <JFXButton fx:id="btn_triagem" layoutX="350.0" layoutY="200.0" onAction="#exec_triagem" style="-fx-background-color: #1CBC0E;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="TRIAGEM" />
+            <JFXButton layoutX="350.0" layoutY="302.0" style="-fx-background-color: #9236DB;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="ETIQUETAGEM" />
+            <JFXButton layoutX="350.0" layoutY="354.0" onAction="#informacao" style="-fx-background-color: #040404;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="COLOFÃO" />
+            <Pane layoutY="464.0" prefHeight="34.0" prefWidth="456.0" styleClass="mensagem" stylesheets="@../styles/menu_colofao.css">
+               <children>
+                  <Label layoutX="139.0" layoutY="9.0" prefHeight="17.0" prefWidth="179.0" text="Pensar é estar doente dos olhos." textFill="WHITE" />
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

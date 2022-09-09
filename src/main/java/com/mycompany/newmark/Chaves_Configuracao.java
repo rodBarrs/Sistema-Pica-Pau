@@ -7,13 +7,22 @@
 package com.mycompany.newmark;
 
 public class Chaves_Configuracao {
+    private String tipo;
     private Integer intervaloDias; 
     private String TipoTriagem = "";     //Varchar de 3 - COM (completa) - MOV (movimentação) - DOC (documento)
     private boolean JuntManual;
     private boolean LaudoPericial;
     private boolean PeticaoInicial;
     private boolean debugpi = false;
-        
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public Integer getIntervaloDias() {
         return intervaloDias;
     }

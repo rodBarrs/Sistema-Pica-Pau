@@ -26,7 +26,7 @@ public class Controller_Informacao {
         Stage stage = (Stage) node.getScene().getWindow();
         Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
         }
         catch (IOException erro) {
             erro.getMessage();

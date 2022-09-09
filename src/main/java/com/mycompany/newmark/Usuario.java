@@ -12,6 +12,16 @@ class Usuario {
     private String Login = "";
     private String Senha = "";
 
+    private String etiqueta = "";
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
+
+    public void setEtiqueta(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
     public String getLogin() {
         return Login;
     }

@@ -50,18 +50,8 @@ public class Processo_Etiquetar {
 			driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")).clear();
 			driver.findElement(By.xpath("//fieldset[5]/div/span/div/table[4]/tbody/tr/td[2]/input"))
 					.sendKeys(resultado.getEtiqueta());
-		if(Chaves_Resultado.getSeqPeticao() != null) {
+			driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")).sendKeys(resultado.getObservacao());
 
-			driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea"))
-					.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ PETIÇÃO INICIAL: " + Chaves_Resultado.getSeqPeticao()
-							+ "\nFRASE CHAVE PETIÇÃO INICIAL: " + Chaves_Resultado.getPalavraChavePeticao());
-		}else {
-			//CASO HAJA TRIAGEM PADRÃO
-
-			driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea"))
-					.sendKeys("MARK" + Sistema.VERSAO + "\nSEQ: "
-							+ resultado.getLocal() + "\nFRASE CHAVE: " + resultado.getPalavraChave());
-		}
 
 			for (int x = 13; x< 25;){
 				try {
@@ -74,7 +64,7 @@ public class Processo_Etiquetar {
 				}
 			}
 
-
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[9]")));
 
 
 

@@ -177,17 +177,17 @@
                   <VBox layoutX="480.0" layoutY="300.0" prefHeight="65.0" prefWidth="234.0" spacing="15.0" />
                   <Line endX="-5.0" endY="376.0" layoutX="450.0" layoutY="22.0" opacity="0.3" startX="-5.0" stroke="WHITE" />
                   <Line endX="424.0" endY="181.0" layoutX="460.0" layoutY="39.0" opacity="0.5" startX="-438.0" startY="181.0" stroke="WHITE" />
-                  <Label alignment="TOP_LEFT" layoutX="465.0" layoutY="60.0" prefHeight="62.0" prefWidth="370.0" text="Com está opção ativada o Mark triará apenas na Peticição Inicial do processo aberto." textFill="WHITE" wrapText="true">
+                  <Label alignment="TOP_LEFT" layoutX="465.0" layoutY="60.0" prefHeight="62.0" prefWidth="370.0" textFill="WHITE" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="465.0" layoutY="30.0" text="Petição Inicial" textFill="WHITE">
+                  <Label layoutX="465.0" layoutY="30.0" text="Triagem SEAS" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <VBox layoutX="470.0" layoutY="128.0" prefHeight="65.0" prefWidth="150.0" spacing="15.0">
+                  <VBox layoutX="465.0" layoutY="78.0" prefHeight="65.0" prefWidth="150.0" spacing="15.0">
                      <children>
                         <RadioButton fx:id="desativadoPeticaoInicial" mnemonicParsing="false" selected="true" text="Desativado" textFill="WHITE">
                            <font>
