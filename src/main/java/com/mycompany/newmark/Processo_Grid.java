@@ -12,6 +12,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -31,10 +32,14 @@ public class Processo_Grid {
     //Encontra os processos
     @SuppressWarnings("SleepWhileInLoop")
     public final Chaves_Resultado buscar_processo(WebDriver driver, WebDriverWait wait) throws InterruptedException, UnsupportedFlavorException, IOException, SQLException {
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS).pageLoadTimeout(2, TimeUnit.SECONDS);
+        Thread.sleep(1000);
     	Actions actions = new Actions(driver);
     	Chaves_Resultado resultado = new Chaves_Resultado();
-    	
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[starts-with(@id,'edicaotarefawindow')]")));
+        //wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[1]")));
+        //wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[5]")));
+ //       driver.findElement(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[1]")).click();
+ //       wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[starts-with(@id,'edicaotarefawindow')]")));
         if (tamanho > 1) {
             wait.until(ExpectedConditions.presenceOfElementLocated(By.id("gridview-1109-body")));
             wait.until(ExpectedConditions.elementToBeClickable(By.id("gridview-1109-body")));
@@ -51,6 +56,9 @@ public class Processo_Grid {
                 try {
                     String assunto = driver.findElement(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[5]/div")).getText();
                     resultado.setAssunto(assunto);
+                    if (!resultado.getAssunto().contains("SALÁRIO-MATERNIDADE") && !resultado.getAssunto().contains("RURAL")){
+                        return resultado;
+                    }
                     boolean flag = false;
                     while (!flag) {
                         try {
@@ -78,6 +86,7 @@ public class Processo_Grid {
                 }
 
             } catch (Exception erro) {
+                System.out.println(erro);
                 URL url = getClass().getResource("/SOUNDS/Urna.wav");
                 AudioClip clip = Applet.newAudioClip(url);
                 clip.play();

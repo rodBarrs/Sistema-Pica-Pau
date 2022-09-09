@@ -16,14 +16,14 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Carrega o layout FXML
-            Pane root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
+            Pane root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
             // Cria a cena
             Scene scene = new Scene(root);
             // Define parâmetros para a janela
             primaryStage.setMinWidth(900);
             primaryStage.setMinHeight(500);
-            primaryStage.getIcons().add(new Image("/fxml/Imagens/iconeMark.png"));
-            primaryStage.setTitle("Sistema de Triagem Mark");
+            primaryStage.getIcons().add(new Image("/fxml/Imagens/Logo.png"));
+            primaryStage.setTitle("Sistema de Triagem Mark Caeiro");
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
             primaryStage.show();

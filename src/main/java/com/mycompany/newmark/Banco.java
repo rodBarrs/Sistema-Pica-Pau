@@ -300,7 +300,8 @@ public class Banco {
 			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE configuracao SET Login = '" + usuario.getLogin() + "'   \n" + ", Senha = '"
-					+ usuario.getSenha() + "' " + "WHERE id = 1997;");
+					+ usuario.getSenha() +  "'   \n" + ", Etiqueta = '"
+					+ usuario.getEtiqueta() + "' " + "WHERE id = 1997;");
 			//Desconecta com o banco de dados, garantindo assim a integridade do dados
 			connection.close();
 		} catch (SQLException erro) {

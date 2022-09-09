@@ -1,0 +1,36 @@
+.btn-iniciar {
+    -fx-background-radius: 80%;
+    -fx-border-radius: 80%;
+    -fx-background-color: linear-gradient(from 510px 290px to 390px 0px, #19a90d, #1ec90f);
+    -fx-border-color: linear-gradient(from 510px 290px to 390px 0px,#146965,#53a67e);
+    -fx-text-fill: #FFFFFF;
+}
+
+.btn-parar {
+    -fx-background-radius: 80%;
+    -fx-border-radius: 80%;
+    -fx-background-color: linear-gradient(from 510px 290px to 390px 0px,  #c72828, #ff0000);
+    -fx-text-fill: #FFFFFF;
+}
+
+.btn-menu{
+    -fx-background-image: url("../fxml/imagens/home.png");
+    -fx-background-repeat:  stretch;
+    -fx-background-size:  46px 44px;
+    -fx-background-color: #ffffff;
+    
+}
+
+.input-login{
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFFFFF;
+    -fx-text-alignment: center;
+    -fx-background-radius:  90px;
+    -fx-border-radius:  90px;
+    
+}
+
+.div-centro{
+    -fx-background-color: #A4C6DF;
+    -fx-border-color: #000000;
+}

@@ -64,7 +64,7 @@ public class Processo_Etiquetar {
 				}
 			}
 
-
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[9]")));
 
 
 

@@ -15,10 +15,14 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.mycompany.newmark.Controllers.ControllerMaternida;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.mycompany.newmark.system.Sistema;
@@ -41,8 +45,9 @@ public class Processo_Triagem {
 	}
 
 	//Inicia a Triagem
-	public boolean iniciarTriagem(WebDriver driver, WebDriverWait wait, String bancos, boolean triagemIniciada, Chaves_Configuracao debugPi)
+	public boolean iniciarTriagem(WebDriver driver, WebDriverWait wait, String bancos, boolean triagemIniciada, Chaves_Configuracao debugPi, String etiquetaFiltro)
 			throws SQLException, InterruptedException, UnsupportedFlavorException, IOException {
+
 		Actions actions = new Actions(driver);
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		resultado.setEtiqueta("NÃO FOI POSSÍVEL LOCALIZAR FRASE CHAVE ATUALIZADA");
@@ -60,7 +65,47 @@ public class Processo_Triagem {
 //		URL url = getClass().getResource("/SOUNDS/ferrolho.wav"); // Som duvidoso
 //		AudioClip clip = Applet.newAudioClip(url);
 //		clip.play();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By
+				.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[3]/div/a[1]")));
+		wait.until(ExpectedConditions.elementToBeClickable(By
+				.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[3]/div/a[1]")));
+		boolean confirmacaoDeLogin1 = driver
+				.findElement(
+						By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/a[2]/span/span/span[1]"))
+
+				.getText().toUpperCase().contains("Tramitações");
+		boolean confirmacaoDeLogin2 = driver
+				.findElement(
+						By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/a[3]/span/span/span[1]"))
+				.getText().toUpperCase().contains("Comunicações");
 		boolean grid;
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS).pageLoadTimeout(30, TimeUnit.SECONDS);
+		WebElement setaAparecer = driver.findElement(
+				By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div[1]/div[3]/div/div/div[33]/div/span"));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By
+				.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div[1]/div[3]/div/div/div[33]/div/span")));
+		setaAparecer.click();
+		WebElement seta = driver.findElement(
+				By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div[1]/div[3]/div/div/div[33]/div/div"));
+		seta.click();
+
+		WebElement filtro = driver.findElement(By.xpath("/html/body/div[11]/div/div[2]/div/div[6]/a/div[1]"));
+		filtro.click();
+		WebElement filtroEs = driver.findElement(By.xpath("/html/body/div[13]/div/div[2]"));
+		filtroEs.click();
+		WebElement filtroSpace = driver
+				.findElement(By.xpath("/html/body/div[13]/div/div[2]/div/table/tbody/tr/td[2]/input"));
+		filtroSpace.click();
+		System.out.println("etiqueta no filtro: " + etiqueta);
+		filtroSpace.sendKeys(etiquetaFiltro);
+		Thread.sleep(1000);
+		long time = 100;
+
+		wait.until(ExpectedConditions.presenceOfElementLocated(By
+				.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[2]/div/div/div[7]")));
+		wait.until(ExpectedConditions.elementToBeClickable(By
+				.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[2]/div/div/div[7]")));
+		Thread.sleep(1000);
 		try {
 
 			do {

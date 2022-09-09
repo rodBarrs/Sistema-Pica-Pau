@@ -1,0 +1,25 @@
+.botao-menu{
+    -fx-background-radius:  90px 0px;
+    -fx-border-radius:  90px 0px;
+    -fx-border-color: black;
+    -fx-text-fill: #FFFFFF;
+    -fx-pref-width: 200px;
+}
+
+.div-esquerda{
+    -fx-background-color: #A4C6DF;
+    -fx-border-color: #000000 #A4C6DF #000000 #000000 ;
+    -fx-alignment: left;
+}
+
+.div-direita{
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000 #000000 #000000 #ffffff ;
+    -fx-alignment: right;
+}
+
+.mensagem{
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFFFFF;
+    -fx-text-alignment: center;
+}
