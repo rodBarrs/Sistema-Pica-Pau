@@ -149,7 +149,7 @@ public class RepositoryMaternidade {
                         break;
                     }
                     codNB = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
-                    if (codNB.equals("")) {
+                    if (codNB.length() != 10) {
 
                         nit = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[2]")).getText();
                         origemVinculo = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[4]")).getText();

@@ -100,13 +100,13 @@
             </Label>
             <JFXButton layoutX="7.0" layoutY="468.0" onAction="#informacao" prefHeight="25.0" prefWidth="24.0" text=" " />
             <FontAwesomeIcon disable="true" fill="WHITE" iconName="INFO" layoutX="16.0" layoutY="505.0" size="15" />
-            <ImageView fitHeight="158.0" fitWidth="220.0" layoutX="116.0" layoutY="10.0">
-               <image>
-                  <Image url="/fxml/Imagens/Logo.png" />
-               </image>
-            </ImageView>
             <JFXTextField fx:id="Etiquetatxt" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="116.0" layoutY="313.0" onKeyPressed="#apertouEnter" prefHeight="25.0" prefWidth="220.0" promptText="ETIQUETA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK" />
             <CheckBox fx:id="exibirSenha" layoutX="233.0" layoutY="369.0" mnemonicParsing="false" onAction="#exibirSenha" text="Exibir Senha" />
+            <ImageView fitHeight="139.0" fitWidth="200.0" layoutX="122.0" layoutY="36.0">
+               <image>
+                  <Image url="@Imagens/Logo.png" />
+               </image>
+            </ImageView>
          </children>
          <opaqueInsets>
             <Insets />

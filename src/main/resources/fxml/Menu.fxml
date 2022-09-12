@@ -5,11 +5,8 @@
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import java.net.URL?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -80,20 +77,20 @@
             </Label>
 <!--            <JFXButton id="input" layoutX="7.0" layoutY="468.0" onAction="#informacao" prefHeight="25.0" prefWidth="24.0" text=" " />-->
             <FontAwesomeIcon disable="true" fill="WHITE" iconName="INFO" layoutX="16.0" layoutY="486.0" size="15" visible="false" />
-            <ImageView fitHeight="158.0" fitWidth="220.0" layoutX="340.0" layoutY="14.0">
-               <image>
-                  <Image url="/fxml/Imagens/Logo.png" />
-               </image>
-            </ImageView>
             <JFXButton layoutX="350.0" layoutY="250.0" style="-fx-background-color: #258398;;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="IMPEDIMENTOS" />
             <JFXButton fx:id="btn_triagem" layoutX="350.0" layoutY="200.0" onAction="#exec_triagem" style="-fx-background-color: #1CBC0E;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="TRIAGEM" />
             <JFXButton layoutX="350.0" layoutY="302.0" style="-fx-background-color: #9236DB;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="ETIQUETAGEM" />
             <JFXButton layoutX="350.0" layoutY="354.0" onAction="#informacao" style="-fx-background-color: #040404;" styleClass="botao-menu" stylesheets="@../styles/menu_colofao.css" text="COLOFÃO" />
             <Pane layoutY="464.0" prefHeight="34.0" prefWidth="456.0" styleClass="mensagem" stylesheets="@../styles/menu_colofao.css">
                <children>
-                  <Label layoutX="139.0" layoutY="9.0" prefHeight="17.0" prefWidth="179.0" text="Pensar é estar doente dos olhos." textFill="WHITE" />
+                  <Label layoutX="139.0" layoutY="9.0" prefHeight="17.0" prefWidth="179.0" text="Pensar é estar doente dos olhos." textFill="#312d2d" />
                </children>
             </Pane>
+            <ImageView fitHeight="139.0" fitWidth="200.0" layoutX="356.0" layoutY="38.0">
+               <image>
+                  <Image url="@Imagens/Logo.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </children>

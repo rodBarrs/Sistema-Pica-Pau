@@ -14,7 +14,7 @@
 }
 
 .btn-menu{
-    -fx-background-image: url("../fxml/imagens/home.png");
+    -fx-background-image: url("home.png");
     -fx-background-repeat:  stretch;
     -fx-background-size:  46px 44px;
     -fx-background-color: #ffffff;
