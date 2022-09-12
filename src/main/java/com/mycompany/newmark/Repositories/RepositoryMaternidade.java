@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RepositoryMaternidade {
 
-    public String clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public boolean clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         Thread.sleep(1000);
         List<String> janela = new ArrayList<String>(driver.getWindowHandles());
@@ -56,11 +56,11 @@ public class RepositoryMaternidade {
             if (existeDosPrev) {
                 WebElement dosClick = driver.findElement(By.xpath("//tr[" + i + "]/td[2]/div/span"));
                 dosClick.click();
-                return "passou";
+                return true;
             }
 
         }
-        return "passou";
+        return false;
     }
 
 
@@ -182,7 +182,7 @@ public class RepositoryMaternidade {
     }
 
 
-    public String clicarSislabra(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+    public boolean clicarSislabra(WebDriver driver, WebDriverWait wait) throws InterruptedException {
 
         driver.switchTo().defaultContent();
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
@@ -218,11 +218,11 @@ public class RepositoryMaternidade {
                 dosClick.click();
                 LeituraPDF pdf = new LeituraPDF();
                 pdf.apagarPDF();
-                return "passou";
+                return true;
             }
 
         }
-        return "passou";
+        return false;
     }
 
     public InformacoesSislabra coletarInformacoesSislabra(WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException {
@@ -349,7 +349,7 @@ public class RepositoryMaternidade {
         return  "nao achou";
     }
 
-    public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca, String assunto){
+    public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca, String assunto, boolean passouSislabra, boolean passouDosprev){
         EtiquetaObservacao etiquetaObservacao = new EtiquetaObservacao();
         Processo_Etiquetar etiquetar = new Processo_Etiquetar();
         String etiqueta = "PRESCRIÇÃO - N; ";
@@ -357,72 +357,95 @@ public class RepositoryMaternidade {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         formatter = formatter.withLocale(Locale.US);
        //PRESCRIÇÃO
-        if(infoDosprev.getDataInicioIndeferido().equals("") || (infoDosprev.getDataDeAjuizamento().equals(""))){
-            etiqueta = "PRESCRIÇÃO - N; ";
-        }else{
-            LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
-            LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
-            Period period = Period.between(d1,d2);
-            int difAnos = Math.abs(period.getYears());
-            if(difAnos>=5){
-                etiqueta = "PRESCRIÇÃO - S; ";
-                observacao +="|PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
+        if (passouDosprev){
+            if(infoDosprev.getDataInicioIndeferido().equals("") || (infoDosprev.getDataDeAjuizamento().equals(""))){
+                etiqueta = "PRESCRIÇÃO - N; ";
+            }else{
+                LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
+                LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
+                Period period = Period.between(d1,d2);
+                int difAnos = Math.abs(period.getYears());
+                if(difAnos>=5){
+                    etiqueta = "PRESCRIÇÃO - S; ";
+                    observacao +="|PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
+                }
             }
+        }else {
+            etiqueta+="PRESCRIÇÃO - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
         }
+
 
 
 
         //LITISPENDÊNCIA
-
-        if (infoDosprev.isExisteProcessoINSS()){
-            etiqueta += " LITISPENDÊNCIA - S; ";
+        if (passouDosprev) {
+            if (infoDosprev.isExisteProcessoINSS()) {
+                etiqueta += " LITISPENDÊNCIA - S; ";
+            } else {
+                etiqueta += " LITISPENDÊNCIA - N; ";
+            }
         }else {
-            etiqueta += " LITISPENDÊNCIA - N; ";
+            etiqueta+="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
         }
 
 
         //PATRIMÔNIO
-        int i = 0;
-        int j = 0;
-        int indexVeiculo = 0;
-        int cont = 0;
-        //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
-        for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
-            if((teste.getTipo().contains("MOTOCICLETA")) || teste.getTipo().contains("AUTOMOVEL")) {
-                if (cont ==0){
-                    observacao += "PATRI- Nº de Veículos: " + infoSislabra.getInfVeiculo().size();
+        if (passouSislabra){
+            int contadorVeiculos = 0;
+            int contadorMotocilceta = 0;
+            int contadorEmpresas = 0;
+            int indexVeiculo = 0;
+            int cont = 0;
+            //List <InformacoesSislabra.InfVeiculo>teste = new ArrayList<>();
+            for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
+                    if (cont == 0){
+                        observacao += "PATRI- Nº de Veículos: " + infoSislabra.getInfVeiculo().size();
+                    }
+                    cont++;
+                    if (infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo().contains("MOTOCICLETA")){
+                        contadorMotocilceta++;
+                    }else {
+                        contadorVeiculos++;
+                    }
+
+                    observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo()+"; ";
+                    observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo()+"; ";
+                    indexVeiculo++;
+
+            }
+
+            for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++){
+                if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
+                    contadorEmpresas++;
+                    observacao += "Empresa Situação: "+ infoSislabra.getSituacaoEmpresa()+"; ";
                 }
-                cont++;
-                i++;
-                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo()+"; ";
-                observacao += " " + infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo()+"; ";
-                indexVeiculo++;
-
-            }else {
-                indexVeiculo++;
             }
-        }
 
-        for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++){
-            if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
-                j++;
-                observacao += "Empresa Situação: "+ infoSislabra.getSituacaoEmpresa()+"; ";
+            if(contadorVeiculos>0 || contadorMotocilceta > 1 || contadorEmpresas>0){
+                etiqueta+="PATRIMÔNIO - S; ";
+
+            }else{
+                etiqueta+="PATRIMÔNIO - N; ";
             }
+        } else{
+            etiqueta += "PATRIMÔNIO - SISLABRA NÃO ENCONTRADO; ";
         }
 
-        if(i>1 || j>0){
-            etiqueta+="PATRIMÔNIO - S; ";
-
-        }else{
-            etiqueta+="PATRIMÔNIO - N; ";
-        }
 
         //URBANO
 
 //        infoDosprev.getDataFim()
+        boolean passouProcessoAdministrativo = !((infoDosprev.getDataFim().equals("")) || (dataNascimentoCrianca.equals("nao achou")));
         if(assunto.contains("SALÁRIO-MATERNIDADE")){
-            if ((infoDosprev.getDataFim().equals("")) || (dataNascimentoCrianca.equals("nao achou"))){
-                etiqueta += "URBANO - N ";
+            if ((passouProcessoAdministrativo && passouDosprev)==false){
+                if((passouDosprev && passouProcessoAdministrativo)==false){
+                    etiqueta += "URBANO - PROCESSO ADMINISTRATIVO E DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADOS ";
+                } else if (passouDosprev == false){
+                    etiqueta += "URBANO - DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADO";
+                } else if (passouProcessoAdministrativo == false){
+                    etiqueta += "URBANO - PROCESSO ADMINISTRATIVO NÃO ENCONTRADO";
+                }
+
             }else {
                 LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
                 LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
@@ -437,22 +460,27 @@ public class RepositoryMaternidade {
                 }
             }
         } else {
-            if (infoDosprev.getDataFim().equals("")) {
-                etiqueta += "URBANO - N ";
-            }else {
-                LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
-                LocalDate data2 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
-                Period period2 = Period.between(data1,data2);
-                int difAnosUrbano = Math.abs(period2.getYears());
-
-                if (difAnosUrbano < 15){
-                    etiqueta += "URBANO - S ";
-                    observacao += "Data de Ajuizamento: " + infoDosprev.getDataDeAjuizamento() + "Data Fim: " + infoDosprev.getDataFim();
-                }else {
+            if (passouDosprev){
+                if (infoDosprev.getDataFim().equals("")) {
                     etiqueta += "URBANO - N ";
+                }else {
+                    LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
+                    LocalDate data2 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
+                    Period period2 = Period.between(data1,data2);
+                    int difAnosUrbano = Math.abs(period2.getYears());
+
+                    if (difAnosUrbano < 15){
+                        etiqueta += "URBANO - S ";
+                        observacao += "Data de Ajuizamento: " + infoDosprev.getDataDeAjuizamento() + "Data Fim: " + infoDosprev.getDataFim();
+                    }else {
+                        etiqueta += "URBANO - N ";
+                    }
                 }
+            } else {
+                etiqueta += "URBANO - DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADO";
             }
-        }
+            }
+
         if (etiqueta.equals("PRESCRIÇÃO - N;  LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N ")){
             etiqueta = "Não contêm impeditivos";
         }

@@ -30,15 +30,19 @@ public class ControllerMaternida {
 
 			String dataNascimentoCrianca;
 
-			String passou = materidadeRepositorio.clicarDosprev(driver, wait);
-			informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
+			boolean passouDosprev = materidadeRepositorio.clicarDosprev(driver, wait);
+			if (passouDosprev) {
+				informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
+			}
 
-			String passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
-			informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
+			boolean passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
+			if (passouSislabra){
+				informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
+			}
 
 			dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
 
-			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, dataNascimentoCrianca, assunto);
+			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, dataNascimentoCrianca, assunto, passouSislabra, passouDosprev);
 
 			resultado.setDriver(driver);
 			resultado.setEtiqueta(etiquetaObservacao.getEtiqueta());
