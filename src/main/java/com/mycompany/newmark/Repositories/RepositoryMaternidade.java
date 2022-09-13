@@ -95,7 +95,11 @@ public class RepositoryMaternidade {
         }
         for (int i = 3; i < 7; i++) {
             String titulo = driver.findElement(By.xpath("/html/body/div/p[" + (i + 1) + "]/b/u")).getText();
+            String conteudo = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[2]/td")).getText();
             if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
+                if(conteudo.contains("Não foram encontrados requerimentos em nome do autor.")){
+
+                }
                 try {
                     WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
                     List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
@@ -435,10 +439,10 @@ public class RepositoryMaternidade {
         //URBANO
 
 //        infoDosprev.getDataFim()
-        boolean passouProcessoAdministrativo = !((infoDosprev.getDataFim().equals("")) || (dataNascimentoCrianca.equals("nao achou")));
+        boolean passouProcessoAdministrativo = !(dataNascimentoCrianca.equals("nao achou"));
         if(assunto.contains("SALÁRIO-MATERNIDADE")){
-            if ((passouProcessoAdministrativo && passouDosprev)==false){
-                if((passouDosprev && passouProcessoAdministrativo)==false){
+            if ((!passouProcessoAdministrativo || !passouDosprev)){
+                if((!passouDosprev && !passouProcessoAdministrativo)){
                     etiqueta += "URBANO - PROCESSO ADMINISTRATIVO E DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADOS ";
                 } else if (passouDosprev == false){
                     etiqueta += "URBANO - DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADO";
@@ -447,17 +451,23 @@ public class RepositoryMaternidade {
                 }
 
             }else {
-                LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
-                LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
-                Period period2 = Period.between(data1,data2);
-                int difMeses = Math.abs(period2.getMonths());
+                if(!infoDosprev.getDataFim().equals("")){
+                    LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
+                    LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
+                    Period period2 = Period.between(data1,data2);
+                    int difMeses = Math.abs(period2.getMonths());
 
-                if (difMeses < 10){
-                    etiqueta += "URBANO - S ";
-                    observacao += "|URBA - Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
-                }else {
-                    etiqueta += "URBANO - N ";
+                    if (difMeses < 10){
+                        etiqueta += "URBANO - S ";
+                        observacao += "|URBA - Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
+                    }else {
+                        etiqueta += "URBANO - N ";
+                    }
                 }
+                else {
+                    etiqueta += "URBANO - SEM DATA FIM";
+                }
+
             }
         } else {
             if (passouDosprev){
