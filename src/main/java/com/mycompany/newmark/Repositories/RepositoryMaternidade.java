@@ -98,42 +98,46 @@ public class RepositoryMaternidade {
             String conteudo = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[2]/td")).getText();
             if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
                 if(conteudo.contains("Não foram encontrados requerimentos em nome do autor.")){
-
-                }
-                try {
-                    WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
-                    List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-                    for (int j = 2; j <= listaRelPrev.size(); j++) {
-                        String status = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
-                        if (status.contains("INDEFERIDO")) {
-                            String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                            String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
-                            if (dataInicioMaisRecente.contains("zero")) {
-                                dataInicioMaisRecente = dataDeInicio;
-                                nbMaisRecente = nbIndeferido;
-                            }
-                            if(!dataInicioMaisRecente.equals("")){
-                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                                formatter = formatter.withLocale(Locale.US);
-                                LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
-                                LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
-                                long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
-                                System.out.println(diferenca);
-                                if (diferenca < 0) {
+                    dataInicioMaisRecente = "";
+                    nbMaisRecente = "";
+                    i = 8;
+                }else {
+                    try {
+                        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
+                        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+                        for (int j = 2; j <= listaRelPrev.size(); j++) {
+                            String status = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
+                            if (status.contains("INDEFERIDO")) {
+                                String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
+                                if (dataInicioMaisRecente.contains("zero")) {
                                     dataInicioMaisRecente = dataDeInicio;
-                                    nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                    nbMaisRecente = nbIndeferido;
                                 }
-                            }
+                                if(!dataInicioMaisRecente.equals("")){
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                    formatter = formatter.withLocale(Locale.US);
+                                    LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                                    LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                                    long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
+                                    System.out.println(diferenca);
+                                    if (diferenca < 0) {
+                                        dataInicioMaisRecente = dataDeInicio;
+                                        nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                    }
+                                }
 
+
+                            }
 
                         }
+                        i = 7;
+                    } catch (Exception e) {
 
+                        System.out.println(e);
                     }
-                    i = 7;
-                } catch (Exception e) {
-
-                    System.out.println(e);
                 }
+
             }
 
         }
@@ -356,27 +360,32 @@ public class RepositoryMaternidade {
     public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String dataNascimentoCrianca, String assunto, boolean passouSislabra, boolean passouDosprev){
         EtiquetaObservacao etiquetaObservacao = new EtiquetaObservacao();
         Processo_Etiquetar etiquetar = new Processo_Etiquetar();
-        String etiqueta = "PRESCRIÇÃO - N; ";
+        String etiqueta = "LITISPENDÊNCIA - S; ";
         String observacao = "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         formatter = formatter.withLocale(Locale.US);
        //PRESCRIÇÃO
-        if (passouDosprev){
-            if(infoDosprev.getDataInicioIndeferido().equals("") || (infoDosprev.getDataDeAjuizamento().equals(""))){
-                etiqueta = "PRESCRIÇÃO - N; ";
-            }else{
-                LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
-                LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
-                Period period = Period.between(d1,d2);
-                int difAnos = Math.abs(period.getYears());
-                if(difAnos>=5){
-                    etiqueta = "PRESCRIÇÃO - S; ";
-                    observacao +="|PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
-                }
-            }
-        }else {
-            etiqueta+="PRESCRIÇÃO - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
-        }
+//        if (passouDosprev){
+//            if(infoDosprev.getDataInicioIndeferido().equals("") || (infoDosprev.getDataDeAjuizamento().equals(""))){
+//                etiqueta = "PRESCRIÇÃO - N; ";
+//            }else{
+//               if(infoDosprev.getDataDeAjuizamento().equals("") || infoDosprev.getDataInicioIndeferido().equals("")){
+//                   etiqueta = "PRESCRIÇÃO - DADOS INSUFICIENTES ";
+//               }else{
+//                   LocalDate d1 = LocalDate.parse(infoDosprev.getDataDeAjuizamento(), formatter);
+//                   LocalDate d2 = LocalDate.parse(infoDosprev.getDataInicioIndeferido(), formatter);
+//                   Period period = Period.between(d1,d2);
+//                   int difAnos = Math.abs(period.getYears());
+//                   if(difAnos>=5){
+//                       etiqueta = "PRESCRIÇÃO - S; ";
+//                       observacao +="|PRESC-data Ajuizamento: "+infoDosprev.getDataDeAjuizamento()+"Data Indeferido: "+ infoDosprev.getDataInicioIndeferido() + "| ";
+//                   }
+//               }
+//
+//            }
+//        }else {
+//            etiqueta+="PRESCRIÇÃO - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
+//        }
 
 
 
@@ -384,12 +393,12 @@ public class RepositoryMaternidade {
         //LITISPENDÊNCIA
         if (passouDosprev) {
             if (infoDosprev.isExisteProcessoINSS()) {
-                etiqueta += " LITISPENDÊNCIA - S; ";
+                etiqueta = " LITISPENDÊNCIA - S; ";
             } else {
-                etiqueta += " LITISPENDÊNCIA - N; ";
+                etiqueta = " LITISPENDÊNCIA - N; ";
             }
         }else {
-            etiqueta+="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
+            etiqueta="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
         }
 
 
@@ -441,35 +450,36 @@ public class RepositoryMaternidade {
 //        infoDosprev.getDataFim()
         boolean passouProcessoAdministrativo = !(dataNascimentoCrianca.equals("nao achou"));
         if(assunto.contains("SALÁRIO-MATERNIDADE")){
-            if ((!passouProcessoAdministrativo || !passouDosprev)){
-                if((!passouDosprev && !passouProcessoAdministrativo)){
-                    etiqueta += "URBANO - PROCESSO ADMINISTRATIVO E DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADOS ";
-                } else if (passouDosprev == false){
-                    etiqueta += "URBANO - DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADO";
-                } else if (passouProcessoAdministrativo == false){
-                    etiqueta += "URBANO - PROCESSO ADMINISTRATIVO NÃO ENCONTRADO";
-                }
-
-            }else {
-                if(!infoDosprev.getDataFim().equals("")){
-                    LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
-                    LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
-                    Period period2 = Period.between(data1,data2);
-                    int difMeses = Math.abs(period2.getMonths());
-
-                    if (difMeses < 10){
-                        etiqueta += "URBANO - S ";
-                        observacao += "|URBA - Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
-                    }else {
-                        etiqueta += "URBANO - N ";
-                    }
-                }
-                else {
-                    etiqueta += "URBANO - SEM DATA FIM";
-                }
-
-            }
-        } else {
+            etiqueta += "";
+//            if ((!passouProcessoAdministrativo || !passouDosprev)){
+//                if((!passouDosprev && !passouProcessoAdministrativo)){
+//                    etiqueta += "URBANO - PROCESSO ADMINISTRATIVO E DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADOS ";
+//                } else if (passouDosprev == false){
+//                    etiqueta += "URBANO - DOSSÎE PREVIDENCIÁRIO NÃO ENCONTRADO";
+//                } else if (passouProcessoAdministrativo == false){
+//                    etiqueta += "URBANO - PROCESSO ADMINISTRATIVO NÃO ENCONTRADO";
+//                }
+//
+//            }else {
+//                if(!infoDosprev.getDataFim().equals("")){
+//                    LocalDate data1 = LocalDate.parse(infoDosprev.getDataFim(), formatter);
+//                    LocalDate data2 = LocalDate.parse(dataNascimentoCrianca, formatter);
+//                    Period period2 = Period.between(data1,data2);
+//                    int difMeses = Math.abs(period2.getMonths());
+//
+//                    if (difMeses < 10){
+//                        etiqueta += "URBANO - S ";
+//                        observacao += "|URBA - Data nascimento: " + dataNascimentoCrianca + "Data Fim: " + infoDosprev.getDataFim();
+//                    }else {
+//                        etiqueta += "URBANO - N ";
+//                    }
+//                }
+//                else {
+//                    etiqueta += "URBANO - SEM DATA FIM";
+//                }
+//
+//            }
+//        } else {
             if (passouDosprev){
                 if (infoDosprev.getDataFim().equals("")) {
                     etiqueta += "URBANO - N ";
