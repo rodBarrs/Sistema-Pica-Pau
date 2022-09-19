@@ -40,9 +40,9 @@ public class ControllerMaternida {
 				informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
 			}
 
-			dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
+			//dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
 
-			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, dataNascimentoCrianca, assunto, passouSislabra, passouDosprev);
+			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, assunto, passouSislabra, passouDosprev);
 
 			resultado.setDriver(driver);
 			resultado.setEtiqueta(etiquetaObservacao.getEtiqueta());
