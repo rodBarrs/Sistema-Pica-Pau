@@ -174,33 +174,51 @@ public class RepositoryMaternidade {
 //
 //        }
         List<InformacoesUrbano> infUrbano = new ArrayList<>();
-        for(int i = 1;;i++){
-            String titulo = driver.findElement(By.xpath(
-                    "/html/body/div/div[6]/div["+i+"]/p[1]/b")).getText();
-            if (titulo.contains("Vínculo Previdenciário")){
-                String colunaCod = driver.findElement(By.xpath(
-                        "/html/body/div/div[6]/div["+i+"]/table[1]/tbody/tr[1]/th[2]")).getText();
-                if (colunaCod.contains("Código Emp.")){
-                    String vinculo = driver.findElement(By.xpath(
-                            "/html/body/div/div[6]/div["+i+"]/table[1]/tbody/tr[2]/td[3]")).getText();
 
-                    String dataInicio = driver.findElement(By.xpath(
-                            "/html/body/div/div[6]/div["+i+"]/table[1]/tbody/tr[2]/td[4]")).getText();
+            for (int z = 6; z < 10; z++) {
+                try {
+                    String cabecalho = driver.findElement(By.xpath("/html/body/div/div[" + z + "]/p/b/u")).getText();
+                    if (cabecalho.contains("COMPETÊNCIAS DETALHADAS")) {
+                        for (int i = 1; i < 100 ; i++) {
+                            String titulo = driver.findElement(By.xpath(
+                                    "/html/body/div/div[" + z + "]/div[" + i + "]/p[1]/b")).getText();
+                            if (titulo.contains("Vínculo Previdenciário")) {
+                                String colunaCod = driver.findElement(By.xpath(
+                                        "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[1]/th[2]")).getText();
+                                if (colunaCod.contains("Código Emp.")) {
+                                    String vinculo = driver.findElement(By.xpath(
+                                            "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[3]")).getText();
 
-                    String dataFim = driver.findElement(By.xpath(
-                            "/html/body/div/div[6]/div["+i+"]/table[1]/tbody/tr[2]/td[5]")).getText();
-                    infUrbano.add(new InformacoesUrbano(vinculo, dataInicio, dataFim));
+                                    String dataInicio = driver.findElement(By.xpath(
+                                            "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[4]")).getText();
+
+                                    String dataFim = driver.findElement(By.xpath(
+                                            "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[5]")).getText();
+                                    infUrbano.add(new InformacoesUrbano(vinculo, dataInicio, dataFim));
+
+                                }else {
+                                    System.out.println("Entrei no Else");
+                                    z=11;
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    z = 11;
                 }
-            }else {
-                break;
+
             }
 
-        }
 
 
 
 
 
+        informacao.setInformacoesUrbanos(infUrbano);
         informacao.setDataDeAjuizamento(dataAjuizamento);
         informacao.setSexo(sexo);
         informacao.setExisteProcessoINSS(processoINSS);
@@ -291,6 +309,10 @@ public class RepositoryMaternidade {
                         tipo = buscaNb[indexBuscaNb];
                         modelo = buscaNb[indexBuscaNb+2];
                         infVeiculo.add(new InformacoesSislabra.InfVeiculo(modelo,tipo));
+                    }
+
+                    if (buscaNb[indexBuscaNb].contains("Cód. Imóvel INCRA")){
+                        System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
                     }
                 }
 

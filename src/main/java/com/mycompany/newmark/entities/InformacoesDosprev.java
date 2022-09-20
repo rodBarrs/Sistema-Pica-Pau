@@ -1,6 +1,7 @@
 package com.mycompany.newmark.entities;
 
 
+import java.util.List;
 
 public class InformacoesDosprev {
 
@@ -10,6 +11,8 @@ public class InformacoesDosprev {
     private String dataInicioIndeferido;
     private boolean existeProcessoINSS;
 
+    List<InformacoesUrbano> informacoesUrbanos;
+
     private String nit;
 
     private String nomeEmpresa;
@@ -17,6 +20,15 @@ public class InformacoesDosprev {
     private String dataInicio;
 
     private String dataFim;
+
+
+    public List<InformacoesUrbano> getInformacoesUrbanos() {
+        return informacoesUrbanos;
+    }
+
+    public void setInformacoesUrbanos(List<InformacoesUrbano> informacoesUrbanos) {
+        this.informacoesUrbanos = informacoesUrbanos;
+    }
 
     public String getDataDeAjuizamento() {
         return dataDeAjuizamento;
