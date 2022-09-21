@@ -2,29 +2,16 @@ package com.mycompany.newmark.Repositories;
 
 import com.mycompany.newmark.LeituraPDF;
 import com.mycompany.newmark.Processo_Etiquetar;
-import com.mycompany.newmark.entities.EtiquetaObservacao;
-import com.mycompany.newmark.entities.InformacoesDosprev;
+import com.mycompany.newmark.entities.*;
 
-import com.mycompany.newmark.entities.InformacoesSislabra;
-import com.mycompany.newmark.entities.InformacoesUrbano;
-import net.sf.cglib.core.Local;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
-import java.security.Key;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -285,18 +272,19 @@ public class RepositoryMaternidade {
 
 
         int cont = 0;
-        while (cont <= 2) {
-
+       do {
             if (pdf.PDFBaixado()) {
                 processo = pdf.lerPDF();
                 System.out.println(processo);
                 String[] buscaNb = processo.split("\r\n");
 
+                String codIncra;
                 String situacaoEmpAtual;
                 String modelo;
                 String tipo;
                 List<String> situacaoEmpresa = new ArrayList<>();
                 List<InformacoesSislabra.InfVeiculo> infVeiculo = new ArrayList<>();
+                List<InfImovel> infImovel = new ArrayList<>();
                 for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
                     if (buscaNb[indexBuscaNb].contains("Situação Empresa:")) {
                         System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
@@ -313,18 +301,21 @@ public class RepositoryMaternidade {
 
                     if (buscaNb[indexBuscaNb].contains("Cód. Imóvel INCRA")){
                         System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
+                        codIncra = buscaNb[indexBuscaNb];
+                        infImovel.add(new InfImovel(codIncra));
+
+
                     }
                 }
 
+                    informacao.setInformacoesImoveis(infImovel);
                 informacao.setInfVeiculo(infVeiculo);
                 informacao.setSituacaoEmpresa(situacaoEmpresa);
 
                 break;
-            } else {
-                pdf.apagarPDF();
             }
             cont++;
-        }
+        } while (!pdf.PDFBaixado());
 
         pdf.apagarPDF();
         return informacao;
@@ -448,43 +439,54 @@ public class RepositoryMaternidade {
 
 
         //PATRIMÔNIO
-        if (passouSislabra){
+        if (passouSislabra) {
             int contadorVeiculos = 0;
             int contadorMotocilceta = 0;
             int contadorEmpresas = 0;
             int indexVeiculo = 0;
+            int contadorImoveis = 0;
 
-            if(infoSislabra.getInfVeiculo().size() > 0){
+
+            if (infoSislabra.getInfVeiculo().size() > 0) {
                 observacao += "Veículos: ";
+                etiqueta += "VEÍCULO - S; ";
             }
-            for(InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()){
-                    if (infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo().contains("MOTOCICLETA")){
-                        contadorMotocilceta++;
-                    }else {
-                        contadorVeiculos++;
-                    }
-
-                    observacao +=infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo()+", ";
-                    observacao +=infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo()+"; ";
-                    indexVeiculo++;
-
-            }
-            if(infoSislabra.getSituacaoEmpresa().size() > 0){
-                observacao+= "Empresa situação: ";
-            }
-            for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++){
-                if (!infoSislabra.getSituacaoEmpresa().get(z).equals("Inapta")){
-                    contadorEmpresas++;
-                    observacao +=infoSislabra.getSituacaoEmpresa()+";";
+            for (InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()) {
+                if (infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo().contains("MOTOCICLETA")) {
+                    contadorMotocilceta++;
+                } else {
+                    contadorVeiculos++;
                 }
+
+                observacao += infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo() + ", ";
+                observacao += infoSislabra.getInfVeiculo().get(indexVeiculo).getModelo() + "; ";
+                indexVeiculo++;
+
+            }
+            if (infoSislabra.getSituacaoEmpresa().size() > 0) {
+                observacao += "Empresa situação: ";
+                etiqueta += "EMPRESA - S; ";
+            }
+            for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++) {
+
+                contadorEmpresas++;
+                observacao += infoSislabra.getSituacaoEmpresa() + ";";
+
             }
 
-            if(contadorVeiculos>0 || contadorMotocilceta > 0 || contadorEmpresas>0){
-                etiqueta+="PATRIMÔNIO - S; ";
+
+            if (infoSislabra.getInformacoesImoveis().size() > 0) {
+                observacao += "Imóveis: ";
+                etiqueta += "IMÓVEL - S; ";
+            }
+            for (int z = 0; z < infoSislabra.getInformacoesImoveis().size(); z++) {
+
+                contadorImoveis++;
+                observacao += infoSislabra.getInformacoesImoveis().get(z).getCodIncra() + "-";
 
             }
-        } else{
-            etiqueta += "PATRIMÔNIO - SISLABRA NÃO ENCONTRADO; ";
+
+
         }
 
 
@@ -492,6 +494,15 @@ public class RepositoryMaternidade {
 
 
 //        infoDosprev.getDataFim()
+
+        if(infoDosprev.getInformacoesUrbanos().size() > 0){
+            etiqueta += "URBANO - S; ";
+            observacao+= "Vinculos Urbano: ";
+        }
+
+        for (int z = 0; z < infoDosprev.getInformacoesUrbanos().size(); z++){
+            observacao +=infoDosprev.getInformacoesUrbanos().get(z).getVinculo()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+"-";
+        }
 
 //        if(assunto.contains("SALÁRIO-MATERNIDADE")){
 //            etiqueta += "";
@@ -545,10 +556,10 @@ public class RepositoryMaternidade {
 //            }
 //            }
 
-        if (etiqueta.equals("LITISPENDÊNCIA - N; PATRIMÔNIO - N; URBANO - N ")){
-            etiqueta = "Não contêm impeditivos";
-        }
 
+        if (etiqueta.equals("")){
+            etiqueta = "NÃO CONTÊM IMPEDITIVOS";
+        }
         etiquetaObservacao.setEtiqueta(etiqueta);
         etiquetaObservacao.setObservacao(observacao);
 

@@ -7,6 +7,7 @@ public class InformacoesSislabra {
 
     List<InfVeiculo> infVeiculo;
     List<String> situacaoEmpresa = new ArrayList<>();
+    List<InfImovel> informacoesImoveis;
 
     public List<String> getSituacaoEmpresa() {
         return situacaoEmpresa;
@@ -41,6 +42,14 @@ public class InformacoesSislabra {
             return tipo;
         }
 
+    }
+
+    public List<InfImovel> getInformacoesImoveis() {
+        return informacoesImoveis;
+    }
+
+    public void setInformacoesImoveis(List<InfImovel> informacoesImoveis) {
+        this.informacoesImoveis = informacoesImoveis;
     }
 }
 

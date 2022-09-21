@@ -53,7 +53,7 @@ public class Processo_Etiquetar {
 			driver.findElement(By.xpath("//div/div/span/div/table/tbody/tr/td[2]/textarea")).sendKeys(resultado.getObservacao());
 
 
-			for (int x = 13; x< 25;){
+		for (int x = 13; x< 25;){
 				try {
 					driver.findElement(By.xpath("/html/body/div["+ x + "]/div[2]/div/div[2]/div/div[2]/div/div/a[2]/span/span/span[1]")).click();
 				//	webElement.click();
