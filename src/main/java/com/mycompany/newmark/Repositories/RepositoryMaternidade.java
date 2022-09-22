@@ -4,7 +4,9 @@ import com.mycompany.newmark.LeituraPDF;
 import com.mycompany.newmark.Processo_Etiquetar;
 import com.mycompany.newmark.entities.*;
 
+import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -25,7 +27,18 @@ public class RepositoryMaternidade {
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         Thread.sleep(1000);
         List<String> janela = new ArrayList<String>(driver.getWindowHandles());
+        String campoPassPath = "/html/body/div[3]/div[1]/div/div/table[1]/tbody/tr/td[2]/input";
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(campoPassPath)));
+        //action.doubleClick(driver.findElement(By.xpath("//td["+i+"]/div"))).build().perform();
+
+        WebElement campoPassElemt = driver.findElement(By.xpath(campoPassPath));
+        campoPassElemt.click();
+
+        campoPassElemt.sendKeys(" ");
         driver.switchTo().window(janela.get(1));
+
+
+
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("treeview-1015")));
         WebElement TabelaTref = driver.findElement(By.id("treeview-1015"));
         List<WebElement> listaMovimentacao = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
@@ -63,6 +76,12 @@ public class RepositoryMaternidade {
                 .getText();
         String sexo = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[11]/td"))
                 .getText();
+
+
+
+
+
+
         boolean processoINSS = false;
 
         String textoNãoContemProcessosINSS = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td")).getText();
@@ -163,40 +182,49 @@ public class RepositoryMaternidade {
         List<InformacoesUrbano> infUrbano = new ArrayList<>();
 
             for (int z = 6; z < 10; z++) {
-                try {
+                try{
                     String cabecalho = driver.findElement(By.xpath("/html/body/div/div[" + z + "]/p/b/u")).getText();
                     if (cabecalho.contains("COMPETÊNCIAS DETALHADAS")) {
-                        for (int i = 1; i < 100 ; i++) {
+                        for (int i = 1; i < 50 ; i++) {
                             String titulo = driver.findElement(By.xpath(
                                     "/html/body/div/div[" + z + "]/div[" + i + "]/p[1]/b")).getText();
                             if (titulo.contains("Vínculo Previdenciário")) {
                                 String colunaCod = driver.findElement(By.xpath(
                                         "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[1]/th[2]")).getText();
                                 if (colunaCod.contains("Código Emp.")) {
-                                    String vinculo = driver.findElement(By.xpath(
-                                            "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[3]")).getText();
+                                    try{
+                                        String vinculo = driver.findElement(By.xpath(
+                                                "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[3]")).getText();
 
-                                    String dataInicio = driver.findElement(By.xpath(
-                                            "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[4]")).getText();
+                                        String dataInicio = driver.findElement(By.xpath(
+                                                "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[4]")).getText();
 
-                                    String dataFim = driver.findElement(By.xpath(
-                                            "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[5]")).getText();
-                                    infUrbano.add(new InformacoesUrbano(vinculo, dataInicio, dataFim));
-
-                                }else {
-                                    System.out.println("Entrei no Else");
-                                    z=11;
-                                    break;
+                                        String dataFim = driver.findElement(By.xpath(
+                                                "/html/body/div/div[" + z + "]/div[" + i + "]/table[1]/tbody/tr[2]/td[5]")).getText();
+                                        infUrbano.add(new InformacoesUrbano(vinculo, dataInicio, dataFim));
+                                        z=11;
+                                        break;
+                                    } catch (Exception e){
+                                        System.out.println("Entrei no Else");
+                                        z=11;
+                                    }
                                 }
+                            } else {
+
                             }
-
                         }
+                    }else if (z == 6){
+                        z = 4;
+                    } else if (z == 5){
+                        z = 6;
                     }
-
-
-                } catch (Exception e) {
-                    z = 11;
+                }catch (Exception e){
+                    z++;
                 }
+
+
+
+
 
             }
 
@@ -308,7 +336,7 @@ public class RepositoryMaternidade {
                     }
                 }
 
-                    informacao.setInformacoesImoveis(infImovel);
+                informacao.setInformacoesImoveis(infImovel);
                 informacao.setInfVeiculo(infVeiculo);
                 informacao.setSituacaoEmpresa(situacaoEmpresa);
 
@@ -318,6 +346,7 @@ public class RepositoryMaternidade {
         } while (!pdf.PDFBaixado());
 
         pdf.apagarPDF();
+
         return informacao;
     }
 
@@ -396,9 +425,10 @@ public class RepositoryMaternidade {
     }
 
     public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String assunto, boolean passouSislabra, boolean passouDosprev){
+
         EtiquetaObservacao etiquetaObservacao = new EtiquetaObservacao();
         Processo_Etiquetar etiquetar = new Processo_Etiquetar();
-        String etiqueta = "";
+        String etiqueta = "IMPEDITIVO: ";
         String observacao = "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         formatter = formatter.withLocale(Locale.US);
@@ -431,7 +461,7 @@ public class RepositoryMaternidade {
         //LITISPENDÊNCIA
         if (passouDosprev) {
             if (infoDosprev.isExisteProcessoINSS()) {
-                etiqueta += " LITISPENDÊNCIA - S; ";
+                etiqueta += "LITISPENDÊNCIA; ";
             }
         }else {
             etiqueta="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
@@ -449,7 +479,7 @@ public class RepositoryMaternidade {
 
             if (infoSislabra.getInfVeiculo().size() > 0) {
                 observacao += "Veículos: ";
-                etiqueta += "VEÍCULO - S; ";
+                etiqueta += "VEÍCULO; ";
             }
             for (InformacoesSislabra.InfVeiculo teste : infoSislabra.getInfVeiculo()) {
                 if (infoSislabra.getInfVeiculo().get(indexVeiculo).getTipo().contains("MOTOCICLETA")) {
@@ -477,7 +507,7 @@ public class RepositoryMaternidade {
 
             if (infoSislabra.getInformacoesImoveis().size() > 0) {
                 observacao += "Imóveis: ";
-                etiqueta += "IMÓVEL - S; ";
+                etiqueta += "IMÓVEL; ";
             }
             for (int z = 0; z < infoSislabra.getInformacoesImoveis().size(); z++) {
 
@@ -496,7 +526,7 @@ public class RepositoryMaternidade {
 //        infoDosprev.getDataFim()
 
         if(infoDosprev.getInformacoesUrbanos().size() > 0){
-            etiqueta += "URBANO - S; ";
+            etiqueta += "URBANO; ";
             observacao+= "Vinculos Urbano: ";
         }
 
@@ -557,8 +587,8 @@ public class RepositoryMaternidade {
 //            }
 
 
-        if (etiqueta.equals("")){
-            etiqueta = "NÃO CONTÊM IMPEDITIVOS";
+        if (etiqueta.equals("IMPEDITIVO: ")){
+            etiqueta = "PROCESSO LIMPO";
         }
         etiquetaObservacao.setEtiqueta(etiqueta);
         etiquetaObservacao.setObservacao(observacao);
@@ -567,6 +597,34 @@ public class RepositoryMaternidade {
 
     }
 
+    public void etiquetar(WebDriver driver, WebDriverWait wait, String etiqueta) {
+        List<String> janela = new ArrayList<String>(driver.getWindowHandles());
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
+        driver.switchTo().window(janela.get(1));
 
+        String campoPassPath = "/html/body/div[3]/div[1]/div/div/table[1]/tbody/tr/td[2]/input";
+        //action.doubleClick(driver.findElement(By.xpath("//td["+i+"]/div"))).build().perform();
+
+        WebElement campoPassElemt = driver.findElement(By.xpath(campoPassPath));
+        campoPassElemt.click();
+
+        campoPassElemt.sendKeys(etiqueta);
+
+        WebElement salvarEtiqueta = driver
+                .findElement(By.xpath("/html/body/div[3]/div[1]/div/div/a/span/span/span[2]"));
+        salvarEtiqueta.click();
+
+        driver.switchTo().window(janela.get(1)).close();
+
+
+        driver.switchTo().window(janela.get(0));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By
+                .xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[2]/div/div/a[5]/span/span/span[2]")));
+        WebElement filtroSpace = driver.findElement(
+                By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[2]/div/div/a[5]/span/span/span[2]"));
+        filtroSpace.click();
+
+
+    }
 }
 

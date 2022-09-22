@@ -120,9 +120,9 @@ public class Processo_Triagem {
 					} else if (config.isPeticaoInicial() == true) {
 					//	if (resultado.getAssunto().contains("SALÁRIO-MATERNIDADE") || resultado.getAssunto().contains("RURAL")) {
 							resultado = controllerMaternida.iniciar(resultado.getDriver(), resultado.getAssunto(), wait, config, bancos);
-							List<String> janela = new ArrayList(resultado.getDriver().getWindowHandles());
-							resultado.getDriver().switchTo().window(janela.get(1)).close();
-							resultado.getDriver().switchTo().window(janela.get(0));
+//							List<String> janela = new ArrayList(resultado.getDriver().getWindowHandles());
+//							resultado.getDriver().switchTo().window(janela.get(1)).close();
+//							resultado.getDriver().switchTo().window(janela.get(0));
 
 
 //						} else {
@@ -130,7 +130,7 @@ public class Processo_Triagem {
 //							resultado.setObservacao("");
 //						}
 
-						etiqueta.etiquetar(resultado.getDriver(), wait, resultado);
+//						etiqueta.etiquetar(resultado.getDriver(), wait, resultado);
 
 
 					}

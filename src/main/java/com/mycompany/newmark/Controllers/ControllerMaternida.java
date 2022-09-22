@@ -8,18 +8,24 @@ import com.mycompany.newmark.Repositories.RepositoryMaternidade;
 import com.mycompany.newmark.entities.EtiquetaObservacao;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 import com.mycompany.newmark.entities.InformacoesSislabra;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 public class ControllerMaternida {
 
 
 	public Chaves_Resultado iniciar(WebDriver driver, String assunto, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, IOException {
+
+
 
 		InformacoesDosprev informacaoDosPrev = new InformacoesDosprev();
 		InformacoesSislabra informacaoSislabra = new InformacoesSislabra();
@@ -30,15 +36,19 @@ public class ControllerMaternida {
 
 			String dataNascimentoCrianca;
 
-			boolean passouDosprev = materidadeRepositorio.clicarDosprev(driver, wait);
-			if (passouDosprev) {
-				informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
-			}
+		boolean passouDosprev = materidadeRepositorio.clicarDosprev(driver, wait);
+		if (passouDosprev) {
+			informacaoDosPrev = materidadeRepositorio.coletarInformacoesDosprev(driver, wait);
+		}
 
-			boolean passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
+
+		boolean passouSislabra = materidadeRepositorio.clicarSislabra(driver, wait);
 			if (passouSislabra){
 				informacaoSislabra = materidadeRepositorio.coletarInformacoesSislabra(driver, wait);
 			}
+
+
+
 
 			//dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
 
@@ -47,6 +57,7 @@ public class ControllerMaternida {
 			resultado.setDriver(driver);
 			resultado.setEtiqueta(etiquetaObservacao.getEtiqueta());
 			resultado.setObservacao(etiquetaObservacao.getObservacao());
+			materidadeRepositorio.etiquetar(driver, wait, etiquetaObservacao.getEtiqueta());
 
 
 		return resultado;
