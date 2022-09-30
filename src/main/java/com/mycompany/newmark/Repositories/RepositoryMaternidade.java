@@ -101,84 +101,109 @@ public class RepositoryMaternidade {
 
         }
         for (int i = 3; i < 7; i++) {
-            String titulo = driver.findElement(By.xpath("/html/body/div/p[" + (i + 1) + "]/b/u")).getText();
-            String conteudo = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[2]/td")).getText();
-            if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
-                if(conteudo.contains("Não foram encontrados requerimentos em nome do autor.")){
-                    dataInicioMaisRecente = "";
-                    nbMaisRecente = "";
-                    i = 8;
-                }else {
-                    try {
-                        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
-                        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-                        for (int j = 2; j <= listaRelPrev.size(); j++) {
-                            String status = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
-                            if (status.contains("INDEFERIDO")) {
-                                String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                                String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
-                                if (dataInicioMaisRecente.contains("zero")) {
-                                    dataInicioMaisRecente = dataDeInicio;
-                                    nbMaisRecente = nbIndeferido;
-                                }
-                                if(!dataInicioMaisRecente.equals("")){
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                                    formatter = formatter.withLocale(Locale.US);
-                                    LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
-                                    LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
-                                    long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
-                                    System.out.println(diferenca);
-                                    if (diferenca < 0) {
-                                        dataInicioMaisRecente = dataDeInicio;
-                                        nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
-                                    }
-                                }
+            try {
+                String titulo = driver.findElement(By.xpath("/html/body/div/p[" + (i + 1) + "]/b/u")).getText();
+                String conteudo = driver.findElement(By.xpath("/html/body/div/div[3]/table/tbody/tr[2]/td")).getText();
+                if (titulo.equals("RESUMO INICIAL – DADOS GERAIS DOS REQUERIMENTOS")) {
+                    if(conteudo.contains("Não foram encontrados requerimentos em nome do autor.")){
+                        dataInicioMaisRecente = "";
+                        nbMaisRecente = "";
+                        i = 8;
+                    }else {
+                        try {
+                            WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
+                            List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+                            for (int j = 2; j <= listaRelPrev.size(); j++) {
+                                String status = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
+                                if (status.contains("INDEFERIDO")) {
+                                    String nbIndeferido = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                    String dataDeInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
+                                    if (dataDeInicio.equals("")){
 
+                                    } else {
+                                        if (dataInicioMaisRecente.contains("zero")) {
+                                            dataInicioMaisRecente = dataDeInicio;
+                                            nbMaisRecente = nbIndeferido;
+                                        }
+                                        if(!dataInicioMaisRecente.equals("")){
+                                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                            formatter = formatter.withLocale(Locale.US);
+                                            LocalDate dataAtual = LocalDate.parse(dataInicioMaisRecente, formatter);
+                                            LocalDate dataValidacao = LocalDate.parse(dataDeInicio, formatter);
+                                            long diferenca = ChronoUnit.DAYS.between(dataValidacao, dataAtual);
+                                            System.out.println(diferenca);
+                                            if (diferenca < 0) {
+                                                dataInicioMaisRecente = dataDeInicio;
+                                                nbMaisRecente = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[1]")).getText();
+                                            }
+                                        }
+                                    }
+
+
+
+                                }
 
                             }
+                            i = 7;
+                        } catch (Exception e) {
 
+                            System.out.println(e);
                         }
-                        i = 7;
-                    } catch (Exception e) {
-
-                        System.out.println(e);
                     }
-                }
 
+                }
+            }catch (Exception e){
+                System.out.println(e);
             }
+
+
 
         }
 
         String filiacao = "";
         String origemVinculo = "";
+        boolean temContribuinteIndividual = false;
         String nit = "";
 //        String dataInicio = "";
 //        String dataFim = "";
         String codNB = "";
-//        for (int i = 4; i < 7; i++) {
-//            try {
-//                WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
-//                List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
-//                for (int j = listaRelPrev.size(); j > 0; j--) {
-//                    if (j == 1){
-//                        break;
-//                    }
-//                    codNB = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[3]")).getText();
-//                    if (codNB.length() != 10) {
-//
-//                        nit = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[2]")).getText();
-//                        origemVinculo = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[4]")).getText();
-//                        dataInicio = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[5]")).getText();
-//                        dataFim = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[6]")).getText();
-//                        j = -1;
-//                        i = 7;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                System.out.println(e);
-//            }
-//
-//        }
+        try{
+            for (int i = 4; i < 7; i++) {
+                String titulo = driver.findElement(By.xpath("/html/body/div/p[" + (i + 1) + "]/b/u")).getText();
+                if (titulo.equals("RELAÇÕES PREVIDENCIÁRIAS")) {
+                    try {
+                        WebElement TabelaTref = driver.findElement(By.xpath("/html/body/div/div[" + i + "]"));
+                        List<WebElement> listaRelPrev = new ArrayList<WebElement>(TabelaTref.findElements(By.cssSelector("tr")));
+                        if (listaRelPrev.size() <= 1){
+                            i = 8;
+                        }else {
+                            for (int j = listaRelPrev.size(); j >= 2; j--) {
+
+                                origemVinculo = driver.findElement(By.xpath("/html/body/div/div[" + i + "]/table/tbody/tr[" + j + "]/td[7]")).getText();
+                                if (origemVinculo.contains("Contribuinte Individual")) {
+                                    temContribuinteIndividual = true;
+                                    i = 8;
+                                    break;
+                                }
+
+                                if (j == 2) {
+                                    i = 8;
+                                }
+
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
         List<InformacoesUrbano> infUrbano = new ArrayList<>();
 
             for (int z = 6; z < 10; z++) {
@@ -219,20 +244,65 @@ public class RepositoryMaternidade {
                         z = 6;
                     }
                 }catch (Exception e){
-                    z++;
+                    if (z==6){
+                        z = 4;
+                    } else if ( z == 5){
+                        z = 6;
+                    }
                 }
 
 
+            }
+        boolean temSegurado = false;
+        for (int z = 6; z < 10; z++) {
+            try {
+                String cabecalho = driver.findElement(By.xpath("/html/body/div/div[" + z + "]/p/b/u")).getText();
+                if (cabecalho.contains("COMPETÊNCIAS DETALHADAS")) {
+                    for (int i = 1; i < 50 ; i++) {
+                        String titulo = driver.findElement(By.xpath(
+                                "/html/body/div/div[" + z + "]/div[" + i + "]/p[1]/b")).getText();
+                        if (titulo.contains("Dados do Benefício")) {
+                            String colunaSegurado = driver.findElement(By.xpath(
+                                    "/html/body/div/div["+z+"]/div["+i+"]/table[3]/tbody/tr[2]/td[1]")).getText();
+                            if (colunaSegurado.contains("SEGURADO_ESPECIAL")) {
+                                try{
+                                    temSegurado = true;
+                                    z = 11;
+                                    break;
+                                } catch (Exception e){
+                                    System.out.println("Entrei no Else");
+                                    z=11;
+                                }
+                            }
+                        } else {
+
+                        }
+                    }
 
 
+                } else if (z == 6) {
+                    z = 4;
+                } else if (z == 5) {
+                    z = 6;
+                }
+            } catch (Exception e) {
+                if (z==6){
+                    z = 4;
+                } else if ( z == 5){
+                    z = 6;
+                } else {
+                    z++;
+                }
 
             }
 
 
+        }
 
 
 
 
+        informacao.setTemSegurado(temSegurado);
         informacao.setInformacoesUrbanos(infUrbano);
         informacao.setDataDeAjuizamento(dataAjuizamento);
         informacao.setSexo(sexo);
@@ -241,6 +311,7 @@ public class RepositoryMaternidade {
         informacao.setNbProcessoIndeferido(nbMaisRecente);
         informacao.setNit(nit);
         informacao.setNomeEmpresa(origemVinculo);
+        informacao.setTemContribuinteIndividual(temContribuinteIndividual);
 //        informacao.setDataInicio(dataInicio);
 //        informacao.setDataFim(dataFim);
 
@@ -306,6 +377,7 @@ public class RepositoryMaternidade {
                 System.out.println(processo);
                 String[] buscaNb = processo.split("\r\n");
 
+                boolean temConjuge = false;
                 String codIncra;
                 String situacaoEmpAtual;
                 String modelo;
@@ -314,6 +386,11 @@ public class RepositoryMaternidade {
                 List<InformacoesSislabra.InfVeiculo> infVeiculo = new ArrayList<>();
                 List<InfImovel> infImovel = new ArrayList<>();
                 for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
+
+                    if (buscaNb[indexBuscaNb].contains("CÔNJUGE/CO")) {
+                       temConjuge = true;
+                    }
+
                     if (buscaNb[indexBuscaNb].contains("Situação Empresa:")) {
                         System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
                         situacaoEmpAtual = buscaNb[indexBuscaNb+1];
@@ -335,7 +412,7 @@ public class RepositoryMaternidade {
 
                     }
                 }
-
+                informacao.setTemConjuge(temConjuge);
                 informacao.setInformacoesImoveis(infImovel);
                 informacao.setInfVeiculo(infVeiculo);
                 informacao.setSituacaoEmpresa(situacaoEmpresa);
@@ -495,7 +572,7 @@ public class RepositoryMaternidade {
             }
             if (infoSislabra.getSituacaoEmpresa().size() > 0) {
                 observacao += "Empresa situação: ";
-                etiqueta += "EMPRESA - S; ";
+                etiqueta += "EMPRESA; ";
             }
             for (int z = 0; z < infoSislabra.getSituacaoEmpresa().size(); z++) {
 
@@ -517,6 +594,8 @@ public class RepositoryMaternidade {
             }
 
 
+        } else {
+            etiqueta += "PATRIMÔNIO - SISLABRA NÃO ENCONTRADO;";
         }
 
 
@@ -524,15 +603,19 @@ public class RepositoryMaternidade {
 
 
 //        infoDosprev.getDataFim()
-
-        if(infoDosprev.getInformacoesUrbanos().size() > 0){
-            etiqueta += "URBANO; ";
+        if (passouDosprev){
+        if(infoDosprev.getInformacoesUrbanos().size() > 0 || infoDosprev.isTemContribuinteIndividual()){
+            etiqueta += "EMPREGO; ";
             observacao+= "Vinculos Urbano: ";
         }
 
         for (int z = 0; z < infoDosprev.getInformacoesUrbanos().size(); z++){
             observacao +=infoDosprev.getInformacoesUrbanos().get(z).getVinculo()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+"-";
         }
+        } else{
+            etiqueta += "EMPREGO - SISLABRA NÃO ENCONTRADO;";
+        }
+
 
 //        if(assunto.contains("SALÁRIO-MATERNIDADE")){
 //            etiqueta += "";
@@ -589,6 +672,14 @@ public class RepositoryMaternidade {
 
         if (etiqueta.equals("IMPEDITIVO: ")){
             etiqueta = "PROCESSO LIMPO";
+        }
+
+        if (infoSislabra.isTemConjuge()){
+            etiqueta += "- CÔNJUGE";
+        }
+
+        if (infoDosprev.isTemSegurado()){
+            etiqueta += "- CONCESSÃO ANTERIOR";
         }
         etiquetaObservacao.setEtiqueta(etiqueta);
         etiquetaObservacao.setObservacao(observacao);

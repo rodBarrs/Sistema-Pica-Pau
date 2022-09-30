@@ -471,14 +471,14 @@ public class Controller_Login implements Initializable {
 			aviso.aviso(avisoTexto);
 		}
 		// Cria a pasta para receber os pdfs
-		Files.createDirectories(Paths.get("C:\\Temp"));
+		Files.createDirectories(Paths.get("C:\\CaeiroPDF"));
 		// Configurações de perfil para o Firefox
 		// Seta a pasta de downloads para a mencionada e faz o download automático de
 		// pdfs
 
 		FirefoxProfile profile = new FirefoxProfile();
 		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-		profile.setPreference("browser.download.dir", "C:\\Temp"); // folder
+		profile.setPreference("browser.download.dir", "C:\\CaeiroPDF"); // folder
 		profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf"); // MIME type
 		profile.setPreference("pdfjs.disabled", true); // disable the built-in viewer
 	    profile.setPreference("browser.download.folderList", 2);

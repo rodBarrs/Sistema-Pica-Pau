@@ -8,6 +8,16 @@ public class InformacoesSislabra {
     List<InfVeiculo> infVeiculo;
     List<String> situacaoEmpresa = new ArrayList<>();
     List<InfImovel> informacoesImoveis;
+    private boolean temConjuge;
+
+
+    public boolean isTemConjuge() {
+        return temConjuge;
+    }
+
+    public void setTemConjuge(boolean temConjuge) {
+        this.temConjuge = temConjuge;
+    }
 
     public List<String> getSituacaoEmpresa() {
         return situacaoEmpresa;

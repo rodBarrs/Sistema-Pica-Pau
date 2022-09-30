@@ -54,11 +54,11 @@ public class Processo_Grid {
                 tarefas = new ArrayList(tabela.findElements(By.cssSelector("tr")));
                 driver.findElement(By.xpath("//tr[1]/td[3]/div/a")).click();
                 try {
-                    String assunto = driver.findElement(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[5]/div")).getText();
-                    resultado.setAssunto(assunto);
-                    if (!resultado.getAssunto().contains("SALÁRIO-MATERNIDADE") && !resultado.getAssunto().contains("RURAL")){
-                        return resultado;
-                    }
+//                    String assunto = driver.findElement(By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[5]/div")).getText();
+//                    resultado.setAssunto(assunto);
+//                    if (!resultado.getAssunto().contains("SALÁRIO-MATERNIDADE") && !resultado.getAssunto().contains("RURAL")){
+//                        return resultado;
+//                    }
                     boolean flag = false;
                     while (!flag) {
                         try {

@@ -11,6 +11,11 @@ public class InformacoesDosprev {
     private String dataInicioIndeferido;
     private boolean existeProcessoINSS;
 
+    private boolean temSegurado;
+
+
+
+
     List<InformacoesUrbano> informacoesUrbanos;
 
     private String nit;
@@ -21,6 +26,16 @@ public class InformacoesDosprev {
 
     private String dataFim;
 
+    private boolean temContribuinteIndividual;
+
+
+    public boolean isTemSegurado() {
+        return temSegurado;
+    }
+
+    public void setTemSegurado(boolean temSegurado) {
+        this.temSegurado = temSegurado;
+    }
 
     public List<InformacoesUrbano> getInformacoesUrbanos() {
         return informacoesUrbanos;
@@ -100,5 +115,13 @@ public class InformacoesDosprev {
 
     public void setDataFim(String dataFim) {
         this.dataFim = dataFim;
+    }
+
+    public boolean isTemContribuinteIndividual() {
+        return temContribuinteIndividual;
+    }
+
+    public void setTemContribuinteIndividual(boolean temContribuinteIndividual) {
+        this.temContribuinteIndividual = temContribuinteIndividual;
     }
 }
