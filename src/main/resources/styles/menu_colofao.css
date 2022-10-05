@@ -7,15 +7,16 @@
 }
 
 .div-esquerda{
-    -fx-background-color: #A4C6DF;
+    -fx-background-color: #3E4095;
     -fx-border-color: #000000 #A4C6DF #000000 #000000 ;
     -fx-alignment: left;
 }
 
-.div-direita{
-    -fx-background-color: #ffffff;
-    -fx-border-color: #000000 #000000 #000000 #ffffff ;
-    -fx-alignment: right;
+
+
+.div-centro {
+      -fx-background-color: #ffffff;
+
 }
 
 .mensagem{

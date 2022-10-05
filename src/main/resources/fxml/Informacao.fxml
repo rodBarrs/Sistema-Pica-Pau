@@ -13,29 +13,39 @@
    <children>
       <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" styleClass="fundo" stylesheets="@../styles/tema.css">
          <children>
-            <VBox layoutX="249.0" layoutY="188.0" prefHeight="200.0" prefWidth="403.0">
+            <VBox alignment="CENTER" layoutX="53.0" layoutY="214.0" prefHeight="200.0" prefWidth="833.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="25.0" prefWidth="411.0" text="COLOFÃO CAEIRO" textFill="WHITE" wrapText="true">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="411.0" text="IMPEDIMENTOS" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" prefHeight="173.0" prefWidth="398.0" text="Alberto Caeiro foi um dos principais heterônimos do poeta português Fernando Pessoa. Sua base poética era baseada na exaltação dos valores da vida do campo, sua simplicidade e crítico ao pensamento das coisas complexas. Caeiro renegava todo pensamento desnecessário, alegando que isso tirava a alegria de viver. É com base nesse pensamento que o sistema CAEIRO se propõe a melhorar a rotina de trabalho, fazendo com que pensemos somente o necessário, e nada mais que isso." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="35.0" prefWidth="678.0" text="LITISPENDÊNCIA:  Ocorre quando há no Dossiê Previdenciário processo movido pelo autor contra o INSS." textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="47.0" prefWidth="683.0" text="PATRIMÔNIO:  Ocorre quando o o Sislabra do autor do processo verifica a existência de participação de empresa, ou veículos ou imóveis." textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="47.0" prefWidth="679.0" text="URBANO: Ocorre quando há no Dossiê Previcenciário do autor do processo, registros de vinculos empregatícios no setor urbano." textFill="WHITE" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                </children>
             </VBox>
-            <JFXButton fx:id="voltar" layoutX="370.0" layoutY="417.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="162.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
+            <JFXButton fx:id="voltar" layoutX="369.0" layoutY="440.0" onAction="#retornaMenu" prefHeight="25.0" prefWidth="162.0" styleClass="botaoBranco" stylesheets="@../styles/botoes.css" text="Voltar">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
-            <FontAwesomeIcon fill="#111111" iconName="CARET_LEFT" layoutX="379.0" layoutY="437.0" size="20" />
-            <ImageView fitHeight="139.0" fitWidth="202.0" layoutX="349.0" layoutY="23.0">
+            <FontAwesomeIcon fill="#111111" iconName="CARET_LEFT" layoutX="380.0" layoutY="459.0" size="20" />
+            <ImageView fitHeight="200.0" fitWidth="153.0" layoutX="380.0" layoutY="14.0">
                <image>
-                  <Image url="/fxml/Imagens/Logo.png" />
+                  <Image url="@Imagens/Logo.png" />
                </image>
             </ImageView>
          </children>

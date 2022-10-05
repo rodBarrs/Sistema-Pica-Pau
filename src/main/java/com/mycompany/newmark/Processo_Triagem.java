@@ -34,6 +34,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+import static com.mycompany.newmark.Controller_Login.som;
+import static com.mycompany.newmark.Controller_Login.somTriste;
+
 /**
  *
  * @author admin-felipe
@@ -62,9 +65,8 @@ public class Processo_Triagem {
 		ControllerMaternida controllerMaternida = new ControllerMaternida();
 		ControllerMaternida peticao = new ControllerMaternida();
 		Processo_Etiquetar etiqueta = new Processo_Etiquetar();
-//		URL url = getClass().getResource("/SOUNDS/ferrolho.wav"); // Som duvidoso
-//		AudioClip clip = Applet.newAudioClip(url);
-//		clip.play();
+
+
 		wait.until(ExpectedConditions.presenceOfElementLocated(By
 				.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div/div[4]/div/table/tbody/tr[1]/td[3]/div/a[1]")));
 		wait.until(ExpectedConditions.elementToBeClickable(By
@@ -88,6 +90,7 @@ public class Processo_Triagem {
 		WebElement seta = driver.findElement(
 				By.xpath("/html/body/div[4]/div[1]/div[2]/div/div[2]/div[1]/div[3]/div/div/div[33]/div/div"));
 		seta.click();
+			som();
 
 		WebElement filtro = driver.findElement(By.xpath("/html/body/div[11]/div/div[2]/div/div[6]/a/div[1]"));
 		filtro.click();
@@ -141,6 +144,7 @@ public class Processo_Triagem {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					somTriste();
 					Alert erro = new Alert(Alert.AlertType.INFORMATION);
 					erro.setTitle("Alerta");
 					erro.setHeaderText("Ocorreu um erro duranto o processo de triagem!");

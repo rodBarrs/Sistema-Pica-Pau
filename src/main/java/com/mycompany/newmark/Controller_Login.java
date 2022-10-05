@@ -286,7 +286,7 @@ public class Controller_Login implements Initializable {
 		stage.setScene(scene);
 		stage.centerOnScreen();
 		stage.show();
-		stage.setTitle("Sistema de Triagem Mark");
+		stage.setTitle("Sistema Pica Pau");
 	}
 
 //	@FXML
@@ -359,7 +359,7 @@ public class Controller_Login implements Initializable {
 
 	@FXML
 	public void triar() {
-		som();
+		//som();
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
@@ -377,7 +377,7 @@ public class Controller_Login implements Initializable {
 	public void triagemIniciada() {
 		try {
 			if (!driver.getTitle().contains("SAPIENS")) {
-				som();
+				//som();
 				SaidaTriagem.setText("- Erro: Login Não Realizado!");
 				BarraDeProgresso.setVisible(false);
 			}
@@ -391,10 +391,12 @@ public class Controller_Login implements Initializable {
 						boolean triar = triagem.iniciarTriagem(driver, wait, bancoSelecionado, triagemIniciada,
 								debugPi, Etiquetatxt.getText());
 						if (triar == false) {
-							som();
+							//som();
 							SaidaTriagem.setText("- Erro de comunicação com plataforma Sapiens!");
 							BarraDeProgresso.setVisible(false);
 						} else {
+							somFeliz();
+							Thread.sleep(5000);
 							JOptionPane.showMessageDialog(null, "Não há tarefas à serem triadas");
 							SaidaTriagem.setText("- Triagem finalizada");
 							BarraDeProgresso.setVisible(false);
@@ -404,7 +406,7 @@ public class Controller_Login implements Initializable {
 
 			triagemIniciada = true;
 		} catch (Exception erro) {
-			som();
+			somTriste();
 			SaidaTriagem.setText("- Erro: Login Não Realizado!");
 			BarraDeProgresso.setVisible(false);
 			erro.printStackTrace();
@@ -417,7 +419,7 @@ public class Controller_Login implements Initializable {
 		triagemIniciada = false;
 		BarraDeProgresso.setVisible(false);
 		SaidaTriagem.setText("- Triagem Parada!");
-		som();
+		//som();
 		try {
 
 			driver.quit();
@@ -429,14 +431,14 @@ public class Controller_Login implements Initializable {
 
 	public void apertouEnter(KeyEvent event) throws InterruptedException, IOException {
 		if (event.getCode() == KeyCode.ENTER) {
-			som();
+			//som();
 			login();
 		}
 	}
 
 	@FXML
 	public void login() throws InterruptedException, IOException {
-		som();
+
 		Banco banco = new Banco();
 		Usuario usuario = new Usuario();
 		usuario.setLogin(LoginTxt.getText());
@@ -528,8 +530,20 @@ public class Controller_Login implements Initializable {
 		return senhaCrip;
 	}
 
-	public void som() {
-		URL url = getClass().getResource("/SOUNDS/have_this.wav"); // Som duvidoso
+	public static void som() {
+		URL url = Controller_Login.class.getResource("/SOUNDS/Tchuc-Tchuc.wav"); // Som duvidoso
+		AudioClip clip = Applet.newAudioClip(url);
+		clip.play();
+	}
+
+	public static void somFeliz() {
+		URL url = Controller_Login.class.getResource("/SOUNDS/Risada_abertura.wav"); // Som duvidoso
+		AudioClip clip = Applet.newAudioClip(url);
+		clip.play();
+	}
+
+	public static void somTriste() {
+		URL url = Controller_Login.class.getResource("/SOUNDS/Risada_Triste.wav"); // Som duvidoso
 		AudioClip clip = Applet.newAudioClip(url);
 		clip.play();
 	}

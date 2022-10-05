@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+import static com.mycompany.newmark.Controller_Login.som;
+
 public class ControllerMaternida {
 
 

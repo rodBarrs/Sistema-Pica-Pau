@@ -17,7 +17,7 @@
     -fx-background-image: url("home.png");
     -fx-background-repeat:  stretch;
     -fx-background-size:  46px 44px;
-    -fx-background-color: #ffffff;
+    -fx-background-color: #3E4095;
     
 }
 
@@ -30,7 +30,10 @@
     
 }
 
-.div-centro{
-    -fx-background-color: #A4C6DF;
-    -fx-border-color: #000000;
+.div-lado{
+    -fx-background-color: #3E4095;
+}
+
+.div-centro {
+    -fx-background-color: #FFFFFF;
 }

@@ -37,7 +37,7 @@ public class Controller_Informacao {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
-        stage.setTitle("Sistema de Triagem Mark");
+        stage.setTitle("Sistema Pica Pau");
     }
     
 }

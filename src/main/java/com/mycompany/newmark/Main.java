@@ -23,7 +23,7 @@ public class Main extends Application {
             primaryStage.setMinWidth(900);
             primaryStage.setMinHeight(500);
             primaryStage.getIcons().add(new Image("/fxml/Imagens/Logo.png"));
-            primaryStage.setTitle("Sistema de Triagem Mark Caeiro");
+            primaryStage.setTitle("Sistema Pica Pau");
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
             primaryStage.show();

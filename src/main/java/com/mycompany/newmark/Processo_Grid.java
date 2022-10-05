@@ -87,9 +87,7 @@ public class Processo_Grid {
 
             } catch (Exception erro) {
                 System.out.println(erro);
-                URL url = getClass().getResource("/SOUNDS/Urna.wav");
-                AudioClip clip = Applet.newAudioClip(url);
-                clip.play();
+                Controller_Login.somTriste();
                 
                 int continuar = JOptionPane.showConfirmDialog(null, "Demora no tempo de resposta do Sapiens\nDeseja continuar triando?", "Triagem encerrada", JOptionPane.YES_NO_OPTION);
                 if (continuar == 0) {

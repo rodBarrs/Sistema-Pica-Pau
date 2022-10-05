@@ -75,7 +75,7 @@ public class Controller_TelaInicial implements  Initializable{
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setResizable(false);
-        stage.setTitle("Sistema de Triagem Mark Caeiro");
+        stage.setTitle("Sistema Pica Pau");
         stage.show();
 
     }
@@ -97,7 +97,7 @@ public class Controller_TelaInicial implements  Initializable{
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setResizable(false);
-        stage.setTitle("Sistema de Triagem Mark Caeiro - Informações");
+        stage.setTitle("Sistema Pica Pau - Impedimentos");
         stage.show();
     }
 }

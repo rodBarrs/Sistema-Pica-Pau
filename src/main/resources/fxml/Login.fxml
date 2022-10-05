@@ -18,36 +18,55 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Line?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchor" prefHeight="539.0" prefWidth="942.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.newmark.Controller_Login">
    <children>
-      <AnchorPane layoutX="249.0" layoutY="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="444.0" styleClass="div-centro" stylesheets="@../styles/login_colofao.css">
+      <AnchorPane layoutX="-3.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="950.0" styleClass="div-lado" stylesheets="@../styles/login_colofao.css">
          <children>
-               
-            <JFXButton fx:id="btTriar" focusTraversable="false" layoutX="135.0" layoutY="421.0" onAction="#login" prefHeight="60.0" prefWidth="59.0" ripplerFill="TRANSPARENT" styleClass="btn-iniciar" stylesheets="@../styles/login_colofao.css" text="Iniciar">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Shadow />
-               </effect>
-            </JFXButton>
-            <JFXButton fx:id="btParar" layoutX="233.0" layoutY="421.0" onAction="#parar" prefHeight="60.0" prefWidth="59.0" ripplerFill="#00000029" styleClass="btn-parar" stylesheets="@../styles/login_colofao.css" text="Parar">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></JFXButton>
-            <JFXTextArea fx:id="Saida" editable="false" focusColor="#ffffff00" focusTraversable="false" layoutX="617.0" layoutY="38.0" prefHeight="89.0" prefWidth="253.0" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="TRANSPARENT" wrapText="true">
+            <Pane layoutX="278.0" prefHeight="539.0" prefWidth="345.0" styleClass="div-centro">
+               <children>
+                  <ImageView fitHeight="200.0" fitWidth="153.0" layoutX="102.0" layoutY="25.0">
+                     <image>
+                        <Image url="@Imagens/Logo.png" />
+                     </image>
+                  </ImageView>
+                     
+                  <JFXButton fx:id="btTriar" focusTraversable="false" layoutX="102.0" layoutY="436.0" onAction="#login" prefHeight="60.0" prefWidth="59.0" ripplerFill="TRANSPARENT" styleClass="btn-iniciar" stylesheets="@../styles/login_colofao.css" text="Iniciar">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <effect>
+                        <Shadow />
+                     </effect>
+                  </JFXButton>
+                  <JFXButton fx:id="btParar" layoutX="186.0" layoutY="436.0" onAction="#parar" prefHeight="60.0" prefWidth="59.0" ripplerFill="#00000029" styleClass="btn-parar" stylesheets="@../styles/login_colofao.css" text="Parar">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <CheckBox fx:id="exibirSenha" layoutX="173.0" layoutY="400.0" mnemonicParsing="false" onAction="#exibirSenha" text="Exibir Senha" />
+                  <CheckBox fx:id="salvarSenha" layoutX="94.0" layoutY="400.0" mnemonicParsing="false" text="Salvar" />
+                  <JFXTextField fx:id="Etiquetatxt" alignment="CENTER" focusColor="WHITE" labelFloat="true" layoutX="63.0" layoutY="345.0" onKeyPressed="#apertouEnter" prefHeight="25.0" prefWidth="220.0" promptText="ETIQUETA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK" />
+                  <JFXPasswordField fx:id="SenhaTxt" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="63.0" layoutY="298.0" onKeyPressed="#apertouEnter" prefHeight="27.0" prefWidth="220.0" promptText="SENHA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK" />
+                  <JFXTextField fx:id="SenhaTxtMostar" alignment="CENTER" focusColor="WHITE" labelFloat="true" layoutX="63.0" layoutY="298.0" onKeyPressed="#apertouEnter" prefHeight="27.0" prefWidth="220.0" promptText="SENHA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="LoginTxt" alignment="CENTER" focusColor="WHITE" labelFloat="true" layoutX="63.0" layoutY="256.0" onKeyPressed="#apertouEnter" prefHeight="27.0" prefWidth="220.0" promptText="CPF" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </JFXTextField>
+               </children>
+            </Pane>
+            <JFXTextArea fx:id="Saida" editable="false" focusColor="#ffffff00" focusTraversable="false" layoutX="617.0" layoutY="38.0" prefHeight="89.0" prefWidth="253.0" styleClass="areaSaida" stylesheets="@../styles/tema.css" unFocusColor="TRANSPARENT" visible="false" wrapText="true">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXTextArea>
-            <JFXTextField fx:id="LoginTxt" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="117.0" layoutY="200.0" onKeyPressed="#apertouEnter" prefHeight="27.0" prefWidth="220.0" promptText="CPF" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets></JFXTextField>
-            <JFXPasswordField fx:id="SenhaTxt" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="117.0" layoutY="253.0" onKeyPressed="#apertouEnter" prefHeight="27.0" prefWidth="220.0" promptText="SENHA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK" />
             <JFXButton fx:id="btAdministracao" buttonType="RAISED" focusTraversable="false" layoutX="79.0" layoutY="319.0" onAction="#abrirPopupLogin" prefHeight="27.0" prefWidth="170.0" ripplerFill="#00000017" style="-fx-background-color: #0D4373;" styleClass="botaoVerde" stylesheets="@../styles/botoes.css" text="Administração" visible="false">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -68,7 +87,6 @@
                   </ContextMenu>
                </contextMenu>
             </JFXButton>
-            <Line endX="30.0" endY="300.0" layoutX="585.0" layoutY="130.0" opacity="0.5" startX="30.0" startY="70.0" stroke="WHITE" />
             <ComboBox fx:id="Bancos" layoutX="680.0" layoutY="162.0" prefWidth="170.0" visible="false" />
             <FontAwesomeIcon fill="WHITE" iconName="KEY" layoutX="87.0" layoutY="338.0" size="15" visible="false" />
             <FontAwesomeIcon fill="WHITE" iconName="GEAR" layoutX="87.0" layoutY="298.0" size="15" visible="false" />
@@ -88,25 +106,12 @@
                   <Image url="@Imagens/LogoMark.png" />
                </image>
             </ImageView>
-            <CheckBox fx:id="salvarSenha" layoutX="116.0" layoutY="369.0" mnemonicParsing="false" text="Salvar" />
-            <JFXTextField fx:id="SenhaTxtMostar" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="116.0" layoutY="256.0" onKeyPressed="#apertouEnter" prefHeight="27.0" prefWidth="220.0" promptText="SENHA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></JFXTextField>
             <Label fx:id="labelDebug" layoutX="36.0" layoutY="463.0" prefHeight="27.0" prefWidth="436.0" text="EXIBINDO ALERTAS DE DEBUG PARA TRIAGEM NA PETIÇÃO INICIAL" textFill="WHITE" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <JFXButton layoutX="7.0" layoutY="468.0" onAction="#informacao" prefHeight="25.0" prefWidth="24.0" text=" " />
-            <FontAwesomeIcon disable="true" fill="WHITE" iconName="INFO" layoutX="16.0" layoutY="505.0" size="15" />
-            <JFXTextField fx:id="Etiquetatxt" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="116.0" layoutY="313.0" onKeyPressed="#apertouEnter" prefHeight="25.0" prefWidth="220.0" promptText="ETIQUETA" styleClass="input-login" stylesheets="@../styles/login_colofao.css" unFocusColor="BLACK" />
-            <CheckBox fx:id="exibirSenha" layoutX="233.0" layoutY="369.0" mnemonicParsing="false" onAction="#exibirSenha" text="Exibir Senha" />
-            <ImageView fitHeight="139.0" fitWidth="200.0" layoutX="122.0" layoutY="36.0">
-               <image>
-                  <Image url="@Imagens/Logo.png" />
-               </image>
-            </ImageView>
          </children>
          <opaqueInsets>
             <Insets />

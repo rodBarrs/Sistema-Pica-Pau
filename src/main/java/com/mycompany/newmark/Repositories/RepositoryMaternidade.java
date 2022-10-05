@@ -90,7 +90,7 @@ public class RepositoryMaternidade {
             for (int i = 1; i <= 10; i++) {
                 try {
                     String texto = driver.findElement(By.xpath("/html/body/div/div[2]/table/tbody/tr[2]/td[3]/table/tbody/tr[" + i + "]/td")).getText();
-                    if (texto.contains("INSTITUTO NACIONAL DO SEGURO SOCIAL")) {
+                    if (texto.contains("INSTITUTO NACIONAL DO SEGURO SOCIAL") || texto.contains("AGENCIA DA PREVIDENCIA") || texto.contains("INSS")) {
                         processoINSS = true;
                         i = 11;
                     }
