@@ -78,7 +78,6 @@
             </Label>
 <!--            <JFXButton id="input" layoutX="7.0" layoutY="468.0" onAction="#informacao" prefHeight="25.0" prefWidth="24.0" text=" " />-->
             <FontAwesomeIcon disable="true" fill="WHITE" iconName="INFO" layoutX="16.0" layoutY="486.0" size="15" visible="false" />
-            <Label layoutX="45.0" layoutY="465.0" prefHeight="17.0" prefWidth="185.0" text="“Essa gente inventa cada coisa.”" />
          </children>
       </AnchorPane>
    </children>

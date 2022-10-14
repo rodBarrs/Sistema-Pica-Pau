@@ -387,7 +387,7 @@ public class RepositoryMaternidade {
                 List<InfImovel> infImovel = new ArrayList<>();
                 for (int indexBuscaNb = 0; indexBuscaNb < buscaNb.length; indexBuscaNb++) {
 
-                    if (buscaNb[indexBuscaNb].contains("CÔNJUGE/CO")) {
+                    if (buscaNb[indexBuscaNb].contains("CÔNJUGE") || buscaNb[indexBuscaNb].contains("Cônjuge")) {
                        temConjuge = true;
                     }
 
@@ -397,7 +397,7 @@ public class RepositoryMaternidade {
                         situacaoEmpresa.add(situacaoEmpAtual);
 
                     }
-                    if (buscaNb[indexBuscaNb].contains("MOTOCICLETA") || buscaNb[indexBuscaNb].contains("AUTOMOVEL")) {
+                    if (buscaNb[indexBuscaNb].contains("MOTOCICLETA") || buscaNb[indexBuscaNb].contains("AUTOMOVEL") || buscaNb[indexBuscaNb].contains("CAMINHONETE") || buscaNb[indexBuscaNb].contains("CAMINHÃO")) {
                         System.out.println(buscaNb[indexBuscaNb] + " : " + indexBuscaNb);
                         tipo = buscaNb[indexBuscaNb];
                         modelo = buscaNb[indexBuscaNb+2];
@@ -541,7 +541,7 @@ public class RepositoryMaternidade {
                 etiqueta += "LITISPENDÊNCIA; ";
             }
         }else {
-            etiqueta="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
+            etiqueta+="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
         }
 
 
@@ -613,7 +613,7 @@ public class RepositoryMaternidade {
             observacao +=infoDosprev.getInformacoesUrbanos().get(z).getVinculo()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+"-";
         }
         } else{
-            etiqueta += "EMPREGO - SISLABRA NÃO ENCONTRADO;";
+            etiqueta += "EMPREGO - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO;";
         }
 
 
