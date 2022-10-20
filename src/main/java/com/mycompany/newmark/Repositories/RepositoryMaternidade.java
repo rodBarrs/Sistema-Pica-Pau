@@ -72,6 +72,10 @@ public class RepositoryMaternidade {
         String dataInicioMaisRecente = "zero";
         String nbMaisRecente = "";
         driver.switchTo().frame(0);
+        String erro = driver.findElement(By.xpath("/html/body")).getText();
+        if (erro.contains("Houve um problema na recuperação do componente digital! Tente novamente mais tarde!")){
+            return informacao;
+        }
         String dataAjuizamento = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[2]/td"))
                 .getText();
         String sexo = driver.findElement(By.xpath("/html/body/div/div[1]/table/tbody/tr[11]/td"))
@@ -509,6 +513,15 @@ public class RepositoryMaternidade {
         String observacao = "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         formatter = formatter.withLocale(Locale.US);
+
+//        if (!passouDosprev && !passouSislabra){
+//            etiqueta = "NADA ENCONTRADO - DOSSIÊ; NADA ENCONTRADO - SISLABRA;";
+//        } else if (!passouDosprev){
+//            etiqueta = "NADA ENCONTRADO - DOSSIÊ; IMPEDITIVO: ";
+//        } else if (!passouSislabra){
+//            etiqueta = "NADA ENCONTRADO - SISLABRA; IMPEDITIVO: ";
+//        }
+
        //PRESCRIÇÃO
 //        if (passouDosprev){
 //            if(infoDosprev.getDataInicioIndeferido().equals("") || (infoDosprev.getDataDeAjuizamento().equals(""))){
@@ -540,8 +553,6 @@ public class RepositoryMaternidade {
             if (infoDosprev.isExisteProcessoINSS()) {
                 etiqueta += "LITISPENDÊNCIA; ";
             }
-        }else {
-            etiqueta+="LITISPENDÊNCIA - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO; ";
         }
 
 
@@ -594,8 +605,6 @@ public class RepositoryMaternidade {
             }
 
 
-        } else {
-            etiqueta += "PATRIMÔNIO - SISLABRA NÃO ENCONTRADO;";
         }
 
 
@@ -603,17 +612,17 @@ public class RepositoryMaternidade {
 
 
 //        infoDosprev.getDataFim()
+
         if (passouDosprev){
-        if(infoDosprev.getInformacoesUrbanos().size() > 0 || infoDosprev.isTemContribuinteIndividual()){
+        if (infoDosprev.getDataDeAjuizamento() == null){
+            etiqueta += "DOSSIÊ PREVIDENCIÁRIO INCOMPLETO";
+        }
+        else if(infoDosprev.getInformacoesUrbanos().size() > 0 || infoDosprev.isTemContribuinteIndividual()){
             etiqueta += "EMPREGO; ";
             observacao+= "Vinculos Urbano: ";
         }
 
-        for (int z = 0; z < infoDosprev.getInformacoesUrbanos().size(); z++){
-            observacao +=infoDosprev.getInformacoesUrbanos().get(z).getVinculo()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+" "+infoDosprev.getInformacoesUrbanos().get(z).getDataFim()+"-";
-        }
-        } else{
-            etiqueta += "EMPREGO - DOSSIÊ PREVIDENCIÁRIO NÃO ENCONTRADO;";
+
         }
 
 
@@ -669,9 +678,29 @@ public class RepositoryMaternidade {
 //            }
 //            }
 
+        if (!passouDosprev && !passouSislabra){
+            etiqueta = "NADA ENCONTRADO - DOSSIÊ; NADA ENCONTRADO - SISLABRA;";
+        } else if (!passouDosprev){
+            etiqueta += "NADA ENCONTRADO - DOSSIÊ;";
+        } else if (!passouSislabra){
+            etiqueta += "NADA ENCONTRADO - SISLABRA;";
+        }
+
 
         if (etiqueta.equals("IMPEDITIVO: ")){
             etiqueta = "PROCESSO LIMPO";
+        }
+
+        if (etiqueta.contains("NADA ENCONTRADO - DOSSIÊ; NADA ENCONTRADO - SISLABRA;")){
+            etiqueta = "PROCESSO LIMPO; NADA ENCONTRADO - DOSSIÊ; NADA ENCONTRADO - SISLABRA;";
+        }
+
+        if (etiqueta.equals("IMPEDITIVO: NADA ENCONTRADO - DOSSIÊ;")){
+            etiqueta = "PROCESSO LIMPO; NADA ENCONTRADO - DOSSIÊ;";
+        }
+
+        if (etiqueta.equals("IMPEDITIVO: NADA ENCONTRADO - SISLABRA;")){
+            etiqueta = "PROCESSO LIMPO; NADA ENCONTRADO - SISLABRA; ";
         }
 
         if (infoSislabra.isTemConjuge()){
