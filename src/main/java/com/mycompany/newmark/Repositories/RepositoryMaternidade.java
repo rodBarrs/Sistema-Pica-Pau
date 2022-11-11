@@ -5,13 +5,15 @@ import com.mycompany.newmark.Processo_Etiquetar;
 import com.mycompany.newmark.entities.*;
 
 import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,92 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class RepositoryMaternidade {
+
+    public InformacoesCapa procurarAdvogado(InformacoesCapa informacoesCapa, WebDriver driver, WebDriverWait wait) throws InterruptedException, IOException, UnsupportedFlavorException {
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
+        Thread.sleep(1000);
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("iframe-myiframe")));
+        WebElement capa = driver.findElement(By.id("iframe-myiframe"));
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(capa));
+        do {
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(By.tagName("html")));
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+                driver.findElement(By.tagName("html")).click();
+                break;
+            } catch (Exception e) {
+                //
+            }
+        } while (true);
+
+        Actions action = new Actions(driver);
+        action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
+        action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
+        driver.switchTo().defaultContent();
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        DataFlavor flavor = DataFlavor.stringFlavor;
+        Thread.sleep(500);
+        String processo = clipboard.getData(flavor).toString();
+
+        if (processo.contains("ABEL BRITO DE QUEIROZ")){
+            informacoesCapa.setNomeAdvogado("ABEL BRITO DE QUEIROZ");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("ADRIANO GOMES DE DEUS")){
+            informacoesCapa.setNomeAdvogado("ADRIANO GOMES DE DEUS");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("ANDERSON JOSE LOPES FRANCO")){
+            informacoesCapa.setNomeAdvogado("ANDERSON JOSE LOPES FRANCO");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("ARTHUR DE ALMEIDA E SOUSA")){
+            informacoesCapa.setNomeAdvogado("ARTHUR DE ALMEIDA E SOUSA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("EDER NILSON VIANA DA SILVA")){
+            informacoesCapa.setNomeAdvogado("EDER NILSON VIANA DA SILVA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if (processo.contains("EVANDRO SOUZA MUNIZ")) {
+            informacoesCapa.setNomeAdvogado("EVANDRO SOUZA MUNIZ");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if (processo.contains("EUCLIDES RABELO ALENCAR")) {
+            informacoesCapa.setNomeAdvogado("EUCLIDES RABELO ALENCAR");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if (processo.contains("FRANKLIN DAYWYSON JAQUES DO MONT SERRAT ANDRADE")){
+            informacoesCapa.setNomeAdvogado("FRANKLIN DAYWYSON JAQUES DO MONT SERRAT ANDRADE");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if (processo.contains("GUILHERME HENRIQUE BRANCO DE OLIVEIRA")){
+            informacoesCapa.setNomeAdvogado("GUILHERME HENRIQUE BRANCO DE OLIVEIRA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("ITALO BENEDITO DA CRUZ MAGALHAES")) {
+            informacoesCapa.setNomeAdvogado("ITALO BENEDITO DA CRUZ MAGALHAES");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("JOÃO PAULO DE LIMA SILVA")) {
+            informacoesCapa.setNomeAdvogado("JOÃO PAULO DE LIMA SILVA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if (processo.contains("KELLY JAMILLY DE OLIVEIRA FERREIRA")){
+            informacoesCapa.setNomeAdvogado("KELLY JAMILLY DE OLIVEIRA FERREIRA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("MAYSA CÉLIA DE SOUZA MAGALHÃES")){
+            informacoesCapa.setNomeAdvogado("MAYSA CÉLIA DE SOUZA MAGALHÃES");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("RAIMUNDO MAURICIO PINTO JUNIOR")){
+            informacoesCapa.setNomeAdvogado("RAIMUNDO MAURICIO PINTO JUNIOR");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("RONALDO DIAS CAVALCANTE")){
+            informacoesCapa.setNomeAdvogado("RONALDO DIAS CAVALCANTE");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if(processo.contains("TARCISIO SAMPAIO DA SILVA")){
+            informacoesCapa.setNomeAdvogado("TARCISIO SAMPAIO DA SILVA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }else if (processo.contains("WILLIAM VIANA DA SILVA")){
+            informacoesCapa.setNomeAdvogado("WILLIAM VIANA DA SILVA");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        } else if (processo.contains("SABRINA DE PONTES ARAUJO")){
+            informacoesCapa.setNomeAdvogado("SABRINA DE PONTES ARAUJO");
+            informacoesCapa.setTemAdvogadoPilantra(true);
+        }
+        driver.switchTo().defaultContent();
+        return informacoesCapa;
+    }
 
     public boolean clicarDosprev(WebDriver driver, WebDriverWait wait) throws InterruptedException {
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
@@ -505,7 +593,7 @@ public class RepositoryMaternidade {
         return  "nao achou";
     }
 
-    public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String assunto, boolean passouSislabra, boolean passouDosprev){
+    public EtiquetaObservacao etiquetarMaternidade (WebDriver driver, WebDriverWait wait, InformacoesDosprev infoDosprev, InformacoesSislabra infoSislabra, String assunto, boolean passouSislabra, boolean passouDosprev, InformacoesCapa informacoesCapa){
 
         EtiquetaObservacao etiquetaObservacao = new EtiquetaObservacao();
         Processo_Etiquetar etiquetar = new Processo_Etiquetar();
@@ -710,8 +798,14 @@ public class RepositoryMaternidade {
         if (infoDosprev.isTemSegurado()){
             etiqueta += "- CONCESSÃO ANTERIOR";
         }
+
+        if (informacoesCapa.isTemAdvogadoPilantra()){
+            etiqueta += "- FRAUDE PARÁ";
+        }
+
         etiquetaObservacao.setEtiqueta(etiqueta);
         etiquetaObservacao.setObservacao(observacao);
+
 
         return etiquetaObservacao;
 

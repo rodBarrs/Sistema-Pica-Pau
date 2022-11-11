@@ -6,6 +6,7 @@ package com.mycompany.newmark.Controllers;
 import com.mycompany.newmark.*;
 import com.mycompany.newmark.Repositories.RepositoryMaternidade;
 import com.mycompany.newmark.entities.EtiquetaObservacao;
+import com.mycompany.newmark.entities.InformacoesCapa;
 import com.mycompany.newmark.entities.InformacoesDosprev;
 import com.mycompany.newmark.entities.InformacoesSislabra;
 import org.openqa.selenium.By;
@@ -16,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -25,18 +27,22 @@ import static com.mycompany.newmark.Controller_Login.som;
 public class ControllerMaternida {
 
 
-	public Chaves_Resultado iniciar(WebDriver driver, String assunto, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, IOException {
+	public Chaves_Resultado iniciar(WebDriver driver, String assunto, WebDriverWait wait, Chaves_Configuracao config, String bancos) throws InterruptedException, IOException, UnsupportedFlavorException {
 
 
 
 		InformacoesDosprev informacaoDosPrev = new InformacoesDosprev();
 		InformacoesSislabra informacaoSislabra = new InformacoesSislabra();
+		InformacoesCapa informacoesCapa = new InformacoesCapa();
 		RepositoryMaternidade materidadeRepositorio = new RepositoryMaternidade();
+
 
 		Chaves_Resultado resultado = new Chaves_Resultado();
 		LeituraPDF pdf = new LeituraPDF();
 
-			String dataNascimentoCrianca;
+		String dataNascimentoCrianca;
+
+		informacoesCapa = materidadeRepositorio.procurarAdvogado(informacoesCapa, driver, wait);
 
 		boolean passouDosprev = materidadeRepositorio.clicarDosprev(driver, wait);
 		if (passouDosprev) {
@@ -54,7 +60,7 @@ public class ControllerMaternida {
 
 			//dataNascimentoCrianca = materidadeRepositorio.clicarProcesoAdministrativo(driver, wait, informacaoDosPrev.getNbProcessoIndeferido());
 
-			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, assunto, passouSislabra, passouDosprev);
+			EtiquetaObservacao etiquetaObservacao = materidadeRepositorio.etiquetarMaternidade(driver, wait, informacaoDosPrev, informacaoSislabra, assunto, passouSislabra, passouDosprev, informacoesCapa);
 
 			resultado.setDriver(driver);
 			resultado.setEtiqueta(etiquetaObservacao.getEtiqueta());
