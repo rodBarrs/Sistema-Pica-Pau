@@ -20,7 +20,7 @@ public class Triagem_Etiquetas {
 		boolean bancoBool = false;
 		while (bancoBool == false) {
 			try {
-				Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+				Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 
 				PreparedStatement stmt;
 				ResultSet resultSet;

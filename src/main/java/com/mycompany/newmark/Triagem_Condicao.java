@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 public class Triagem_Condicao {
     
     public boolean verificaCondicao(String processo, String tipo) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
         PreparedStatement stmt;
         ResultSet resultSet;
         stmt = connection.prepareStatement("SELECT * FROM condicao WHERE tipo = '" + tipo + "'");

@@ -228,7 +228,7 @@ public class Controller_Configuracao implements Initializable {
 
 	public void contadores() {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM contador");
 			ResultSet resultSet = stmt.executeQuery();
 			contTotal.setText(resultSet.getString("ContTotal"));

@@ -23,7 +23,7 @@ public class Banco {
 	public void conectar() {
 		try {
 			//Estabelece a conecção com o banco de dados
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			//Cria o banco de dados, com todas as tabelas caso o mesmo não seja localizado no diretorio especificado
 			comandoSql.execute("CREATE TABLE IF NOT EXISTS bancos (                 \n"
@@ -124,7 +124,7 @@ public class Banco {
 		String textoAviso = "";
 		Connection connection = null;
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql
 					.execute("INSERT INTO etiquetas (palavrachave ,complemento,etiqueta,tipo,prioridade,banco) VALUES ("
@@ -152,7 +152,7 @@ public class Banco {
 	public void alterarEtiquetas(Chaves_Banco chave, String PalavraChave, String Complemento, String Etiqueta,
 			String Tipo, String Prioridade) {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE etiquetas SET " + "palavrachave = '" + PalavraChave + "', " + "complemento = '"
 					+ Complemento + "', " + "etiqueta = '" + Etiqueta + "', " + "tipo = '" + Tipo + "', "
@@ -177,7 +177,7 @@ public class Banco {
 	public void excluirEtiquetas(Chaves_Banco chave) {
 		Aviso aviso = new Aviso();
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("DELETE FROM etiquetas WHERE" + "(palavrachave = '" + chave.getPALAVRACHAVE() + "') AND "
 					+ "(complemento = '" + chave.getCOMPLEMENTO() + "') AND " + "(banco = '" + chave.getBANCO()
@@ -196,7 +196,7 @@ public class Banco {
 		Aviso aviso = new Aviso();
 		String textoAviso = "";
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			//Inserindo
 			comandoSql.execute("INSERT INTO condicao VALUES(" + "'"
@@ -225,7 +225,7 @@ public class Banco {
 	//Altera dados dentro da tabela PROVJURI e CABECALHO
 	public void alterarCondicao(Chaves_Condicao chave, String texto) {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE condicao SET texto = '" + texto + "'" + " WHERE texto = '" + chave.getTEXTO()
 					+ "'" + " AND tipo = '" + chave.getTIPO() + "';");
@@ -247,7 +247,7 @@ public class Banco {
 	public void excluirCondicao(Chaves_Condicao chave) {
 		Aviso aviso = new Aviso();
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			//Excluir
 			comandoSql.execute("DELETE FROM condicao WHERE tipo ='" + chave.getTIPO() + "' AND texto = '"
@@ -265,7 +265,7 @@ public class Banco {
 
 	public void salvarAvancadas(Integer periodoData, String triagem, boolean juntadamanual) {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE configuracao SET" + " TriarAntigo = '" + periodoData + "'          \n"
 					+ ", TipoTriagem = '" + triagem + "'        \n" + ", JuntManual = '" + juntadamanual + "'   \n"
@@ -282,7 +282,7 @@ public class Banco {
 	//Altera o valor da unica linha da coluna LaudoPericial na tabela CONFIG para alterar o processo de Triagem
 	public void salvarEspecificas(boolean laudoPericial, boolean peticaoInicial) {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE configuracao SET" + " LaudoPericial = '" + laudoPericial + "'   \n"
 					+ ", PeticaoInicial = '" + peticaoInicial + "' \n" + " WHERE id = 1997;");
@@ -297,7 +297,7 @@ public class Banco {
 
 	public void salvarSenha(Usuario usuario) {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE configuracao SET Login = '" + usuario.getLogin() + "'   \n" + ", Senha = '"
 					+ usuario.getSenha() +  "'   \n" + ", Etiqueta = '"
@@ -314,7 +314,7 @@ public class Banco {
 	//Metodos para realizar a incrementação dos contadores
 	public void contarNao() throws SQLException {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 
 			comandoSql.execute("UPDATE contador SET" + " ContNao = ContNao + 1" + ", ContTotal = ContTotal + 1"
@@ -329,7 +329,7 @@ public class Banco {
 
 	public void contarDoc() {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE contador SET" + " ContDoc = ContDoc + 1" + ", ContTotal = ContTotal + 1"
 					+ " WHERE id = 1997;");
@@ -345,7 +345,7 @@ public class Banco {
 
 	public void contarMov() {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			comandoSql.execute("UPDATE contador SET" + " ContSeq = ContSeq + 1" + ", ContTotal = ContTotal + 1"
 					+ " WHERE id = 1997;");
@@ -366,7 +366,7 @@ public class Banco {
 			boolean LaudoPericial;
 			boolean PeticaoInicial;
 
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM configuracao WHERE id = 1997");
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {
@@ -415,7 +415,7 @@ public class Banco {
 		Aviso aviso = new Aviso();
 		String textoAviso = "";
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			//Inserindo
 			comandoSql.execute("INSERT INTO bancos VALUES(" + "'"
@@ -439,7 +439,7 @@ public class Banco {
 	public void excluirBancos(Chaves_Condicao chave) {
 		Aviso aviso = new Aviso();
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			Statement comandoSql = connection.createStatement();
 			//Excluir
 			comandoSql.execute(
@@ -460,7 +460,7 @@ public class Banco {
 		try {
 			List<String> lista = new ArrayList<>();
 			lista.add("TODOS OS BANCOS");
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM bancos ORDER BY nome");
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
@@ -479,7 +479,7 @@ public class Banco {
 		String bancoSelecionado = bancoSelecionadoLocal;
 
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM bancos ORDER BY nome");
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {

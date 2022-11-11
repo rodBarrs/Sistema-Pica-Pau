@@ -196,7 +196,7 @@ public class Controller_Login implements Initializable {
 
 	public void pegarSenha() {
 		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoEtiquetasMark.db");
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:BancoPicaPau.db");
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM configuracao WHERE id = 1997");
 			ResultSet resultadoBanco = stmt.executeQuery();
 			while (resultadoBanco.next()) {

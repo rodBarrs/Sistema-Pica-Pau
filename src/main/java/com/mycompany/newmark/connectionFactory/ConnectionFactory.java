@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 
 public class ConnectionFactory {
 	
-	private final String URL = "jdbc:sqlite:BancoEtiquetasMark.db";
+	private final String URL = "jdbc:sqlite:BancoPicaPau.db";
 
 	public Connection obterConexao() {
 		try {

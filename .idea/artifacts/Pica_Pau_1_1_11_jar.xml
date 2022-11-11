@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="Pica Pau 1.1.11:jar">
+  <artifact type="jar" name="Pica Pau 1.1.11:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Pica_Pau_1_1_11_jar</output-path>
     <root id="archive" name="NewMark.jar">
       <element id="module-output" name="NewMark" />
