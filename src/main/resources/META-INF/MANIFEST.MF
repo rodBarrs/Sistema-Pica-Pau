@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: Pica Pau 1.1.11
+Main-Class: Pica Pau 1.1.12
 

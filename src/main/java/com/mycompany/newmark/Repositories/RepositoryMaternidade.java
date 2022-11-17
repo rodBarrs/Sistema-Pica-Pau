@@ -43,6 +43,11 @@ public class RepositoryMaternidade {
             }
         } while (true);
 
+        try {
+            driver.findElement(By.xpath("/html/body/div/div[6]/span")).click();
+        } catch (Exception e) {
+            //
+        }
         Actions action = new Actions(driver);
         action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0061')).perform();
         action.keyDown(Keys.CONTROL).sendKeys(String.valueOf('\u0063')).perform();
@@ -82,7 +87,7 @@ public class RepositoryMaternidade {
         }else if(processo.contains("ITALO BENEDITO DA CRUZ MAGALHAES")) {
             informacoesCapa.setNomeAdvogado("ITALO BENEDITO DA CRUZ MAGALHAES");
             informacoesCapa.setTemAdvogadoPilantra(true);
-        }else if(processo.contains("JOÃO PAULO DE LIMA SILVA")) {
+        }else if(processo.contains("JOAO PAULO DE LIMA SILVA")) {
             informacoesCapa.setNomeAdvogado("JOÃO PAULO DE LIMA SILVA");
             informacoesCapa.setTemAdvogadoPilantra(true);
         }else if (processo.contains("KELLY JAMILLY DE OLIVEIRA FERREIRA")){
@@ -811,7 +816,7 @@ public class RepositoryMaternidade {
 
     }
 
-    public void etiquetar(WebDriver driver, WebDriverWait wait, String etiqueta) {
+    public void etiquetar(WebDriver driver, WebDriverWait wait, String etiqueta) throws InterruptedException {
         List<String> janela = new ArrayList<String>(driver.getWindowHandles());
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS).pageLoadTimeout(1, TimeUnit.SECONDS);
         driver.switchTo().window(janela.get(1));
@@ -826,7 +831,9 @@ public class RepositoryMaternidade {
 
         WebElement salvarEtiqueta = driver
                 .findElement(By.xpath("/html/body/div[3]/div[1]/div/div/a/span/span/span[2]"));
+        wait.until(ExpectedConditions.elementToBeClickable(salvarEtiqueta));
         salvarEtiqueta.click();
+        Thread.sleep(200);
 
         driver.switchTo().window(janela.get(1)).close();
 
